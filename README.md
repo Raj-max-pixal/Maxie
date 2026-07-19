@@ -20,6 +20,10 @@ npm run dist
 
 The Windows installer is generated in `dist/`.
 
+## 🚀 Download
+
+👉 **[Download MAXie Beta](https://github.com/Raj-max-pixal/Maxie/releases/latest)**
+
 ## Current Features
 
 - Transparent always-on-top pet window with saved desktop position.
