@@ -1,0 +1,64 @@
+{
+  "name": "maxie",
+  "version": "0.1.0",
+  "description": "MAXie - a local-first AI desktop companion prototype.",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check renderer/petBrain.js && node --check renderer/petPhysics.js && node --check renderer/pet.js && node --check settings/settings.js && node --check storage/store.js && node --check ai/aiClient.js && node --check ai/ollamaClient.js && node --check ai/openAiCompatibleClient.js && node --check ai/geminiClient.js && node --check ai/personality.js && node --check utils/activeApp.js && node --check utils/systemInfo.js && node --check utils/startup.js && node --check tray/trayController.js",
+    "release:check": "npm run check",
+    "dist": "electron-builder --win nsis"
+  },
+  "keywords": [
+    "desktop-pet",
+    "ai-companion",
+    "electron",
+    "local-first"
+  ],
+  "author": "MAXie Project",
+  "license": "MIT",
+  "build": {
+    "appId": "com.maxie.desktop",
+    "productName": "MAXie",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "settings/**/*",
+      "assets/**/*",
+      "animations/**/*",
+      "ai/**/*",
+      "utils/**/*",
+      "storage/**/*",
+      "tray/**/*",
+      "package.json",
+      "README.md",
+      "FAQ.md",
+      "PRIVACY.md",
+      "CHANGELOG.md",
+      "ROADMAP.md",
+      "CONTRIBUTING.md",
+      "RELEASE_CHECKLIST.md",
+      "LICENSE",
+      "plugins/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  }
+}
