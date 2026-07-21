@@ -5,13 +5,15 @@ const { createTray } = require("./tray/trayController");
 const { createStore } = require("./storage/store");
 const { getActiveApp } = require("./utils/activeApp");
 const { getSystemSnapshot } = require("./utils/systemInfo");
-const { ensureStartup, isStartupEnabled } = require("./utils/startup");
+const { ensureStartup, ensureStartupEnabled, isStartupEnabled } = require("./utils/startup");
 const { createAiClient } = require("./ai/aiClient");
 
 const store = createStore("maxie-state.json");
 let petWindow;
 let settingsWindow;
 let tray;
+const appIconPath = path.join(__dirname, "assets", "icon.ico");
+const trayIconPath = path.join(__dirname, "assets", "tray.png");
 
 const singleInstanceLock = app.requestSingleInstanceLock();
 if (!singleInstanceLock) {
@@ -129,6 +131,7 @@ function createPetWindow() {
     alwaysOnTop: true,
     focusable: true,
     backgroundColor: "#00000000",
+    icon: appIconPath,
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -168,6 +171,7 @@ function openSettings() {
     minHeight: 560,
     title: "MAXie Settings",
     backgroundColor: "#17181f",
+    icon: appIconPath,
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -356,6 +360,7 @@ function sanitizeState(state) {
 
 if (singleInstanceLock) app.whenReady().then(() => {
   app.setAppUserModelId("MAXie.DesktopCompanion");
+  ensureStartupEnabled();
   setupIpc();
   createPetWindow();
   tray = createTray({
@@ -363,7 +368,7 @@ if (singleInstanceLock) app.whenReady().then(() => {
     Menu,
     nativeImage,
     app,
-    iconPath: path.join(__dirname, "assets", "tray.png"),
+    iconPath: trayIconPath,
     onOpenSettings: openSettings,
     onWakePet: showPet,
     onDance: () => sendToPet("pet:command", { type: "dance" })

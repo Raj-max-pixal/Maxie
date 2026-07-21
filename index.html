@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MAXie</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="stage" aria-label="MAXie companion desktop">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">Local-first prototype</p>
+            <h1>MAXie</h1>
+          </div>
+          <div class="topbar-actions">
+            <label class="icon-button" data-tooltip="Upload companion image">
+              <input id="avatarInput" type="file" accept="image/*">
+              <span>Upload</span>
+            </label>
+            <button id="resetButton" class="icon-button" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="desktop-space" id="desktopSpace">
+          <div class="window-mock browser-window">
+            <div class="window-bar">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="window-content">
+              <strong>Study notes</strong>
+              <p>MAXie reacts to your selected context while keeping private data local.</p>
+            </div>
+          </div>
+          <div class="window-mock editor-window">
+            <div class="window-bar">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="code-lines" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+
+          <button id="companion" class="companion is-idle" type="button" aria-label="Talk to MAXie">
+            <span class="speech" id="speechBubble">Hey! I'm MAXie.</span>
+            <span class="pet-shadow"></span>
+            <span class="pet-body">
+              <span class="pet-avatar" id="petAvatar">
+                <span class="pet-face">
+                  <span class="eye left"></span>
+                  <span class="eye right"></span>
+                  <span class="mouth"></span>
+                </span>
+              </span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <aside class="control-panel" aria-label="MAXie controls">
+        <section class="panel-section">
+          <div class="section-title">
+            <h2>Companion</h2>
+            <span id="stageBadge">Baby</span>
+          </div>
+          <label class="field">
+            <span>Name</span>
+            <input id="nameInput" type="text" maxlength="18" value="MAXie">
+          </label>
+          <label class="field">
+            <span>Personality</span>
+            <select id="personalitySelect">
+              <option>Cute</option>
+              <option>Funny</option>
+              <option>Chill</option>
+              <option>Motivational</option>
+              <option>Gamer</option>
+              <option>Nerd</option>
+              <option>Mischievous</option>
+              <option>Professional</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Current context</span>
+            <select id="contextSelect">
+              <option>Desktop</option>
+              <option>VS Code</option>
+              <option>Chrome</option>
+              <option>Spotify</option>
+              <option>Steam</option>
+              <option>Study session</option>
+            </select>
+          </label>
+          <div class="action-row">
+            <button class="primary" id="talkButton" type="button">Talk</button>
+            <button id="feedButton" type="button">Feed</button>
+            <button id="playButton" type="button">Play</button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title">
+            <h2>Mood</h2>
+            <span id="moodBadge">Happy</span>
+          </div>
+          <div class="meters">
+            <label><span>Energy</span><meter id="energyMeter" min="0" max="100" value="82"></meter></label>
+            <label><span>Food</span><meter id="foodMeter" min="0" max="100" value="74"></meter></label>
+            <label><span>Fun</span><meter id="funMeter" min="0" max="100" value="68"></meter></label>
+            <label><span>Friendship</span><meter id="friendshipMeter" min="0" max="100" value="52"></meter></label>
+          </div>
+          <div class="xp-track">
+            <div>
+              <span>XP</span>
+              <strong id="xpLabel">0 / 100</strong>
+            </div>
+            <progress id="xpProgress" max="100" value="0"></progress>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title">
+            <h2>Quick tools</h2>
+          </div>
+          <div class="tool-grid">
+            <button data-mode="Coding" type="button">Coding</button>
+            <button data-mode="Study" type="button">Study</button>
+            <button data-mode="Focus" type="button">Focus</button>
+            <button data-mode="Creative" type="button">Creative</button>
+          </div>
+          <form id="taskForm" class="task-form">
+            <label class="field">
+              <span>Add a memory or task</span>
+              <input id="memoryInput" type="text" placeholder="Example: Finish React lesson">
+            </label>
+            <button class="primary" type="submit">Save</button>
+          </form>
+          <ul id="memoryList" class="memory-list" aria-label="Saved memories"></ul>
+        </section>
+      </aside>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

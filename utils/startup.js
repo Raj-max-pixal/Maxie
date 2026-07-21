@@ -12,4 +12,12 @@ function isStartupEnabled() {
   return app.getLoginItemSettings().openAtLogin;
 }
 
-module.exports = { ensureStartup, isStartupEnabled };
+function ensureStartupEnabled() {
+  try {
+    ensureStartup(true);
+  } catch (error) {
+    console.warn("Could not enable MAXie startup:", error.message);
+  }
+}
+
+module.exports = { ensureStartup, ensureStartupEnabled, isStartupEnabled };

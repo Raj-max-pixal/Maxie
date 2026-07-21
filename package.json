@@ -21,6 +21,7 @@
   "build": {
     "appId": "com.maxie.desktop",
     "productName": "MAXie",
+    "icon": "assets/icon.ico",
     "directories": {
       "output": "dist"
     },
@@ -47,12 +48,15 @@
       "plugins/**/*"
     ],
     "win": {
+      "icon": "assets/icon.ico",
       "target": "nsis"
     },
     "nsis": {
       "oneClick": true,
       "perMachine": false,
       "allowToChangeInstallationDirectory": false,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     }
