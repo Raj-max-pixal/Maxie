@@ -1,4 +1,5 @@
 const storeKey = "maxie-prototype-v1";
+const isMobileShell = window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
 
 const defaults = {
   name: "MAXie",
@@ -266,3 +267,11 @@ setInterval(() => {
 
 render();
 speak(`Hey! I'm ${state.name}.`);
+
+if ("serviceWorker" in navigator && !location.protocol.startsWith("file")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  });
+}
+
+document.body.classList.toggle("is-mobile-shell", isMobileShell);

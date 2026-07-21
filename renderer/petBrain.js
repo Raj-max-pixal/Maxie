@@ -31,6 +31,7 @@ class PetBrain {
     this.nextGiftDelay = this.randomBetween(12, 24) * 60000;
     this.lastProductivityAt = Date.now();
     this.lastAppName = "";
+    this.lastContextByCategory = {};
   }
 
   hydrate(appState) {
@@ -121,6 +122,20 @@ class PetBrain {
     this.lastAppName = app;
     const category = this.categoryForApp(app);
     this.updateMoodForCategory(category);
+    const freshContext = this.isFreshContext(category, 3 * 60000);
+    if (category === "music") return this.oneOf([
+      { animation: "dance", mood: "Music Mode", line: freshContext ? "Nice song! I am dancing with you." : "This beat is cute." },
+      { animation: "headphones", mood: "Music Mode", line: "Nice song. Headphones on." },
+      { animation: "listen", mood: "Music Mode", line: "I like this song vibe." },
+      { animation: "sing", mood: "Music Mode", line: "Tiny concert mode. La la la." },
+      { animation: "dance", mood: "Music Mode", line: "Dance time!" }
+    ]);
+    if (category === "whatsapp") return this.oneOf([
+      { animation: "message", mood: "Happy", line: freshContext ? "WhatsApp time. Reply nicely." : "Message time." },
+      { animation: "wave", mood: "Happy", line: "Tell them MAXie says hi." },
+      { animation: "surprised", mood: "Curious", line: "Ooh, WhatsApp ping?" },
+      { animation: "listen", mood: "Happy", line: "I will wait while you chat." }
+    ]);
     if (app.includes("notification") || app.includes("toast") || app.includes("alert")) return this.oneOf([
       { animation: "notification", mood: "Surprised", line: "A notification arrived!" },
       { animation: "surprised", mood: "Surprised", line: "Ooh, something popped up." },
@@ -132,7 +147,7 @@ class PetBrain {
       { animation: "happy", mood: "Happy", line: "Friend message energy." }
     ]);
     if (category === "coding") return this.oneOf([
-      { animation: "typing", mood: "Coding Mode", line: "Debugging again? Let's solve it." },
+      { animation: "typing", mood: "Coding Mode", line: freshContext ? "VS Code time. I am helping from the corner." : "Debugging again? Let's solve it." },
       { animation: "thinking", mood: "Coding Mode", line: "Thinking through the bug." },
       { animation: "idea", mood: "Coding Mode", line: "Got an idea." },
       { animation: "focused", mood: "Coding Mode", line: "Focus mode. We got this." },
@@ -148,15 +163,10 @@ class PetBrain {
       { animation: "happy", mood: "Watching Mode", line: "This video has good vibes." }
     ]);
     if (category === "browser") return { animation: "thinking", mood: "Curious", line: "What are we learning today?" };
-    if (category === "music") return this.oneOf([
-      { animation: "headphones", mood: "Music Mode", line: "Headphones on." },
-      { animation: "listen", mood: "Music Mode", line: "Feeling the music." },
-      { animation: "dance", mood: "Music Mode", line: "This sounds danceable." },
-      { animation: "sing", mood: "Music Mode", line: "Tiny concert mode." }
-    ]);
     if (category === "chat") return this.oneOf([
       { animation: "wave", mood: "Happy", line: "Tell them I said hi." },
-      { animation: "message", mood: "Happy", line: "Discord ping spotted." }
+      { animation: "message", mood: "Happy", line: "Chat time. I am listening politely." },
+      { animation: "surprised", mood: "Curious", line: "Message ping spotted." }
     ]);
     if (category === "gaming") return this.oneOf([
       { animation: "controller", mood: "Gaming Mode", line: "Controller ready." },
@@ -525,6 +535,7 @@ class PetBrain {
       music: "Music Mode",
       video: "Watching Mode",
       gaming: "Gaming Mode",
+      whatsapp: "Happy",
       chat: "Happy",
       creative: "Curious",
       terminal: "Coding Mode",
@@ -532,15 +543,17 @@ class PetBrain {
       browser: "Curious"
     };
     this.state.mood = moods[category] || this.state.mood;
-    if (category === "music" || category === "chat") this.state.fun = this.clamp(this.state.fun + 1.2);
+    if (category === "music" || category === "chat" || category === "whatsapp") this.state.fun = this.clamp(this.state.fun + 1.2);
     if (category === "coding" || category === "terminal") this.state.energy = this.clamp(this.state.energy - 0.4);
   }
 
   categoryForApp(app) {
+    if (app.includes("spotify") || app.includes("youtube music") || app.includes("music.youtube") || app.includes("vlc") || app.includes("now playing")) return "music";
+    if (app.includes("whatsapp")) return "whatsapp";
     if (app.includes("code") || app.includes("android studio") || app.includes("studio64") || app.includes("extension")) return "coding";
     if (app.includes("terminal") || app.includes("powershell") || app.includes("cmd") || app.includes("wt.exe") || app.includes("windows terminal")) return "terminal";
     if (app.includes("git") || app.includes("github") || app.includes("commit")) return "terminal";
-    if (app.includes("spotify") || app.includes("music") || app.includes("vlc")) return "music";
+    if (app.includes("music")) return "music";
     if (app.includes("youtube")) return "video";
     if (app.includes("discord") || app.includes("message") || app.includes("mail") || app.includes("whatsapp") || app.includes("telegram")) return "chat";
     if (app.includes("steam") || app.includes("game")) return "gaming";
@@ -548,6 +561,13 @@ class PetBrain {
     if (app.includes("obs")) return "recording";
     if (app.includes("photoshop") || app.includes("figma") || app.includes("blender")) return "creative";
     return "general";
+  }
+
+  isFreshContext(category, cooldownMs) {
+    const now = Date.now();
+    const last = Number(this.lastContextByCategory[category] || 0);
+    this.lastContextByCategory[category] = now;
+    return now - last > cooldownMs;
   }
 
   meme(memeLine, normalLine) {

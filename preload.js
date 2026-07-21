@@ -23,6 +23,7 @@ contextBridge.exposeInMainWorld("maxie", {
   system: {
     getSnapshot: () => ipcRenderer.invoke("system:get-snapshot"),
     getActiveApp: () => ipcRenderer.invoke("system:get-active-app"),
+    getMediaApp: () => ipcRenderer.invoke("system:get-media-app"),
     getStartup: () => ipcRenderer.invoke("system:get-startup"),
     setStartup: (enabled) => ipcRenderer.invoke("system:set-startup", enabled)
   },

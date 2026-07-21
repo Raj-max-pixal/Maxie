@@ -53,4 +53,34 @@ $rect = New-Object RECT
   });
 }
 
-module.exports = { getActiveApp };
+function getMediaApp() {
+  if (process.platform !== "win32") return Promise.resolve(null);
+
+  const script = `
+$media = Get-Process -ErrorAction SilentlyContinue |
+  Where-Object {
+    $_.ProcessName -match '^(Spotify|vlc|Music\\.UI|iTunes|AIMP|foobar2000|wmplayer|chrome|msedge|brave|firefox)$' -and
+    ($_.MainWindowTitle -match 'Spotify|YouTube Music|VLC|Music|Now Playing| - YouTube' -or $_.ProcessName -match '^(Spotify|vlc|Music\\.UI|iTunes|AIMP|foobar2000|wmplayer)$')
+  } |
+  Select-Object -First 1 ProcessName, MainWindowTitle
+if ($media) {
+  [pscustomobject]@{
+    name = $media.ProcessName
+    title = $media.MainWindowTitle
+  } | ConvertTo-Json -Compress
+}
+`;
+
+  return new Promise((resolve) => {
+    execFile("powershell.exe", ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script], { timeout: 2500 }, (error, stdout) => {
+      if (error || !stdout.trim()) return resolve(null);
+      try {
+        resolve(JSON.parse(stdout));
+      } catch {
+        resolve(null);
+      }
+    });
+  });
+}
+
+module.exports = { getActiveApp, getMediaApp };

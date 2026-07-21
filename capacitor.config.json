@@ -1,0 +1,14 @@
+{
+  "appId": "com.maxie.mobile",
+  "appName": "MAXie",
+  "webDir": "mobile/www",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#17181f",
+    "allowMixedContent": false,
+    "captureInput": true
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

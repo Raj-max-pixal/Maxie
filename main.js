@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { createTray } = require("./tray/trayController");
 const { createStore } = require("./storage/store");
-const { getActiveApp } = require("./utils/activeApp");
+const { getActiveApp, getMediaApp } = require("./utils/activeApp");
 const { getSystemSnapshot } = require("./utils/systemInfo");
 const { ensureStartup, ensureStartupEnabled, isStartupEnabled } = require("./utils/startup");
 const { createAiClient } = require("./ai/aiClient");
@@ -270,6 +270,7 @@ function setupIpc() {
 
   ipcMain.handle("system:get-snapshot", async () => getSystemSnapshot());
   ipcMain.handle("system:get-active-app", async () => getActiveApp());
+  ipcMain.handle("system:get-media-app", async () => getMediaApp());
   ipcMain.handle("system:set-startup", (_event, enabled) => {
     ensureStartup(enabled);
     return isStartupEnabled();

@@ -14,6 +14,8 @@ let appState;
 let currentAnimation = "idle";
 let lastActiveApp = "";
 let lastActiveInfo;
+let lastMediaApp = "";
+let lastMediaReactionAt = 0;
 let mouse = { x: 0, y: 0 };
 let clickThroughTimer;
 let windowBounds;
@@ -264,6 +266,22 @@ async function systemPulse() {
       }
     } catch {
       lastActiveInfo = null;
+    }
+  }
+
+  if (state.permissions.activeApp && window.maxie.system.getMediaApp) {
+    try {
+      const media = await window.maxie.system.getMediaApp();
+      const mediaKey = `${media?.name || ""} ${media?.title || ""}`.trim();
+      const now = Date.now();
+      if (mediaKey && (mediaKey !== lastMediaApp || now - lastMediaReactionAt > 4 * 60000)) {
+        lastMediaApp = mediaKey;
+        lastMediaReactionAt = now;
+        lastReactionAt = now;
+        playReactionSequence(sequenceForContext(mediaKey, brain.reactToApp(mediaKey)), { returnToPrevious: true });
+      }
+    } catch {
+      lastMediaApp = "";
     }
   }
 
@@ -1065,7 +1083,7 @@ function sequenceForReaction(reaction) {
 function sequenceForContext(activeKey, reaction) {
   const app = activeKey.toLowerCase();
   if (app.includes("code") || app.includes("android studio") || app.includes("studio64")) return [
-    { animation: "walk", line: app.includes("android") || app.includes("studio64") ? "Android Studio opened." : "VS Code opened.", duration: 800 },
+    { animation: "walk", line: app.includes("android") || app.includes("studio64") ? "Android Studio time." : "VS Code time.", duration: 800 },
     { animation: "sit", line: "Walking over to help.", duration: 650 },
     { animation: "laptop", line: "Opening tiny laptop.", duration: 1000 },
     { animation: "typing", line: "MAXie coding mode.", duration: 1500 },
@@ -1083,11 +1101,11 @@ function sequenceForContext(activeKey, reaction) {
     { animation: "typing", line: "Commit check energy.", duration: 1000 },
     { animation: "celebrate", line: "Ship it carefully.", duration: 900 }
   ];
-  if (app.includes("spotify") || app.includes("music") || app.includes("vlc")) return [
-    { animation: "surprised", line: "Music started.", duration: 650 },
+  if (app.includes("spotify") || app.includes("youtube music") || app.includes("music.youtube") || app.includes("music") || app.includes("vlc") || app.includes("now playing")) return [
+    { animation: "surprised", line: "Nice song!", duration: 650 },
     { animation: "headphones", line: "Headphones on.", duration: 1000 },
     { animation: "listen", line: "Feeling the beat.", duration: 1000 },
-    { animation: "dance", line: "Head bobbing mode.", duration: 1500 }
+    { animation: "dance", line: reaction.line || "Dancing with you.", duration: 1700 }
   ];
   if (app.includes("youtube")) return [
     { animation: "walk", line: "YouTube time.", duration: 700 },
@@ -1101,10 +1119,16 @@ function sequenceForContext(activeKey, reaction) {
     { animation: "thinking", line: "What are we learning today?", duration: 1100 },
     { animation: "idea", line: "I am curious too.", duration: 900 }
   ];
-  if (app.includes("discord") || app.includes("message")) return [
-    { animation: "surprised", line: "Discord notification?", duration: 700 },
+  if (app.includes("whatsapp")) return [
+    { animation: "surprised", line: "WhatsApp time.", duration: 700 },
+    { animation: "message", line: "Reading the message vibe.", duration: 1000 },
+    { animation: "wave", line: reaction.line || "Tell them MAXie says hi.", duration: 1000 },
+    { animation: "listen", line: "I will wait while you chat.", duration: 900 }
+  ];
+  if (app.includes("discord") || app.includes("message") || app.includes("telegram") || app.includes("mail")) return [
+    { animation: "surprised", line: "Message time.", duration: 700 },
     { animation: "message", line: "Reading the ping.", duration: 1000 },
-    { animation: "wave", line: "Hi hi!", duration: 900 },
+    { animation: "wave", line: reaction.line || "Hi hi!", duration: 900 },
     { animation: "listen", line: "Back to listening.", duration: 900 }
   ];
   if (app.includes("steam") || app.includes("game")) return [
