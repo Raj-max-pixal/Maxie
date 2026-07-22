@@ -1,734 +1,1435 @@
+<!-- ========================================================= -->
+<!--                        MAXie README                        -->
+<!--                      Part 1 - Hero                         -->
+<!-- ========================================================= -->
+
 <div align="center">
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-MAXie is a Windows-first Electron desktop companion. The pet is the app: a
-transparent, frameless, always-on-top desktop pet with an optional settings
-window.
-=======
-# <img src="assets/logo.png" width="55"> MAXie
->>>>>>> 8d143ed3c1ac91592832b223d3473c70c538b2c3
+<img src="assets/banner.png" alt="MAXie Banner" width="100%">
 
-### ✨ Your Tiny AI Friend That Lives On Your Desktop
+# 🐾 MAXie
 
-<img src="assets/maxie-banner.gif" width="850">
+### **An Intelligent AI Desktop Companion That Lives, Learns, and Grows With You.**
 
-### 🐾 Walk • 💻 Code • 🎵 Dance • 😴 Sleep • 🎮 Play • ❤️ Grow
-
----
+<p align="center">
+Making your desktop more productive, interactive, and alive with AI.
+</p>
 
 <p align="center">
 
-<a href="https://github.com/Raj-max-pixal/Maxie/releases/latest">
-<img src="https://img.shields.io/badge/⬇️_Download-Windows-2ea44f?style=for-the-badge">
-</a>
-
-<img src="https://img.shields.io/github/stars/Raj-max-pixal/Maxie?style=for-the-badge">
-
-<img src="https://img.shields.io/github/license/Raj-max-pixal/Maxie?style=for-the-badge">
-
-<img src="https://img.shields.io/badge/Beta-v1.0.0-orange?style=for-the-badge">
-
-<img src="https://img.shields.io/badge/Offline_AI-✓-blue?style=for-the-badge">
+<img src="https://img.shields.io/github/stars/Raj-max-pixal/maxie?style=for-the-badge">
+<img src="https://img.shields.io/github/forks/Raj-max-pixal/maxie?style=for-the-badge">
+<img src="https://img.shields.io/github/issues/Raj-max-pixal/maxie?style=for-the-badge">
+<img src="https://img.shields.io/github/license/Raj-max-pixal/maxie?style=for-the-badge">
 
 </p>
 
----
+<p align="center">
 
-## 🌎 Meet MAXie
+<img src="https://img.shields.io/badge/Platform-Windows-blue?style=flat-square">
+<img src="https://img.shields.io/badge/Electron-v31+-47848F?style=flat-square">
+<img src="https://img.shields.io/badge/Node.js-v20+-339933?style=flat-square">
+<img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square">
+<img src="https://img.shields.io/badge/License-MIT-success?style=flat-square">
+<img src="https://img.shields.io/badge/Status-Beta-orange?style=flat-square">
 
-MAXie isn't just another desktop pet.
+</p>
 
-It's a tiny AI companion that **lives with you** while you code, study, watch YouTube, play games, or simply relax.
+<p align="center">
 
-It watches your workflow (without reading your private text), reacts with adorable animations, learns your habits locally, remembers your adventures, and makes your desktop feel alive.
+<a href="#-features">Features</a> •
+<a href="#-installation">Installation</a> •
+<a href="#-roadmap">Roadmap</a> •
+<a href="#-contributing">Contributing</a> •
+<a href="#-license">License</a>
 
-Think of it as...
-
-💙 **A Tamagotchi + Desktop Pet + Local AI Assistant**
-
----
-
-# 🎬 What Does MAXie Do?
-
-<table>
-
-<tr>
-
-<td align="center">
-
-🐾<br>
-Walks Around
-
-</td>
-
-<td align="center">
-
-💻<br>
-Codes With You
-
-</td>
-
-<td align="center">
-
-🎵<br>
-Listens To Music
-
-</td>
-
-<td align="center">
-
-🎮<br>
-Games With You
-
-</td>
-
-</tr>
-
-<tr>
-
-<td align="center">
-
-😴<br>
-Sleeps At Night
-
-</td>
-
-<td align="center">
-
-🍔<br>
-Gets Hungry
-
-</td>
-
-<td align="center">
-
-🎁<br>
-Brings Gifts
-
-</td>
-
-<td align="center">
-
-🦋<br>
-Chases Butterflies
-
-</td>
-
-</tr>
-
-<tr>
-
-<td align="center">
-
-😂<br>
-Funny Reactions
-
-</td>
-
-<td align="center">
-
-❤️<br>
-Friendship XP
-
-</td>
-
-<td align="center">
-
-🧠<br>
-AI Memory
-
-</td>
-
-<td align="center">
-
-✨<br>
-Cute Adventures
-
-</td>
-
-</tr>
-
-</table>
-
----
-
-# 📥 Download
-
-### Windows 10 / Windows 11 (64-bit)
-
-### 👉 https://github.com/Raj-max-pixal/Maxie/releases/latest
-
----
-
-# 🌟 Why MAXie?
-
-Unlike traditional desktop pets...
-
-MAXie actually reacts to your computer.
-
-```text
-🎧 Spotify Opens
-        ↓
-MAXie puts on headphones
-
-💻 VS Code Opens
-        ↓
-MAXie opens a tiny laptop
-
-📺 YouTube Starts
-        ↓
-MAXie grabs popcorn
-
-🎮 Steam Launches
-        ↓
-MAXie grabs a controller
-
-🌙 Late Night
-        ↓
-MAXie yawns and sleeps
-
-🎁 Random Adventure
-        ↓
-Returns with a surprise gift
-```
-
----
-
-> 💙 Every animation, reaction, and adventure is designed to make your desktop feel alive.
----
-
-# ✨ Features
-
-## 🐾 A Desktop Pet That Actually Feels Alive
-
-MAXie isn't just an animated sticker.
-
-It reacts, explores, sleeps, plays, learns, and grows while staying on your desktop.
-
-<table>
-<tr>
-<td>🚶 Smooth Walking</td>
-<td>🧗 Wall Climbing</td>
-<td>🏃 Edge Walking</td>
-<td>🪂 Gravity Physics</td>
-</tr>
-
-<tr>
-<td>😴 Sleeping</td>
-<td>🌙 Night Routine</td>
-<td>😊 Mood Engine</td>
-<td>❤️ Emotion System</td>
-</tr>
-
-<tr>
-<td>😂 Funny Moments</td>
-<td>🦋 Butterfly Chase</td>
-<td>🎁 Surprise Gifts</td>
-<td>🌈 Rare Events</td>
-</tr>
-
-<tr>
-<td>☕ Coffee Break</td>
-<td>🍔 Eating</td>
-<td>🥤 Drinking</td>
-<td>💃 Dancing</td>
-</tr>
-
-<tr>
-<td>👋 Waving</td>
-<td>🎤 Singing</td>
-<td>🤔 Thinking</td>
-<td>💤 Yawning</td>
-</tr>
-</table>
-
----
-
-# 💻 Works With Your Favorite Apps
-
-MAXie understands what you're doing and reacts automatically.
-
-| App | MAXie's Reaction |
-|------|------------------|
-| 💻 VS Code | Opens a tiny laptop and starts coding |
-| 🤖 Android Studio | Focuses and types |
-| 🖥 Terminal | Enters command mode |
-| 🎵 Spotify | Wears headphones and dances |
-| 📺 YouTube | Eats popcorn while watching |
-| 💬 Discord | Reads messages and waves |
-| 🎮 Steam | Picks up a controller |
-| 🎨 Photoshop | Paints and gets creative |
-| 🎨 Figma | Starts designing |
-| 🎥 OBS Studio | Gets ready for streaming |
-| 🌐 Chrome / Edge / Brave | Curious browsing reactions |
-
----
-
-# 🧠 AI Brain
-
-MAXie isn't just animated.
-
-It can think.
-
-### Supported AI
-
-- 🦙 Ollama
-- 🤖 Llama
-- 💎 Gemma
-- ⚡ Phi
-- 🌟 Qwen
-- 🧠 Gemini
-- 🔗 OpenAI-Compatible APIs
-
-### AI Features
-
-✅ Offline First
-
-✅ Long-term Memory
-
-✅ Conversation Memory
-
-✅ Habit Learning
-
-✅ Daily Routine Learning
-
-✅ Mood Engine
-
-✅ Personality Engine
-
-✅ Smart Suggestions
-
-✅ Productivity Reminders
-
----
-
-# ❤️ Friendship System
-
-The more time you spend with MAXie...
-
-...the closer you become.
-
-```text
-🙂 Stranger
-      ↓
-😊 Friend
-      ↓
-😄 Best Friend
-      ↓
-💙 Companion
-      ↓
-👑 Legendary Friend
-```
-
-Unlock:
-
-🎁 Gifts
-
-🎉 Celebrations
-
-🎭 New reactions
-
-✨ Rare animations
-
-🏆 Achievements
-
----
-
-# 🎒 Inventory System
-
-Collect and unlock items while using your computer.
-
-🍔 Food
-
-🧸 Toys
-
-👒 Hats
-
-🎈 Balloons
-
-📚 Books
-
-🎸 Guitar
-
-📱 Phone
-
-🎮 Game Controller
-
-🪀 Yo-Yo
-
-⚽ Football
-
-☕ Coffee
-
-More items will be added over time.
-
----
-
-# 🌍 Living Desktop World
-
-Your desktop becomes MAXie's playground.
-
-🌸 Butterflies
-
-🐦 Birds
-
-☕ Coffee Cups
-
-🎁 Gift Boxes
-
-🎈 Floating Balloons
-
-⚽ Rolling Footballs
-
-🌈 Rainbows
-
-👽 UFO Visits
-
-🐉 Dragons
-
-☄️ Meteors
-
-🎆 Fireworks
-
-Every day feels a little different.
-
----
-
-# 📈 Growth System
-
-MAXie grows together with you.
-
-🏅 XP
-
-❤️ Friendship
-
-🍔 Hunger
-
-💧 Thirst
-
-😴 Energy
-
-🎮 Fun
-
-🧠 Curiosity
-
-📖 Daily Stories
-
-🏠 Home Decorations
-
-As you spend more time together...
-
-MAXie slowly evolves.
-
----
-
-# 🎨 Personalize Your MAXie
-
-Make MAXie truly yours.
-
-✨ Upload Your Own Character
-
-🎨 Custom Colors
-
-🎭 Different Personalities
-
-⚡ Movement Settings
-
-🌍 World Settings
-
-🧠 AI Provider
-
-🔊 Voice Settings
-
-🖼 Appearance
-
-⚙️ Behavior
-
-Everything is stored locally on your PC.
-
----
-
-# 🔒 Privacy First
-
-Your data belongs to **you**.
-
-MAXie was designed with a local-first philosophy.
-
-✅ No keylogging
-
-✅ No screen recording
-
-✅ No cloud account required
-
-✅ Offline AI supported
-
-✅ Local memory storage
-
-✅ User controls every AI provider
----
-
-# 📸 Screenshots
-
-> Replace these placeholders with real screenshots from MAXie.
-
-<div align="center">
-
-| Home | Coding | Music |
-|------|---------|--------|
-| <img src="assets/screenshots/home.png" width="300"> | <img src="assets/screenshots/coding.png" width="300"> | <img src="assets/screenshots/music.png" width="300"> |
-
-| YouTube | Sleeping | Adventures |
-|------|---------|--------|
-| <img src="assets/screenshots/youtube.png" width="300"> | <img src="assets/screenshots/sleep.png" width="300"> | <img src="assets/screenshots/adventure.png" width="300"> |
+</p>
 
 </div>
 
 ---
 
-# ⚡ Installation
+# 🌟 Welcome to MAXie
 
-## Download
+MAXie isn't just another desktop pet.
 
-Download the latest version here:
+It's an intelligent desktop companion designed to make your computer feel alive.
 
-👉 https://github.com/Raj-max-pixal/Maxie/releases/latest
+Whether you're coding late at night, studying for exams, listening to music, gaming with friends, or simply browsing the web, MAXie stays by your side—reacting, learning, remembering, and growing with every interaction.
 
----
+Unlike traditional desktop pets that simply play animations, MAXie understands your workflow, adapts to your routine, and becomes more personalized over time.
 
-## Requirements
-
-- Windows 10
-- Windows 11
-- 64-bit Operating System
+Think of it as your digital companion that blends artificial intelligence, productivity, personality, and fun into one seamless desktop experience.
 
 ---
 
-## Run From Source
+# 🎯 Vision
+
+Our vision is simple:
+
+> **Create the world's most intelligent and lovable desktop AI companion.**
+
+MAXie is built to bridge the gap between productivity software and emotional interaction.
+
+Instead of opening another chatbot in your browser, imagine having an AI friend living directly on your desktop—always available, always learning, and always evolving.
+
+---
+
+# 💡 Why MAXie?
+
+Most desktop pets were created for entertainment.
+
+MAXie was created for **companionship, productivity, and intelligence.**
+
+Traditional desktop pets:
+
+- Only play animations
+- No memory
+- No personality
+- No learning
+- No productivity features
+- No AI interaction
+
+MAXie changes everything.
+
+✔ Understands your activities
+
+✔ Learns your habits
+
+✔ Remembers conversations
+
+✔ Celebrates achievements
+
+✔ Motivates your workflow
+
+✔ Reacts to applications
+
+✔ Grows with friendship
+
+✔ Supports local AI
+
+✔ Works offline
+
+✔ Designed with privacy first
+
+---
+
+# ✨ What Makes MAXie Different?
+
+| Traditional Desktop Pets | MAXie |
+|---------------------------|--------|
+| Cute animations | ✅ Intelligent AI Companion |
+| Random movements | ✅ Context-aware behavior |
+| No memory | ✅ Long-term memory |
+| No emotions | ✅ Mood engine |
+| Static personality | ✅ Adaptive personality |
+| Entertainment only | ✅ Productivity companion |
+| Cloud dependent | ✅ Offline AI support |
+| No desktop awareness | ✅ Detects apps & activities |
+| No learning | ✅ Learns routines |
+| No friendship system | ✅ XP & relationship system |
+
+---
+
+# 🚀 Key Highlights
+
+## 🧠 AI Powered
+
+MAXie uses intelligent behavior systems to create natural interactions.
+
+- Long-term memory
+- Personality engine
+- Context awareness
+- Mood simulation
+- Habit learning
+- Smart conversations
+
+---
+
+## 💻 Desktop Awareness
+
+MAXie knows what you're doing.
+
+Whether you're coding, gaming, studying, watching YouTube, or listening to Spotify, MAXie reacts dynamically based on your activity.
+
+Supported environments include:
+
+- Visual Studio Code
+- Android Studio
+- Terminal
+- Chrome
+- Edge
+- Firefox
+- Spotify
+- Discord
+- Steam
+- OBS Studio
+- GitHub
+- YouTube
+
+---
+
+## 🎮 Interactive Experience
+
+MAXie isn't just something you watch.
+
+You interact with it every day.
+
+- 🍔 Feed MAXie
+- 😴 Put MAXie to sleep
+- 💃 Dance together
+- 🎵 Listen to music
+- 🎁 Receive surprise gifts
+- 📸 Photo Mode
+- 🎲 Mini Games
+- 🏆 Unlock achievements
+- ❤️ Increase friendship level
+
+---
+
+## ⚡ Productivity Companion
+
+MAXie quietly helps improve your workflow.
+
+Features include:
+
+- Smart reminders
+- Break notifications
+- Focus mode
+- Coding companion
+- Study partner
+- Daily motivation
+- Task encouragement
+- Session tracking
+
+---
+
+## 🔒 Privacy First
+
+Privacy isn't an afterthought.
+
+It's a core principle.
+
+MAXie keeps your data on your device whenever possible.
+
+- Local memory storage
+- Offline AI support
+- No hidden tracking
+- No unnecessary cloud dependency
+- User-controlled data
+
+---
+
+# 🎨 Core Features
+
+## 🤖 Artificial Intelligence
+
+- Adaptive Personality
+- Long-Term Memory
+- Context Awareness
+- Mood Engine
+- Emotion Simulation
+- Conversation History
+- Friendship XP
+- Habit Learning
+- Routine Detection
+- Smart Greetings
+- AI Responses
+- Offline Intelligence
+
+---
+
+## 💻 Desktop Features
+
+- Always-On-Top Companion
+- Transparent Window
+- Click-Through Mode
+- Drag Anywhere
+- System Tray Integration
+- Auto Startup
+- Lightweight Performance
+- Smooth Animations
+- Custom Themes *(Planned)*
+- Adjustable Pet Size
+- Adjustable Speed
+
+---
+
+## 🎭 Expressions
+
+MAXie can express dozens of emotions.
+
+- 😊 Happy
+- 😴 Sleepy
+- 😂 Laughing
+- 😭 Crying
+- 😡 Angry
+- 🤔 Thinking
+- 😲 Surprised
+- 👋 Waving
+- 💻 Coding
+- 🎮 Gaming
+- 🎵 Singing
+- 💃 Dancing
+- 🍔 Eating
+- 🥤 Drinking
+- 🎉 Celebrating
+- ❤️ Excited
+- 📚 Studying
+- 😌 Relaxing
+
+---
+
+## 📈 Current Project Status
+
+| Feature | Status |
+|----------|--------|
+| Desktop Pet | ✅ Complete |
+| Walking Animation | ✅ Complete |
+| AI Personality | ✅ Complete |
+| Memory System | ✅ Complete |
+| Mood Engine | ✅ Complete |
+| Desktop Awareness | ✅ Complete |
+| Productivity Features | ✅ Complete |
+| Offline AI | ✅ Complete |
+| Local LLM Support | ✅ Complete |
+| Voice Chat | 🚧 In Progress |
+| Plugin System | 📅 Planned |
+| Mobile Companion | 📅 Planned |
+| Cloud Sync | 📅 Planned |
+
+---
+
+# 📸 Preview
+
+> 🚧 Screenshots and GIF demonstrations will be added soon.
+
+Expected showcase:
+
+- Desktop Walking
+- AI Conversation
+- Coding Companion
+- Gaming Companion
+- Music Reactions
+- Mood Changes
+- Friendship System
+- Productivity Notifications
+
+---
+
+> 💙 **MAXie is more than software. It's an evolving AI companion designed to make every desktop feel a little more alive.**
+<!-- ========================================================= -->
+<!--                 MAXie README - Part 2                      -->
+<!--        Architecture • Installation • Development          -->
+<!-- ========================================================= -->
+
+# 📸 Showcase
+
+> **A glimpse into MAXie's world.**
+
+| Desktop Companion | AI Chat | Coding Mode |
+|------------------|----------|-------------|
+| ![](assets/screenshots/home.png) | ![](assets/screenshots/chat.png) | ![](assets/screenshots/coding.png) |
+
+| Gaming Mode | Music Mode | Sleeping |
+|-------------|------------|----------|
+| ![](assets/screenshots/gaming.png) | ![](assets/screenshots/music.png) | ![](assets/screenshots/sleep.png) |
+
+---
+
+## 🎬 Live Demonstration
+
+Coming Soon
+
+```
+🎥 Walking Animation
+🎥 AI Conversations
+🎥 Coding Assistant
+🎥 Gaming Companion
+🎥 Music Detection
+🎥 Productivity Reminders
+🎥 Friendship System
+🎥 Mood Engine
+```
+
+---
+
+# 🏗 System Architecture
+
+```
+                           ┌─────────────────────────┐
+                           │        User             │
+                           └────────────┬────────────┘
+                                        │
+                         Mouse / Keyboard / Voice
+                                        │
+                                        ▼
+                   ┌───────────────────────────────┐
+                   │        Electron Desktop       │
+                   │        Application Layer      │
+                   └────────────┬──────────────────┘
+                                │
+        ┌───────────────────────┼─────────────────────────┐
+        │                       │                         │
+        ▼                       ▼                         ▼
+
+ Animation Engine       AI Personality Engine      Desktop Monitor
+
+        │                       │                         │
+        ▼                       ▼                         ▼
+
+ Mood System          Memory Manager         Activity Detection
+
+        │                       │                         │
+        └───────────────┬───────┴───────────────┬────────┘
+                        ▼
+                Local Data Storage
+
+                        │
+                        ▼
+
+             Ollama / Local AI Models
+```
+
+---
+
+# ⚙ Technology Stack
+
+## 🖥 Desktop Framework
+
+- Electron
+- Chromium
+- Node.js
+
+---
+
+## 💻 Frontend
+
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+
+---
+
+## 🧠 Artificial Intelligence
+
+- Ollama
+- Local LLMs
+- Prompt Engineering
+- Personality Engine
+- Memory Engine
+- Context Processing
+
+---
+
+## 💾 Storage
+
+- JSON Database
+- Local Configuration
+- Local User Memory
+- Settings Manager
+
+---
+
+## 🎨 User Interface
+
+- CSS Animations
+- Responsive Layout
+- Transparent Windows
+- Custom Components
+
+---
+
+## 🔧 Development Tools
+
+- Visual Studio Code
+- Git
+- GitHub
+- npm
+- Electron Builder
+
+---
+
+# 📂 Project Structure
+
+```
+MAXie
+│
+├── assets/
+│   ├── gifs/
+│   ├── icons/
+│   ├── sounds/
+│   ├── screenshots/
+│   └── animations/
+│
+├── src/
+│   ├── ai/
+│   ├── animations/
+│   ├── desktop/
+│   ├── memory/
+│   ├── personality/
+│   ├── reactions/
+│   ├── settings/
+│   └── utils/
+│
+├── app.js
+├── main.js
+├── preload.js
+├── index.html
+├── styles.css
+├── package.json
+├── LICENSE
+└── README.md
+```
+
+---
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+Before installing MAXie, make sure you have:
+
+- Node.js 20+
+- npm
+- Git
+- Windows 10/11
+
+---
+
+## Clone Repository
 
 ```bash
-git clone https://github.com/Raj-max-pixal/Maxie.git
+git clone https://github.com/Raj-max-pixal/MAXie.git
+```
 
-cd Maxie
+---
 
+## Navigate
+
+```bash
+cd MAXie
+```
+
+---
+
+## Install Dependencies
+
+```bash
 npm install
+```
 
+---
+
+## Start Development
+
+```bash
 npm start
 ```
 
 ---
 
-## Build Installer
+## Build Application
 
 ```bash
-npm run release:check
+npm run build
+```
 
+---
+
+## Package for Windows
+
+```bash
 npm run dist
 ```
 
-The installer will be generated inside:
+---
 
-```text
-dist/
+# 📦 Releases
+
+Download the latest stable version from the **GitHub Releases** page.
+
+Available formats:
+
+- Windows Installer (.exe)
+- Portable Version
+- ZIP Package
+
+---
+
+# ⚡ Development Workflow
+
+```
+Clone Repository
+        │
+        ▼
+
+Install Dependencies
+        │
+        ▼
+
+Run Development Mode
+        │
+        ▼
+
+Modify Source Code
+        │
+        ▼
+
+Test Features
+        │
+        ▼
+
+Build Release
+        │
+        ▼
+
+Publish Release
 ```
 
 ---
 
-<<<<<<< HEAD
-MAXie is local-first. Active app awareness uses app names/window titles for
-context; it does not capture typed text. See `PRIVACY.md` before publishing.
-=======
-MAXie is a free-budget, local-first prototype for a living AI desktop companion.
+# 🔌 Core Modules
 
-## Run
+## 🤖 AI Engine
 
-Open `index.html` in a browser. No install step is required.
+Responsible for:
 
-## Current prototype
+- Conversations
+- Smart Responses
+- Mood Decisions
+- Habit Learning
+- Personality
 
-- Upload any image and use it as MAXie's companion avatar.
-- Animated desktop pet with speech reactions.
-- Personality, context, mood, needs, XP, and growth stage.
-- Local memory/task list stored in browser `localStorage`.
-- Quick coding, study, focus, and creative helper modes.
+---
 
-## Next fastest milestones
+## 🧠 Memory Engine
 
-1. Package as a desktop app with Tauri or Electron.
-2. Add optional Ollama chat integration for local AI replies.
-3. Add SQLite storage once the desktop shell exists.
-4. Add real active-window detection behind a clear permission toggle.
->>>>>>> 0e604ca4c5d19770d0e86d7fcb7effbe29738ea8
-=======
-# 🏗 Project Structure
+Stores:
 
-```text
-Maxie
-│
-├── ai/
-├── animations/
-├── assets/
-├── plugins/
-├── renderer/
-├── settings/
-├── storage/
-├── tray/
-├── utils/
-│
-├── main.js
-├── preload.js
-├── package.json
-├── README.md
-└── LICENSE
+- User interactions
+- Friendship Level
+- XP
+- Preferences
+- Daily routines
+- Activity history
+
+---
+
+## 🎭 Animation Engine
+
+Handles:
+
+- Walking
+- Sleeping
+- Dancing
+- Idle
+- Celebrations
+- Smooth transitions
+- Physics-based movement
+
+---
+
+## 🖥 Desktop Monitor
+
+Monitors:
+
+- Active Applications
+- Browser Usage
+- Coding Sessions
+- Gaming Sessions
+- Music Playback
+- Idle Time
+
+---
+
+## ⚙ Settings Manager
+
+Controls:
+
+- Startup
+- Transparency
+- Speed
+- Companion Size
+- Sound
+- Notifications
+- AI Settings
+
+---
+
+# 🖥 Supported Environment
+
+| Component | Support |
+|-----------|---------|
+| Windows 10 | ✅ |
+| Windows 11 | ✅ |
+| Linux | 🚧 Planned |
+| macOS | 🚧 Planned |
+
+---
+
+# 📈 Performance
+
+MAXie is designed to be lightweight.
+
+Typical resource usage:
+
+| Resource | Usage |
+|-----------|------:|
+| RAM | ~80–150 MB |
+| CPU (Idle) | <2% |
+| Storage | <150 MB |
+| Startup Time | ~3–5 sec |
+
+---
+
+# 🛠 Configuration
+
+Future configuration options include:
+
+```json
+{
+  "startup": true,
+  "theme": "system",
+  "petSize": "medium",
+  "speed": "normal",
+  "sound": true,
+  "voice": false,
+  "notifications": true,
+  "offlineAI": true,
+  "friendship": true
+}
 ```
 
 ---
 
-# 🗺 Roadmap
+# 🧪 Testing Checklist
 
-## ✅ Version 1.0
-
-- Desktop Pet
-- AI Chat
-- Offline Memory
-- Desktop Awareness
-- Music Reactions
-- Coding Reactions
-- World Events
-- Adventures
-- Friendship System
-- Inventory
-- Demo Mode
+- ✔ Desktop Launch
+- ✔ Window Dragging
+- ✔ Animation Engine
+- ✔ Memory Persistence
+- ✔ Mood Updates
+- ✔ Desktop Awareness
+- ✔ Startup Launch
+- ✔ System Tray
+- ✔ Local Storage
+- ✔ Offline AI
 
 ---
 
-## 🚀 Version 1.5
+# 📚 Documentation
 
-- Better Animations
-- Better AI
-- More Toys
-- More Adventures
-- Better Personality
-- Sound Effects
-- Improved Performance
-- New Themes
+Additional documentation (coming soon):
 
----
-
-## 🌍 Version 2.0
-
-- AI Pet Creator
-- Plugin SDK
-- Better Desktop World
-- More Pet Species
-- Community Themes
-- Better AI Conversations
+- API Reference
+- Plugin Development Guide
+- Theme Development Guide
+- AI Prompt Design
+- Memory System Architecture
+- Contribution Guide
 
 ---
 
-## ⭐ Future Ideas
+> **MAXie is built with a modular architecture, making it easy to maintain, extend, and evolve as new AI capabilities are introduced.**
+>
+> <!-- ========================================================= -->
+<!--                 MAXie README - Part 3                      -->
+<!--      Intelligence • Memory • Privacy • Roadmap            -->
+<!-- ========================================================= -->
 
-- Mobile Companion App
+# 🧠 Inside MAXie's Intelligence
 
+MAXie is not powered by a single chatbot.
+
+Instead, it combines multiple intelligent systems that work together to create an experience that feels natural, personal, and continuously evolving.
+
+```
+                    ┌────────────────────────┐
+                    │     User Interaction   │
+                    └───────────┬────────────┘
+                                │
+                                ▼
+                 Context Understanding Engine
+                                │
+        ┌──────────────┬────────┴────────┬─────────────┐
+        ▼              ▼                 ▼             ▼
+
+ Mood Engine     Memory Engine     Desktop AI     Personality
+
+        │              │                 │             │
+        └──────────────┴─────────┬───────┴─────────────┘
+                                 ▼
+                         Decision Engine
+                                 │
+                                 ▼
+                        MAXie Response System
+```
+
+---
+
+# ❤️ Personality Engine
+
+Every MAXie interaction passes through the Personality Engine.
+
+Instead of replying with fixed responses, MAXie evaluates multiple factors before deciding how to react.
+
+Decision inputs include:
+
+- Current mood
+- Friendship level
+- Time of day
+- Active application
+- User habits
+- Previous conversations
+- Productivity state
+- Recent achievements
+- Gaming activity
+- Music playback
+
+This allows MAXie to behave more like a companion than a traditional assistant.
+
+---
+
+# 😊 Mood Engine
+
+MAXie's emotions evolve throughout the day based on interaction and activity.
+
+Current emotional states include:
+
+| Mood | Trigger |
+|-------|----------|
+| 😊 Happy | User interaction |
+| 😴 Sleepy | Late night / inactivity |
+| 🤔 Thinking | AI processing |
+| 🎉 Excited | Achievement unlocked |
+| 💻 Focused | Coding detected |
+| 📚 Study Mode | Educational apps |
+| 🎮 Competitive | Gaming session |
+| 🎵 Relaxed | Music playback |
+| ❤️ Friendly | High friendship level |
+| 😢 Lonely | Long inactivity |
+
+Future versions will introduce more dynamic emotional transitions and personality growth.
+
+---
+
+# 🧠 Long-Term Memory System
+
+MAXie remembers meaningful interactions while respecting user privacy.
+
+Examples include:
+
+- Favorite applications
+- Daily routines
+- Conversation history
+- Productivity habits
+- Study schedules
+- Gaming preferences
+- Music preferences
+- Friendship milestones
+- Birthday reminders
+- Frequently used actions
+
+Rather than storing everything, MAXie prioritizes information that improves future interactions.
+
+---
+
+# ⭐ Friendship System
+
+The more time you spend with MAXie, the stronger your friendship becomes.
+
+### Friendship Activities
+
+- Daily conversations
+- Coding sessions
+- Study sessions
+- Playing games
+- Feeding MAXie
+- Completing achievements
+- Consistent interaction
+
+Friendship unlocks:
+
+- New animations
+- Hidden reactions
+- Special greetings
+- Rare gifts
+- Exclusive celebrations
+- Personalized conversations
+
+---
+
+# 🏆 Achievement System
+
+MAXie celebrates your progress with unlockable achievements.
+
+Examples include:
+
+| Achievement | Requirement |
+|-------------|-------------|
+| 👋 First Hello | Meet MAXie |
+| 💻 Coding Streak | Code for 5 hours |
+| 📚 Study Master | Study consistently |
+| 🎮 Gamer | Complete gaming session |
+| 🎵 Music Lover | Listen to music daily |
+| ❤️ Best Friend | Reach maximum friendship |
+| 🌅 Early Bird | Morning productivity |
+| 🌙 Night Owl | Late-night coding |
+
+Additional achievements will be introduced over time.
+
+---
+
+# 🖥 Desktop Awareness
+
+MAXie continuously adapts to your workflow.
+
+It can recognize activities such as:
+
+### Development
+
+- Visual Studio Code
+- Android Studio
+- IntelliJ IDEA
+- Cursor
+- Terminal
+
+### Entertainment
+
+- Steam
+- Epic Games
+- Spotify
+- YouTube
+- Netflix
+
+### Communication
+
+- Discord
+- Microsoft Teams
+- Slack
+
+### Productivity
+
+- Microsoft Office
+- Notion
+- Browser-based work
+- Documentation
+
+Desktop awareness enables context-aware reactions without interrupting your workflow.
+
+---
+
+# ⚡ Productivity Companion
+
+MAXie is designed to encourage healthy work habits.
+
+Features include:
+
+- Break reminders
+- Hydration reminders
+- Coding motivation
+- Daily greetings
+- Session tracking
+- Study encouragement
+- Focus mode
+- Idle detection
+- Gentle productivity nudges
+
+The goal is to assist—not distract.
+
+---
+
+# 🔒 Privacy First
+
+Privacy is a core design principle.
+
+MAXie is built to minimize unnecessary data collection.
+
+## What MAXie DOES
+
+- Stores preferences locally
+- Keeps conversation history on your device
+- Uses local AI when available
+- Allows complete user control over stored data
+
+## What MAXie DOES NOT
+
+- Sell user data
+- Track browsing history for advertising
+- Upload personal files without permission
+- Collect unnecessary analytics
+- Require cloud services for basic functionality
+
+Your desktop remains your personal space.
+
+---
+
+# 🛡 Security
+
+Security is integrated into MAXie's architecture.
+
+### Principles
+
+- Local-first design
+- Permission-based features
+- User-controlled settings
+- Minimal external communication
+- Secure configuration storage
+- Open-source transparency
+
+Future security enhancements include:
+
+- Encrypted local memory
+- Optional password protection
+- Secure plugin sandbox
+- AI permission manager
+
+---
+
+# 🌍 Accessibility
+
+MAXie aims to be inclusive.
+
+Planned accessibility improvements include:
+
+- Keyboard navigation
+- Screen reader support
+- Adjustable animations
+- Reduced motion mode
+- Color accessibility improvements
+- High contrast themes
+- Font scaling
+- Voice interaction
+
+---
+
+# 🔌 Plugin System (Planned)
+
+Future versions will support community-developed plugins.
+
+Possible plugin categories:
+
+- Weather
+- Calendar
+- Email
+- AI Models
+- Games
+- Smart Home
+- Notes
+- Music
+- Automation
+- Custom Commands
+
+A plugin SDK will allow developers to extend MAXie without modifying the core application.
+
+---
+
+# 🌐 Localization
+
+Planned language support:
+
+- English
+- Tamil
+- Hindi
+- Japanese
+- Korean
+- Spanish
+- French
+- German
+- Portuguese
+
+Community translations will also be welcomed.
+
+---
+
+# 🗺 Development Roadmap
+
+## Version 1.x
+
+- ✅ Desktop Companion
+- ✅ Personality Engine
+- ✅ Mood System
+- ✅ Friendship XP
+- ✅ Desktop Awareness
+- ✅ Offline AI
+- ✅ Productivity Features
+
+---
+
+## Version 2.x
+
+- Voice Conversations
+- Plugin Marketplace
+- Theme Engine
+- Multi-language Support
+- Advanced Memory
+- Calendar Integration
+- Smart Widgets
+- AI Vision (Experimental)
+
+---
+
+## Version 3.x
+
+- Cross-platform Support
+- Mobile Companion
 - Cloud Sync (Optional)
-
-- Multiplayer Pets
-
-- Workshop
-
-- Custom Animation Packs
-
-- Seasonal Events
+- Collaborative AI Agents
+- Wearable Integration
+- Developer SDK
+- Community Marketplace
 
 ---
+
+# 🚀 Future Vision
+
+MAXie is not intended to remain a desktop pet.
+
+The long-term vision is to evolve MAXie into a fully featured AI companion platform capable of understanding your workflow, adapting to your habits, and assisting across productivity, learning, creativity, and entertainment.
+
+Future capabilities may include:
+
+- Personalized AI assistants
+- Multi-agent collaboration
+- Intelligent task automation
+- Voice-first interaction
+- Cross-device continuity
+- AI-powered workspace recommendations
+- Smart workflow optimization
+
+MAXie is being built with scalability in mind, ensuring that today's companion can become tomorrow's intelligent desktop ecosystem.
+
+---
+
+# 📊 Project Maturity
+
+| Category | Status |
+|----------|---------|
+| Desktop Companion | ✅ Stable |
+| AI Personality | ✅ Stable |
+| Mood Engine | ✅ Stable |
+| Memory System | ✅ Stable |
+| Desktop Awareness | ✅ Stable |
+| Productivity Features | ✅ Stable |
+| Voice Assistant | 🚧 In Development |
+| Plugin SDK | 📅 Planned |
+| Cross-Platform | 📅 Planned |
+| Mobile Integration | 📅 Planned |
+
+---
+
+> **MAXie is more than a desktop application—it is an evolving AI ecosystem designed to make technology feel more personal, intelligent, and human while keeping users in control of their data and experience.**
+>
+> <!-- ========================================================= -->
+<!--                 MAXie README - Part 4                      -->
+<!--        Community • Contributing • Support                 -->
+<!-- ========================================================= -->
 
 # 🤝 Contributing
 
-Contributions are welcome!
+Thank you for your interest in contributing to **MAXie**.
 
-You can help by:
+Whether you're fixing a bug, improving documentation, designing animations, optimizing performance, or proposing new AI features, every contribution helps make MAXie better.
 
-- 🐞 Reporting bugs
-- ✨ Suggesting features
-- 🎨 Improving artwork
-- 💻 Improving code
+---
+
+## 🌱 Ways to Contribute
+
+You can contribute by:
+
+- 🐛 Reporting bugs
+- ✨ Suggesting new features
 - 📖 Improving documentation
+- 🎨 Enhancing UI/UX
+- ⚡ Optimizing performance
+- 🧠 Improving AI behavior
 - 🌍 Translating MAXie
-
-Read **CONTRIBUTING.md** before opening a Pull Request.
-
----
-
-# 🐛 Found a Bug?
-
-Open a GitHub Issue.
-
-Please include:
-
-- Windows Version
-- MAXie Version
-- Steps to Reproduce
-- Screenshots (if possible)
+- 🧪 Testing beta releases
+- 💻 Writing code
+- ❤️ Helping other community members
 
 ---
 
-# 🔒 Privacy
+## 🚀 Development Workflow
 
-MAXie is designed with privacy first.
-
-✔ No keylogging
-
-✔ No screen recording
-
-✔ No hidden analytics
-
-✔ Local-first storage
-
-✔ Offline AI supported
-
-Read **PRIVACY.md** for complete details.
-
----
-
-# 📄 License
-
-Released under the **MIT License**.
-
-See **LICENSE** for more information.
+```text
+Fork Repository
+      │
+      ▼
+Create Feature Branch
+      │
+      ▼
+Develop & Test
+      │
+      ▼
+Commit Changes
+      │
+      ▼
+Push Branch
+      │
+      ▼
+Open Pull Request
+```
 
 ---
 
-# ❤️ Support the Project
+## 📋 Contribution Guidelines
 
-If MAXie made you smile...
+Please follow these practices:
 
-⭐ Star this repository
+- Keep pull requests focused on a single feature or fix.
+- Write clear commit messages.
+- Follow the existing project structure.
+- Test your changes before submitting.
+- Update documentation when required.
+- Be respectful and collaborative in discussions.
 
-🐞 Report bugs
+---
 
-💡 Suggest ideas
+## 💡 Feature Requests
 
-🤝 Contribute
+Have an idea?
 
-📢 Share it with your friends
+Open a GitHub Issue with:
 
-Every star helps MAXie grow!
+- Feature description
+- Problem it solves
+- Proposed solution
+- Optional mockups or sketches
+
+Community feedback helps shape MAXie's future.
+
+---
+
+# 🐛 Reporting Bugs
+
+When reporting an issue, please include:
+
+- MAXie version
+- Operating System
+- Steps to reproduce
+- Expected behavior
+- Actual behavior
+- Screenshots or logs (if available)
+
+This information helps us resolve issues more efficiently.
+
+---
+
+# 🛠 Troubleshooting
+
+### MAXie doesn't launch
+
+- Ensure Node.js is installed.
+- Run `npm install`.
+- Check the terminal for errors.
+- Verify Electron dependencies.
+
+---
+
+### Animations aren't playing
+
+- Confirm the animation assets exist.
+- Check file paths.
+- Restart the application.
+
+---
+
+### AI responses are unavailable
+
+- Verify your local AI service (e.g., Ollama) is running.
+- Check model availability.
+- Review the application logs.
+
+---
+
+### High CPU usage
+
+- Close unnecessary background applications.
+- Restart MAXie.
+- Disable experimental features if enabled.
+
+---
+
+# ❓ Frequently Asked Questions
+
+### Is MAXie free?
+
+Yes. MAXie is open-source and free to use.
+
+---
+
+### Does MAXie require an internet connection?
+
+No. Most core features are designed to work offline. Some optional AI capabilities may require locally running models or external services, depending on your configuration.
+
+---
+
+### Does MAXie collect my personal data?
+
+MAXie follows a **privacy-first** approach. Core functionality is designed to keep data on your device whenever possible.
+
+---
+
+### Which operating systems are supported?
+
+Current support:
+
+- Windows 10
+- Windows 11
+
+Linux and macOS support are planned for future releases.
+
+---
+
+### Can I contribute?
+
+Absolutely. Community contributions are welcome.
+
+---
+
+### Can I build plugins?
+
+A plugin SDK and marketplace are planned for future versions.
+
+---
+
+### Can I use my own AI model?
+
+Yes. The long-term goal is to support multiple local AI providers and custom models through a modular architecture.
+
+---
+
+# 📈 Project Goals
+
+MAXie aims to become:
+
+- An intelligent desktop companion
+- A productivity assistant
+- A coding companion
+- A learning partner
+- A gaming companion
+- A customizable AI platform
+- A developer-friendly ecosystem
+
+---
+
+# 🌍 Community
+
+We welcome developers, designers, AI enthusiasts, students, and open-source contributors from around the world.
+
+Ways to get involved:
+
+- ⭐ Star the repository
+- 🍴 Fork the project
+- 🐛 Report issues
+- 💡 Suggest features
+- 🔀 Submit pull requests
+- 📢 Share MAXie with others
+
+Every contribution helps the project grow.
+
+---
+
+# ❤️ Acknowledgements
+
+Special thanks to:
+
+- The open-source community
+- Electron
+- Node.js
+- HTML, CSS, and JavaScript communities
+- Ollama and the local AI ecosystem
+- Everyone who tests, contributes, or provides feedback
+
+Your support makes MAXie possible.
+
+---
+
+# 📜 License
+
+This project is licensed under the **MIT License**.
+
+You are free to:
+
+- Use
+- Modify
+- Distribute
+- Learn from
+- Contribute to
+
+Please refer to the `LICENSE` file for full details.
+
+---
+
+# ⭐ Support the Project
+
+If you enjoy MAXie, consider supporting the project by:
+
+- ⭐ Starring the repository
+- 🍴 Forking the project
+- 🗣 Sharing it with friends
+- 💻 Contributing code
+- 📝 Improving documentation
+- 🐞 Reporting issues
+
+Open-source projects grow through community support.
+
+---
+
+# 📢 Stay Updated
+
+Follow the repository to receive updates about:
+
+- New releases
+- Feature announcements
+- Bug fixes
+- Performance improvements
+- Upcoming milestones
+
+---
+
+# 🛣 Looking Ahead
+
+The journey of MAXie is only beginning.
+
+Future releases will continue expanding the platform with smarter AI, deeper personalization, enhanced productivity tools, and broader platform support—all while maintaining a privacy-first philosophy.
+
+Every version is a step toward building an AI companion that feels genuinely helpful, approachable, and enjoyable to use.
+
+---
+
+# 👨‍💻 About the Creator
+
+<div align="center">
+
+## Raj
+
+**Founder of Multimax**
+
+*Building AI products that make technology feel more personal, intelligent, and accessible.*
+
+Passionate about:
+
+🤖 Artificial Intelligence • 💻 Full-Stack Development • 🛡 Cybersecurity • 🎮 Interactive Experiences • 🚀 Open Source
+
+*"Beyond Tech, Beyond Limit."*
+
+</div>
 
 ---
 
 <div align="center">
 
-# 🐾 Thanks for Visiting!
+# ⭐ If MAXie made you smile, consider giving the project a Star!
 
-<img src="assets/maxie-wave.gif" width="220">
-
-### Made with ❤️ by Raj
-
-*"Making desktops feel alive, one tiny adventure at a time."*
+Your support motivates continued development and helps more people discover the project.
 
 ---
 
-**⭐ Don't forget to Star the repository if you enjoyed MAXie! ⭐**
+Made with ❤️ by **Raj**
+
+**Building the future of AI companions, one commit at a time.**
 
 </div>
->>>>>>> 8d143ed3c1ac91592832b223d3473c70c538b2c3
