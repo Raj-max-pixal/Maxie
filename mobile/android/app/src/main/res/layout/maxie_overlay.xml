@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:background="@android:color/transparent">
+    
+    <ImageView
+        android:id="@+id/maxie_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_maxie"
+        android:scaleType="fitCenter"
+        android:contentDescription="MAXie" />
+        
+</FrameLayout>
