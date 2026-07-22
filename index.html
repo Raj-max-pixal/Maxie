@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#72d6b2">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#071225">
     <title>MAXie</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="assets/icon-192.png">
@@ -11,45 +11,26 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <main class="app-shell">
-      <section class="stage" aria-label="MAXie companion desktop">
-        <div class="topbar">
+    <main class="phone-shell" data-theme="aurora">
+      <header class="app-topbar">
+        <div class="brand-lockup">
+          <span class="brand-orb">M</span>
           <div>
-            <p class="eyebrow">Local-first prototype</p>
             <h1>MAXie</h1>
-          </div>
-          <div class="topbar-actions">
-            <label class="icon-button" data-tooltip="Upload companion image">
-              <input id="avatarInput" type="file" accept="image/*">
-              <span>Upload</span>
-            </label>
-            <button id="resetButton" class="icon-button" type="button">Reset</button>
+            <p id="connectionStatus">Local-first companion</p>
           </div>
         </div>
+        <button id="notifyButton" class="round-button" type="button" aria-label="Enable notifications">
+          <span class="signal-icon"></span>
+        </button>
+      </header>
 
-        <div class="desktop-space" id="desktopSpace">
-          <div class="window-mock browser-window">
-            <div class="window-bar">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="window-content">
-              <strong>Study notes</strong>
-              <p>MAXie reacts to your selected context while keeping private data local.</p>
-            </div>
-          </div>
-          <div class="window-mock editor-window">
-            <div class="window-bar">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="code-lines" aria-hidden="true">
-              <i></i><i></i><i></i><i></i>
-            </div>
-          </div>
-
-          <button id="companion" class="companion is-idle" type="button" aria-label="Talk to MAXie">
-            <span class="speech" id="speechBubble">Hey! I'm MAXie.</span>
-            <span class="pet-shadow"></span>
-            <span class="pet-body">
+      <section class="view is-active" id="view-home" data-view="home" aria-label="Home">
+        <div class="hero-panel">
+          <button id="companion" class="companion face-glow" type="button" aria-label="Talk to MAXie">
+            <span class="speech" id="speechBubble">Hey! I am watching your vibe.</span>
+            <span class="halo"></span>
+            <span class="pet-card">
               <span class="pet-avatar" id="petAvatar">
                 <span class="pet-face">
                   <span class="eye left"></span>
@@ -57,16 +38,174 @@
                   <span class="mouth"></span>
                 </span>
               </span>
+              <strong id="petName">MAXie</strong>
+              <small>AI Assistant</small>
             </span>
           </button>
         </div>
+
+        <section class="status-card">
+          <div class="section-kicker">Companion status</div>
+          <div class="status-line">
+            <h2 id="moodBadge">Happy</h2>
+            <span id="friendshipLabel">Lv. 5 Friendship</span>
+          </div>
+          <progress id="xpProgress" max="1000" value="750"></progress>
+          <div class="xp-row">
+            <span id="xpLabel">750 / 1000 XP</span>
+            <span id="nextLevelLabel">Next lv. in 250</span>
+          </div>
+        </section>
+
+        <div class="quick-actions">
+          <button id="feedButton" type="button"><span class="mini-icon food"></span>Feed</button>
+          <button id="playButton" type="button"><span class="mini-icon play"></span>Play</button>
+          <button id="talkButton" type="button"><span class="mini-icon talk"></span>Talk</button>
+        </div>
+
+        <section class="feature-grid" aria-label="Feature shortcuts">
+          <button data-jump="chat" type="button">AI Chat<span>Free local replies</span></button>
+          <button data-jump="tasks" type="button">Tasks<span>Reminders and habits</span></button>
+          <button data-jump="sync" type="button">PC Sync<span>Files and clipboard</span></button>
+          <button data-jump="settings" type="button">Customize<span>Faces and themes</span></button>
+        </section>
       </section>
 
-      <aside class="control-panel" aria-label="MAXie controls">
-        <section class="panel-section">
+      <section class="view" id="view-chat" data-view="chat" aria-label="Chat">
+        <section class="panel-card">
           <div class="section-title">
-            <h2>Companion</h2>
-            <span id="stageBadge">Baby</span>
+            <div>
+              <div class="section-kicker">AI chat</div>
+              <h2>Free/local mode</h2>
+            </div>
+            <span id="aiModeBadge">On-device</span>
+          </div>
+          <div id="chatLog" class="chat-log" aria-live="polite"></div>
+          <form id="chatForm" class="composer">
+            <input id="chatInput" type="text" placeholder="Ask MAXie anything">
+            <button class="primary" type="submit">Send</button>
+          </form>
+        </section>
+
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">App mood reactions</div>
+              <h2>Context bubble</h2>
+            </div>
+          </div>
+          <label class="field">
+            <span>Current app</span>
+            <select id="contextSelect">
+              <option>Desktop</option>
+              <option>WhatsApp</option>
+              <option>Music</option>
+              <option>Chrome</option>
+              <option>VS Code</option>
+              <option>Study session</option>
+              <option>Gaming</option>
+            </select>
+          </label>
+          <div class="context-chips">
+            <button data-context="WhatsApp" type="button">Nice chat</button>
+            <button data-context="Music" type="button">Nice song</button>
+            <button data-context="Chrome" type="button">Search hard</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-tasks" data-view="tasks" aria-label="Tasks">
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Productivity</div>
+              <h2>Tasks and reminders</h2>
+            </div>
+            <span id="taskCount">0 active</span>
+          </div>
+          <form id="taskForm" class="task-form">
+            <input id="memoryInput" type="text" placeholder="Add task or reminder">
+            <button class="primary" type="submit">Add</button>
+          </form>
+          <ul id="memoryList" class="item-list" aria-label="Saved tasks"></ul>
+        </section>
+
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Habit tracker</div>
+              <h2>Today</h2>
+            </div>
+            <span id="streakLabel">0 day streak</span>
+          </div>
+          <div class="habit-list">
+            <label><input type="checkbox" data-habit="Focus">Focus block</label>
+            <label><input type="checkbox" data-habit="Water">Drink water</label>
+            <label><input type="checkbox" data-habit="Study">Study 20 min</label>
+          </div>
+        </section>
+
+        <section class="dashboard-card">
+          <div>
+            <span>Energy</span>
+            <meter id="energyMeter" min="0" max="100" value="82"></meter>
+          </div>
+          <div>
+            <span>Fun</span>
+            <meter id="funMeter" min="0" max="100" value="68"></meter>
+          </div>
+          <div>
+            <span>Food</span>
+            <meter id="foodMeter" min="0" max="100" value="74"></meter>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-sync" data-view="sync" aria-label="Sync">
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Phone to PC</div>
+              <h2>Same network connection</h2>
+            </div>
+            <span id="pairBadge">Ready</span>
+          </div>
+          <form id="pairForm" class="task-form">
+            <input id="pairInput" type="text" placeholder="PC address, example 192.168.1.5">
+            <button class="primary" type="submit">Pair</button>
+          </form>
+          <p class="helper-text">This prototype saves the paired address locally. Real transfer needs a small PC helper app.</p>
+        </section>
+
+        <section class="sync-grid">
+          <label class="sync-tile">
+            <input id="fileInput" type="file" multiple>
+            <strong>File transfer</strong>
+            <span id="fileStatus">Choose files to queue</span>
+          </label>
+          <button id="copyClipboardButton" class="sync-tile" type="button">
+            <strong>Clipboard sync</strong>
+            <span id="clipboardStatus">Copy demo text</span>
+          </button>
+          <button id="exportButton" class="sync-tile" type="button">
+            <strong>Cloud sync</strong>
+            <span>Export backup file</span>
+          </button>
+          <label class="sync-tile">
+            <input id="importInput" type="file" accept="application/json">
+            <strong>Restore</strong>
+            <span>Import backup</span>
+          </label>
+        </section>
+      </section>
+
+      <section class="view" id="view-settings" data-view="settings" aria-label="Settings">
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Customization</div>
+              <h2>Make MAXie yours</h2>
+            </div>
           </div>
           <label class="field">
             <span>Name</span>
@@ -81,68 +220,35 @@
               <option>Motivational</option>
               <option>Gamer</option>
               <option>Nerd</option>
-              <option>Mischievous</option>
               <option>Professional</option>
             </select>
           </label>
-          <label class="field">
-            <span>Current context</span>
-            <select id="contextSelect">
-              <option>Desktop</option>
-              <option>VS Code</option>
-              <option>Chrome</option>
-              <option>Spotify</option>
-              <option>Steam</option>
-              <option>Study session</option>
-            </select>
+          <div class="face-picker" aria-label="Face styles">
+            <button data-face="glow" type="button">Glow face</button>
+            <button data-face="spark" type="button">Spark face</button>
+            <button data-face="focus" type="button">Focus face</button>
+          </div>
+          <label class="upload-card">
+            <input id="avatarInput" type="file" accept="image/*">
+            <strong>Add photo</strong>
+            <span>Use your own MAXie picture</span>
           </label>
-          <div class="action-row">
-            <button class="primary" id="talkButton" type="button">Talk</button>
-            <button id="feedButton" type="button">Feed</button>
-            <button id="playButton" type="button">Play</button>
+          <div class="theme-picker">
+            <button data-theme-choice="aurora" type="button">Aurora</button>
+            <button data-theme-choice="candy" type="button">Candy</button>
+            <button data-theme-choice="mono" type="button">Mono</button>
           </div>
+          <button id="resetButton" class="danger-button" type="button">Reset MAXie</button>
         </section>
+      </section>
 
-        <section class="panel-section">
-          <div class="section-title">
-            <h2>Mood</h2>
-            <span id="moodBadge">Happy</span>
-          </div>
-          <div class="meters">
-            <label><span>Energy</span><meter id="energyMeter" min="0" max="100" value="82"></meter></label>
-            <label><span>Food</span><meter id="foodMeter" min="0" max="100" value="74"></meter></label>
-            <label><span>Fun</span><meter id="funMeter" min="0" max="100" value="68"></meter></label>
-            <label><span>Friendship</span><meter id="friendshipMeter" min="0" max="100" value="52"></meter></label>
-          </div>
-          <div class="xp-track">
-            <div>
-              <span>XP</span>
-              <strong id="xpLabel">0 / 100</strong>
-            </div>
-            <progress id="xpProgress" max="100" value="0"></progress>
-          </div>
-        </section>
-
-        <section class="panel-section">
-          <div class="section-title">
-            <h2>Quick tools</h2>
-          </div>
-          <div class="tool-grid">
-            <button data-mode="Coding" type="button">Coding</button>
-            <button data-mode="Study" type="button">Study</button>
-            <button data-mode="Focus" type="button">Focus</button>
-            <button data-mode="Creative" type="button">Creative</button>
-          </div>
-          <form id="taskForm" class="task-form">
-            <label class="field">
-              <span>Add a memory or task</span>
-              <input id="memoryInput" type="text" placeholder="Example: Finish React lesson">
-            </label>
-            <button class="primary" type="submit">Save</button>
-          </form>
-          <ul id="memoryList" class="memory-list" aria-label="Saved memories"></ul>
-        </section>
-      </aside>
+      <nav class="bottom-nav" aria-label="Main navigation">
+        <button class="is-active" data-nav="home" type="button"><span class="nav-icon home"></span>Home</button>
+        <button data-nav="chat" type="button"><span class="nav-icon chat"></span>Chat</button>
+        <button data-nav="tasks" type="button"><span class="nav-icon tasks"></span>Tasks</button>
+        <button data-nav="sync" type="button"><span class="nav-icon sync"></span>Sync</button>
+        <button data-nav="settings" type="button"><span class="nav-icon settings"></span>Settings</button>
+      </nav>
     </main>
 
     <script src="app.js"></script>
