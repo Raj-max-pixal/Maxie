@@ -1,0 +1,28 @@
+<component name="libraryTable">
+  <library name="assets2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-64.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-32.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/sleep.gif.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/tray.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-16.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon.ico.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-24.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-256.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-512.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-48.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/wave.gif.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/idle.gif.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-192.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/jump.gif.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/run.gif.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/dance.gif.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/logo.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/walk.gif.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon.png.jar!/" />
+      <root url="jar://$PROJECT_DIR$/android/app/build/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/public/assets/icon-128.png.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
