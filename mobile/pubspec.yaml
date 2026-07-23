@@ -62,11 +62,10 @@ dependencies:
   # Media & Audio
   audio_session: ^0.1.18
   just_audio: ^0.9.36
-  media_session: ^1.0.0+1
 
   # Notifications
   flutter_local_notifications: ^16.3.0
-  awesome_notifications: ^3.0.0
+
 
   # Location & Weather
   geolocator: ^10.1.0
