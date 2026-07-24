@@ -41,9 +41,6 @@ dependencies:
 
   # Firebase
   firebase_core: ^2.24.2
-  firebase_auth: ^4.16.0
-  firebase_messaging: ^14.7.10
-  cloud_firestore: ^4.14.0
 
   # Voice
   flutter_tts: ^3.8.5
