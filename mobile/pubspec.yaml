@@ -99,3 +99,6 @@ flutter:
     - assets/images/
     - assets/sounds/
     - assets/lottie/
+
+dependency_overrides:
+  firebase_messaging_web: 3.5.18
