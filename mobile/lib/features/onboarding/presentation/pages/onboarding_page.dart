@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'core/providers/onboarding_provider.dart';
+import 'package:maxie_mobile/core/providers/onboarding_provider.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});
@@ -95,11 +94,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Lottie.asset(
-            data.animation,
-            height: 300,
-            animate: true,
-          )
+          _buildAnimationPlaceholder(data.title)
               .animate()
               .fadeIn(duration: 600.ms)
               .scale(delay: 200.ms),
@@ -127,6 +122,44 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               .animate()
               .fadeIn(delay: 600.ms, duration: 600.ms)
               .slideY(begin: 0.3, end: 0),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnimationPlaceholder(String title) {
+    return Container(
+      height: 300,
+      width: 300,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.purple.shade200,
+            Colors.deepPurple.shade400,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.pets,
+            size: 96,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

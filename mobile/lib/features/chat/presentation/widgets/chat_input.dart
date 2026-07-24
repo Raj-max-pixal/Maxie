@@ -12,7 +12,6 @@ class ChatInput extends ConsumerStatefulWidget {
 
 class _ChatInputState extends ConsumerState<ChatInput> {
   final TextEditingController _controller = TextEditingController();
-  bool _isTyping = false;
 
   @override
   void dispose() {
@@ -30,7 +29,9 @@ class _ChatInputState extends ConsumerState<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
-    final isTyping = ref.watch(chatProvider.select((state) => state.last?.isUser == false));
+    final isTyping = ref.watch(
+      chatProvider.select((state) => state.isNotEmpty && !state.last.isUser),
+    );
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -88,9 +89,7 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                   ),
                   style: GoogleFonts.poppins(),
                   onSubmitted: (_) => _sendMessage(),
-                  onChanged: (value) {
-                    setState(() => _isTyping = value.isNotEmpty);
-                  ),
+                ),
               ),
               const SizedBox(width: 12),
               Container(

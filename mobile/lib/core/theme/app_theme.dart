@@ -10,7 +10,7 @@ class AppTheme {
         brightness: Brightness.light,
       ),
       textTheme: GoogleFonts.poppinsTextTheme(),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -43,7 +43,7 @@ class AppTheme {
         brightness: Brightness.dark,
       ),
       textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

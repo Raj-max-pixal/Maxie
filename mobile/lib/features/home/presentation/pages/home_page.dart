@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
 import '../widgets/maxie_character.dart';
 import '../widgets/maxie_overlay.dart';
 import '../widgets/maxie_dialogue.dart';
-import '../../providers/maxie_state_provider.dart';
+import '../providers/maxie_state_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -94,7 +93,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         const SizedBox(height: 12),
         _buildActionButton(
-          icon: Icons.overlay_outlined,
+          icon: Icons.layers_outlined,
           onTap: () {
             // Toggle overlay
           },

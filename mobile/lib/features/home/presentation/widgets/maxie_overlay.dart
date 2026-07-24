@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/overlay_provider.dart';
+import '../providers/overlay_provider.dart';
 
 class MaxieOverlay extends ConsumerWidget {
   const MaxieOverlay({super.key});

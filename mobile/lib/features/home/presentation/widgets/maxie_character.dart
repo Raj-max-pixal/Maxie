@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
-import '../../providers/maxie_state_provider.dart';
+import '../providers/maxie_state_provider.dart';
 
 class MaxieCharacter extends ConsumerWidget {
   const MaxieCharacter({super.key});
@@ -9,7 +8,7 @@ class MaxieCharacter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final maxieState = ref.watch(maxieStateProvider);
-    final animation = _getAnimationForState(maxieState.currentEmotion, maxieState.currentActivity);
+    final visual = _getVisualForState(maxieState.currentEmotion);
 
     return GestureDetector(
       onTap: () {
@@ -25,32 +24,52 @@ class MaxieCharacter extends ConsumerWidget {
         child: SizedBox(
           height: 200,
           width: 200,
-          child: Lottie.asset(
-            animation,
-            animate: true,
-            repeat: true,
-            frameRate: FrameRate(60),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  visual.color.withValues(alpha: 0.85),
+                  Colors.deepPurple.shade400,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(32),
+              boxShadow: [
+                BoxShadow(
+                  color: visual.color.withValues(alpha: 0.25),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Icon(
+                visual.icon,
+                size: 96,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  String _getAnimationForState(String emotion, String activity) {
-    // Return appropriate Lottie animation based on emotion and activity
+  ({IconData icon, Color color}) _getVisualForState(String emotion) {
     switch (emotion) {
       case 'happy':
-        return 'assets/lottie/maxie_happy.json';
+        return (icon: Icons.sentiment_very_satisfied, color: Colors.pink);
       case 'sleepy':
-        return 'assets/lottie/maxie_sleepy.json';
+        return (icon: Icons.bedtime, color: Colors.indigo);
       case 'excited':
-        return 'assets/lottie/maxie_excited.json';
+        return (icon: Icons.celebration, color: Colors.orange);
       case 'sad':
-        return 'assets/lottie/maxie_sad.json';
+        return (icon: Icons.sentiment_dissatisfied, color: Colors.blueGrey);
       case 'focused':
-        return 'assets/lottie/maxie_focused.json';
+        return (icon: Icons.psychology, color: Colors.teal);
       default:
-        return 'assets/lottie/maxie_idle.json';
+        return (icon: Icons.pets, color: Colors.deepPurple);
     }
   }
 }

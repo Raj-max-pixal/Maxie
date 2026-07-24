@@ -83,7 +83,7 @@ class SettingsPage extends ConsumerWidget {
             title: 'Overlay Mode',
             children: [
               SettingsTile(
-                icon: Icons.overlay_outlined,
+                icon: Icons.layers_outlined,
                 title: 'Enable Overlay',
                 subtitle: 'Show MAXie over other apps',
                 trailing: Switch(
