@@ -3,7 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/maxie_character.dart';
 import '../widgets/maxie_overlay.dart';
 import '../widgets/maxie_dialogue.dart';
+import '../widgets/floating_quick_actions.dart';
+import '../widgets/floating_status_bar.dart';
+import '../widgets/floating_music_player.dart';
+import '../widgets/floating_pomodoro_timer.dart';
 import '../providers/maxie_state_provider.dart';
+import '../providers/overlay_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -16,6 +21,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final maxieState = ref.watch(maxieStateProvider);
+    final overlayState = ref.watch(overlayProvider);
 
     return Scaffold(
       body: Stack(
@@ -33,6 +39,14 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
           ),
+          
+          // Floating Widgets (when overlay is enabled)
+          if (overlayState.isEnabled) ...[
+            const FloatingStatusBar(),
+            const FloatingQuickActions(),
+            const FloatingMusicPlayer(),
+            const FloatingPomodoroTimer(),
+          ],
           
           // MAXie Character
           const Positioned(
@@ -95,7 +109,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         _buildActionButton(
           icon: Icons.layers_outlined,
           onTap: () {
-            // Toggle overlay
+            ref.read(overlayProvider.notifier).toggleOverlay();
           },
         ),
       ],

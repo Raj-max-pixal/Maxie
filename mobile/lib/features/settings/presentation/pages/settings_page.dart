@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/settings_tile.dart';
 import '../providers/settings_provider.dart';
+import '../../home/presentation/providers/overlay_provider.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -11,6 +12,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
+    final overlayState = ref.watch(overlayProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -23,6 +25,56 @@ class SettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          SettingsSection(
+            title: 'Floating Widgets',
+            children: [
+              SettingsTile(
+                icon: Icons.widgets,
+                title: 'Status Bar',
+                subtitle: 'Battery, weather, friendship level',
+                trailing: Switch(
+                  value: overlayState.getWidget('status_bar')?.isVisible ?? true,
+                  onChanged: (value) {
+                    ref.read(overlayProvider.notifier).toggleWidgetVisibility('status_bar');
+                  },
+                ),
+              ),
+              SettingsTile(
+                icon: Icons.quick_actions,
+                title: 'Quick Actions',
+                subtitle: 'Chat, settings, music controls',
+                trailing: Switch(
+                  value: overlayState.getWidget('quick_actions')?.isVisible ?? true,
+                  onChanged: (value) {
+                    ref.read(overlayProvider.notifier).toggleWidgetVisibility('quick_actions');
+                  },
+                ),
+              ),
+              SettingsTile(
+                icon: Icons.music_note,
+                title: 'Music Player',
+                subtitle: 'Show when music is playing',
+                trailing: Switch(
+                  value: overlayState.getWidget('music_player')?.isVisible ?? true,
+                  onChanged: (value) {
+                    ref.read(overlayProvider.notifier).toggleWidgetVisibility('music_player');
+                  },
+                ),
+              ),
+              SettingsTile(
+                icon: Icons.timer,
+                title: 'Pomodoro Timer',
+                subtitle: 'Show during study sessions',
+                trailing: Switch(
+                  value: overlayState.getWidget('pomodoro_timer')?.isVisible ?? true,
+                  onChanged: (value) {
+                    ref.read(overlayProvider.notifier).toggleWidgetVisibility('pomodoro_timer');
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
           SettingsSection(
             title: 'MAXie Appearance',
             children: [
