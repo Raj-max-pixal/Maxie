@@ -169,7 +169,7 @@ class HealthService {
       'I\'m getting hungry... ⚡',
       'Low battery! Time to charge! 🔋',
       'My energy is draining... ⚡',
-      'Battery low! Need more power!",
+      'Battery low! Need more power!',
     ];
     return warnings[(DateTime.now().millisecond) % warnings.length];
   }

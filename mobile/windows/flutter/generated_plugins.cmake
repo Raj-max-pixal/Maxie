@@ -4,13 +4,16 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   battery_plus
+  cloud_firestore
+  connectivity_plus
+  firebase_auth
   firebase_core
   flutter_tts
   geolocator_windows
-  isar_flutter_libs
   permission_handler_windows
   rive_common
   share_plus
+  speech_to_text_windows
   url_launcher_windows
 )
 
