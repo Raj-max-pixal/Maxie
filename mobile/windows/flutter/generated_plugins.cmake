@@ -3,15 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  battery_plus
-  firebase_core
-  flutter_tts
-  geolocator_windows
-  isar_flutter_libs
-  permission_handler_windows
-  rive_common
-  share_plus
-  url_launcher_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
