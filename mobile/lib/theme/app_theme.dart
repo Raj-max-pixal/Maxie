@@ -11,7 +11,6 @@ class AppTheme {
   static ThemeData get light {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: AppColors.seed,
-      brightness: Brightness.light,
       secondary: AppColors.calmTeal,
       tertiary: AppColors.warmCoral,
       surface: Colors.white,

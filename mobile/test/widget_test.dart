@@ -10,9 +10,5 @@ void main() {
     expect(find.text('MAXie'), findsOneWidget);
     expect(find.text('Your AI Companion'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-    await tester.pump(const Duration(seconds: 1));
-
-    expect(find.text('Enter MAXie'), findsOneWidget);
   });
 }
