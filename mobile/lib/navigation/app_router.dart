@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
+import 'package:maxie_mobile/features/memory/presentation/memory_screen.dart';
 import 'package:maxie_mobile/features/onboarding/presentation/onboarding_screen.dart';
+import 'package:maxie_mobile/features/pet/presentation/pet_screen.dart';
 import 'package:maxie_mobile/features/profile/presentation/profile_screen.dart';
 import 'package:maxie_mobile/features/settings/presentation/settings_screen.dart';
 import 'package:maxie_mobile/features/splash/presentation/splash_screen.dart';
@@ -53,6 +55,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.aiChat,
         name: 'aiChat',
         builder: (context, state) => const AiChatScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.memory,
+        name: 'memory',
+        builder: (context, state) => const MemoryScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.pet,
+        name: 'pet',
+        builder: (context, state) => const PetScreen(),
       ),
     ],
   );

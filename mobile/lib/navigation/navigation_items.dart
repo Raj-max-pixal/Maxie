@@ -11,16 +11,21 @@ const appNavigationItems = <NavigationItem>[
   NavigationItem(
     label: 'Chat',
     location: AppRoutes.aiChat,
-    icon: Icons.auto_awesome_rounded,
+    icon: Icons.chat_bubble_outline_rounded,
+  ),
+  NavigationItem(
+    label: 'Memory',
+    location: AppRoutes.memory,
+    icon: Icons.auto_stories_rounded,
+  ),
+  NavigationItem(
+    label: 'Pet',
+    location: AppRoutes.pet,
+    icon: Icons.smart_toy_outlined,
   ),
   NavigationItem(
     label: 'Profile',
     location: AppRoutes.profile,
     icon: Icons.person_rounded,
-  ),
-  NavigationItem(
-    label: 'Settings',
-    location: AppRoutes.settings,
-    icon: Icons.settings_rounded,
   ),
 ];

@@ -8,4 +8,6 @@ class AppRoutes {
   static const String subscription = '/subscription';
   static const String profile = '/profile';
   static const String aiChat = '/ai-chat';
+  static const String memory = '/memory';
+  static const String pet = '/pet';
 }

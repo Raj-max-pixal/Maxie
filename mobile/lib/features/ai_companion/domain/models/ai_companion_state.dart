@@ -1,8 +1,19 @@
-enum CompanionPresence { resting, listening, thinking, speaking }
+enum CompanionPresence {
+  idle,
+  happy,
+  thinking,
+  listening,
+  typing,
+  sleeping,
+  celebrating,
+  dancing,
+  walking,
+  excited,
+}
 
 class AiCompanionState {
   const AiCompanionState({
-    this.presence = CompanionPresence.resting,
+    this.presence = CompanionPresence.idle,
     this.displayName = 'MAXie',
     this.statusMessage = 'Ready when you are.',
   });

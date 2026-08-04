@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:maxie_mobile/shared/app_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:maxie_mobile/navigation/app_routes.dart';
+import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
-import 'package:maxie_mobile/widgets/animated_card.dart';
-import 'package:maxie_mobile/widgets/app_empty_state.dart';
-import 'package:maxie_mobile/widgets/app_text_field.dart';
+import 'package:maxie_mobile/widgets/content_cards.dart';
+import 'package:maxie_mobile/widgets/metric_widgets.dart';
+import 'package:maxie_mobile/widgets/premium_card.dart';
+import 'package:maxie_mobile/widgets/premium_scaffold.dart';
 import 'package:maxie_mobile/widgets/section_title.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -11,40 +14,89 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppPage(
+    final theme = Theme.of(context);
+
+    return PremiumScaffold(
       title: 'Profile',
+      actions: [
+        IconButton(
+          tooltip: 'Settings',
+          onPressed: () => context.go(AppRoutes.settings),
+          icon: const Icon(Icons.settings_rounded),
+        ),
+      ],
       child: ListView(
-        children: const [
-          SectionTitle(
-            title: 'Your space',
-            subtitle: 'Basic identity settings for the companion experience.',
-          ),
-          SizedBox(height: AppSpacing.lg),
-          AnimatedCard(
-            child: Column(
+        padding: const EdgeInsets.fromLTRB(16, 18, 16, 108),
+        children: [
+          PremiumCard(
+            glowColor: AppColors.seed,
+            child: Row(
               children: [
-                AppTextField(
-                  label: 'Display name',
-                  hintText: 'How should MAXie greet you?',
-                  prefixIcon: Icons.badge_rounded,
+                CircleAvatar(
+                  radius: 34,
+                  backgroundColor: AppColors.seed.withValues(alpha: 0.22),
+                  child: const Icon(Icons.person_rounded, size: 34),
                 ),
-                SizedBox(height: AppSpacing.md),
-                AppTextField(
-                  label: 'Primary goal',
-                  hintText: 'Focus, learning, planning',
-                  prefixIcon: Icons.flag_rounded,
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Alex',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      Text(
+                        'Joined Aug 2026',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                const Chip(label: Text('Lv. 7')),
               ],
             ),
           ),
-          SizedBox(height: AppSpacing.lg),
-          SizedBox(
-            height: 260,
-            child: AppEmptyState(
-              title: 'No saved memories yet',
-              message: 'Memories will appear after companion features are built.',
-              icon: Icons.bookmark_border_rounded,
-            ),
+          const SizedBox(height: AppSpacing.lg),
+          const XpProgressCard(level: 7, progress: 0.68),
+          const SizedBox(height: AppSpacing.lg),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: AppSpacing.md,
+            mainAxisSpacing: AppSpacing.md,
+            childAspectRatio: 1.25,
+            children: const [
+              StatCard(
+                label: 'Current Streak',
+                value: '12',
+                icon: Icons.local_fire_department_rounded,
+                color: AppColors.warning,
+              ),
+              StatCard(
+                label: 'Memories',
+                value: '24',
+                icon: Icons.auto_stories_rounded,
+                color: AppColors.calmTeal,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          const SectionTitle(title: 'Achievements'),
+          const SizedBox(height: AppSpacing.sm),
+          const AchievementCard(
+            title: 'First companion check-in',
+            icon: Icons.emoji_events_rounded,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          const AchievementCard(
+            title: 'Seven-day reflection streak',
+            icon: Icons.bolt_rounded,
           ),
         ],
       ),

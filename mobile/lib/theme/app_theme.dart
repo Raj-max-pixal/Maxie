@@ -14,6 +14,7 @@ class AppTheme {
       secondary: AppColors.calmTeal,
       tertiary: AppColors.warmCoral,
       surface: Colors.white,
+      error: AppColors.danger,
     );
 
     return _base(colorScheme).copyWith(
@@ -27,7 +28,8 @@ class AppTheme {
       brightness: Brightness.dark,
       secondary: AppColors.calmTeal,
       tertiary: AppColors.warmCoral,
-      surface: const Color(0xFF181A20),
+      surface: AppColors.darkSurface,
+      error: AppColors.danger,
     );
 
     return _base(colorScheme).copyWith(
@@ -48,11 +50,16 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         centerTitle: false,
         elevation: AppElevation.none,
-        backgroundColor: Colors.transparent,
+        backgroundColor: colorScheme.brightness == Brightness.dark
+            ? AppColors.darkScaffold
+            : Colors.transparent,
         foregroundColor: colorScheme.onSurface,
       ),
       cardTheme: CardThemeData(
-        elevation: AppElevation.sm,
+        color: colorScheme.brightness == Brightness.dark
+            ? AppColors.darkSurface
+            : colorScheme.surface,
+        elevation: AppElevation.none,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(borderRadius: AppRadius.card),
       ),
@@ -97,6 +104,15 @@ class AppTheme {
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: AppRadius.card),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: colorScheme.brightness == Brightness.dark
+            ? AppColors.darkSurface.withValues(alpha: 0.94)
+            : colorScheme.surface,
+        indicatorColor: colorScheme.primary.withValues(alpha: 0.18),
+        labelTextStyle: WidgetStatePropertyAll(
+          textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
       ),
     );
   }
