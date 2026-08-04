@@ -42,7 +42,17 @@ class SubscriptionScreen extends StatelessWidget {
                 PrimaryButton(
                   label: 'Continue',
                   icon: Icons.workspace_premium_rounded,
-                  onPressed: () {},
+                  onPressed: () {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'RevenueCat subscription flow is ready to connect.',
+                          ),
+                        ),
+                      );
+                  },
                 ),
               ],
             ),

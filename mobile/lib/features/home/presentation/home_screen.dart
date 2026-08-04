@@ -63,6 +63,8 @@ class HomeScreen extends StatelessWidget {
             ],
           ).animate().fadeIn(duration: 260.ms).slideY(begin: -0.1, end: 0),
           const SizedBox(height: AppSpacing.xl),
+          const _TodaysCompanionCard(),
+          const SizedBox(height: AppSpacing.lg),
           PremiumCard(
             padding: const EdgeInsets.fromLTRB(18, 24, 18, 20),
             glowColor: AppColors.calmTeal,
@@ -105,10 +107,56 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showFoundationMessage(
+                    context,
+                    'Scan file foundation is ready for Phase 3.',
+                  ),
                   icon: const Icon(Icons.document_scanner_rounded),
                   label: const Text('Scan File'),
                 ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          const SectionTitle(
+            title: 'Quick Actions',
+            subtitle: 'Your core entry points into MAXie.',
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: AppSpacing.sm,
+            mainAxisSpacing: AppSpacing.sm,
+            childAspectRatio: 0.88,
+            children: [
+              _QuickAction(
+                label: 'Chat',
+                icon: Icons.chat_bubble_rounded,
+                color: AppColors.seed,
+                onTap: () => context.go(AppRoutes.aiChat),
+              ),
+              _QuickAction(
+                label: 'Memory',
+                icon: Icons.psychology_rounded,
+                color: AppColors.calmTeal,
+                onTap: () => context.go(AppRoutes.memory),
+              ),
+              _QuickAction(
+                label: 'Voice',
+                icon: Icons.mic_rounded,
+                color: AppColors.warmCoral,
+                onTap: () => _showFoundationMessage(
+                  context,
+                  'Voice mode is ready as a Phase 3 entry point.',
+                ),
+              ),
+              _QuickAction(
+                label: 'Tasks',
+                icon: Icons.calendar_month_rounded,
+                color: AppColors.warning,
+                onTap: () => context.go(AppRoutes.tasks),
               ),
             ],
           ),
@@ -197,5 +245,115 @@ class HomeScreen extends StatelessWidget {
       'Dec',
     ];
     return months[date.month - 1];
+  }
+
+  void _showFoundationMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+  }
+}
+
+class _TodaysCompanionCard extends StatelessWidget {
+  const _TodaysCompanionCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return PremiumCard(
+      glowColor: AppColors.warmCoral,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Today's Companion",
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          const _CompanionLine(icon: '👋', text: 'Good Evening Raj'),
+          const _CompanionLine(
+            icon: '✨',
+            text: 'You completed 3 tasks today.',
+          ),
+          const _CompanionLine(icon: '🔥', text: '7 day streak'),
+          const _CompanionLine(icon: '💜', text: 'Friendship Level 12'),
+          const _CompanionLine(icon: '🎁', text: 'Daily Reward Available'),
+        ],
+      ),
+    ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.08, end: 0);
+  }
+}
+
+class _CompanionLine extends StatelessWidget {
+  const _CompanionLine({required this.icon, required this.text});
+
+  final String icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      child: Row(
+        children: [
+          Text(icon, style: const TextStyle(fontSize: 18)),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  const _QuickAction({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return PremiumCard(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      glowColor: color,
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

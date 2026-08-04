@@ -47,13 +47,19 @@ class PetScreen extends StatelessWidget {
                 child: PrimaryButton(
                   label: 'Feed',
                   icon: Icons.restaurant_rounded,
-                  onPressed: () {},
+                  onPressed: () => _showFoundationMessage(
+                    context,
+                    'Feed interaction is ready for the pet system.',
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showFoundationMessage(
+                    context,
+                    'Play interaction is ready for companion animations.',
+                  ),
                   icon: const Icon(Icons.sports_esports_rounded),
                   label: const Text('Play'),
                 ),
@@ -62,7 +68,10 @@ class PetScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: () => _showFoundationMessage(
+              context,
+              'Customization foundation is ready.',
+            ),
             icon: const Icon(Icons.palette_rounded),
             label: const Text('Customize'),
           ),
@@ -81,5 +90,11 @@ class PetScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showFoundationMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 }

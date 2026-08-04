@@ -34,7 +34,10 @@ class MemoryScreen extends StatelessWidget {
                 FilterChip(
                   label: Text(label),
                   selected: label == 'Pinned',
-                  onSelected: (_) {},
+                  onSelected: (_) => _showFoundationMessage(
+                    context,
+                    '$label memory filter is ready.',
+                  ),
                 ),
             ],
           ),
@@ -62,5 +65,11 @@ class MemoryScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showFoundationMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 }

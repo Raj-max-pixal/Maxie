@@ -10,6 +10,7 @@ import 'package:maxie_mobile/features/profile/presentation/profile_screen.dart';
 import 'package:maxie_mobile/features/settings/presentation/settings_screen.dart';
 import 'package:maxie_mobile/features/splash/presentation/splash_screen.dart';
 import 'package:maxie_mobile/features/subscription/presentation/subscription_screen.dart';
+import 'package:maxie_mobile/features/tasks/presentation/tasks_screen.dart';
 import 'package:maxie_mobile/navigation/app_routes.dart';
 
 final rootNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>(
@@ -65,6 +66,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.pet,
         name: 'pet',
         builder: (context, state) => const PetScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.tasks,
+        name: 'tasks',
+        builder: (context, state) => const TasksScreen(),
       ),
     ],
   );

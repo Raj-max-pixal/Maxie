@@ -63,7 +63,10 @@ class AiChatScreen extends StatelessWidget {
                       ActionChip(
                         label: Text(prompt),
                         avatar: const Icon(Icons.auto_awesome_rounded, size: 16),
-                        onPressed: () {},
+                        onPressed: () => _showFoundationMessage(
+                          context,
+                          '$prompt is ready for Phase 3 chat.',
+                        ),
                       ),
                   ],
                 ),
@@ -89,13 +92,19 @@ class AiChatScreen extends StatelessWidget {
                 children: [
                   IconButton.filledTonal(
                     tooltip: 'Voice',
-                    onPressed: () {},
+                    onPressed: () => _showFoundationMessage(
+                      context,
+                      'Voice input foundation is ready.',
+                    ),
                     icon: const Icon(Icons.mic_rounded),
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   IconButton.filledTonal(
                     tooltip: 'Upload image',
-                    onPressed: () {},
+                    onPressed: () => _showFoundationMessage(
+                      context,
+                      'Image upload foundation is ready.',
+                    ),
                     icon: const Icon(Icons.image_rounded),
                   ),
                   const SizedBox(width: AppSpacing.xs),
@@ -108,7 +117,10 @@ class AiChatScreen extends StatelessWidget {
                   const SizedBox(width: AppSpacing.xs),
                   IconButton.filled(
                     tooltip: 'Send',
-                    onPressed: () {},
+                    onPressed: () => _showFoundationMessage(
+                      context,
+                      'Streaming chat connects in Phase 3.',
+                    ),
                     icon: const Icon(Icons.send_rounded),
                   ),
                 ],
@@ -118,6 +130,12 @@ class AiChatScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showFoundationMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 }
 

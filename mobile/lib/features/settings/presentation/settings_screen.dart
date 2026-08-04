@@ -73,7 +73,10 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: 'Prepared for speech input and MAXie voice output.',
                   icon: Icons.mic_rounded,
                   value: true,
-                  onChanged: (_) {},
+                  onChanged: (_) => _showFoundationMessage(
+                    context,
+                    'Voice settings are ready for Phase 3.',
+                  ),
                 ),
                 const Divider(),
                 _SettingsSwitch(
@@ -81,7 +84,10 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: 'Prepared for reminders and companion nudges.',
                   icon: Icons.notifications_rounded,
                   value: true,
-                  onChanged: (_) {},
+                  onChanged: (_) => _showFoundationMessage(
+                    context,
+                    'Notification settings are ready.',
+                  ),
                 ),
                 const Divider(),
                 _SettingsSwitch(
@@ -125,6 +131,12 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _showFoundationMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
@@ -191,6 +203,11 @@ class _SettingsRow extends StatelessWidget {
       title: Text(title),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: () {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text('$title foundation is ready.')));
+      },
     );
   }
 }
