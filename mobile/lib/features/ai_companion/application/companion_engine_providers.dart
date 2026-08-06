@@ -1,0 +1,41 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/ai_companion/domain/models/companion_model.dart';
+import 'package:maxie_mobile/features/ai_companion/domain/services/companion_engines.dart';
+
+final companionMoodEngineProvider = Provider<MoodEngine>(
+  (ref) => const PlaceholderMoodEngine(),
+);
+
+final companionModelProvider = Provider<CompanionModel>((ref) {
+  final mood = ref.watch(companionMoodEngineProvider).moodFor(DateTime.now());
+  return CompanionModel(
+    name: 'MAXie',
+    mood: mood,
+    message: const PlaceholderEmotionManager().messageFor(mood),
+  );
+});
+
+class PlaceholderMoodEngine implements MoodEngine {
+  const PlaceholderMoodEngine();
+
+  @override
+  CompanionMood moodFor(DateTime moment) {
+    final moods = CompanionMood.values;
+    return moods[(moment.hour + moment.weekday) % moods.length];
+  }
+}
+
+class PlaceholderEmotionManager implements EmotionManager {
+  const PlaceholderEmotionManager();
+
+  @override
+  String messageFor(CompanionMood mood) {
+    return switch (mood) {
+      CompanionMood.motivating => "Let's win Shipaton.",
+      CompanionMood.studyMode => "Today's a good day to learn.",
+      CompanionMood.sleeping => "Don't forget to recharge yourself too.",
+      CompanionMood.celebrating => "You're building something special.",
+      _ => "I'm always here.",
+    };
+  }
+}

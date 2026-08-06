@@ -38,14 +38,15 @@ class PremiumCard extends StatelessWidget {
       child: child,
     );
 
-    if (onTap == null) {
-      return card;
-    }
-
-    return InkWell(
+    return Material(
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(20),
-      onTap: onTap,
-      child: card,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: card,
+      ),
     );
   }
 }

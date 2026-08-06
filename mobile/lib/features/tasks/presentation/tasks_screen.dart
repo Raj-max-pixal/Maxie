@@ -13,7 +13,6 @@ class TasksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PremiumScaffold(
       title: 'Tasks',
-      showNavigation: false,
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 18, 16, 32),
         children: const [

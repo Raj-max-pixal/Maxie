@@ -1,13 +1,3 @@
-class MemoryEntry {
-  const MemoryEntry({
-    required this.id,
-    required this.title,
-    required this.createdAt,
-    this.tags = const [],
-  });
+import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 
-  final String id;
-  final String title;
-  final DateTime createdAt;
-  final List<String> tags;
-}
+typedef MemoryEntry = MemoryRecord;

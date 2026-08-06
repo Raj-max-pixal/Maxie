@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/config/app_state.dart';
+import 'package:maxie_mobile/features/ai_chat/application/ai_settings_providers.dart';
 import 'package:maxie_mobile/services/connectivity_service.dart';
 import 'package:maxie_mobile/services/snackbar_service.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
@@ -16,6 +17,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final isOffline = ref.watch(offlineProvider);
+    final aiSettings = ref.watch(aiSettingsProvider);
 
     return PremiumScaffold(
       title: 'Settings',
@@ -59,6 +61,59 @@ class SettingsScreen extends ConsumerWidget {
                     ref
                         .read(snackbarServiceProvider)
                         .showSuccess(context, 'Theme updated');
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          PremiumCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _SettingsGroupTitle('AI Engine'),
+                const SizedBox(height: AppSpacing.sm),
+                _SettingsRow(
+                  title: 'Provider',
+                  subtitle: aiSettings.provider,
+                  icon: Icons.hub_rounded,
+                ),
+                const Divider(),
+                _SettingsRow(
+                  title: 'Model',
+                  subtitle: aiSettings.model,
+                  icon: Icons.memory_rounded,
+                ),
+                const Divider(),
+                _SettingsRow(
+                  title: 'Temperature',
+                  subtitle: aiSettings.temperature.toStringAsFixed(1),
+                  icon: Icons.thermostat_rounded,
+                ),
+                const Divider(),
+                _SettingsSwitch(
+                  title: 'Streaming',
+                  subtitle: 'Token-by-token response rendering.',
+                  icon: Icons.stream_rounded,
+                  value: aiSettings.streamingEnabled,
+                  onChanged: (_) => _showFoundationMessage(
+                    context,
+                    'Streaming is enabled for the chat engine.',
+                  ),
+                ),
+                const Divider(),
+                _SettingsSwitch(
+                  title: 'Memory',
+                  subtitle: 'Future automatic memory extraction hooks.',
+                  icon: Icons.psychology_rounded,
+                  value: aiSettings.memoryEnabled,
+                  onChanged: (value) {
+                    ref.read(aiSettingsProvider.notifier).state =
+                        aiSettings.copyWith(memoryEnabled: value);
+                    _showFoundationMessage(
+                      context,
+                      value ? 'Automatic memory is enabled.' : 'Automatic memory is disabled.',
+                    );
                   },
                 ),
               ],
