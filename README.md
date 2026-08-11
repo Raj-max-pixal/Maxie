@@ -52,6 +52,9 @@ Making your desktop more productive, interactive, and alive with AI.
 
 # 🌟 Welcome to MAXie
 
+<img width="1983" height="793" alt="banner" src="https://github.com/user-attachments/assets/bbb2f270-501a-4e9c-ac10-cca68232b387" />
+
+
 MAXie isn't just another desktop pet.
 
 It's an intelligent desktop companion designed to make your computer feel alive.
@@ -391,6 +394,38 @@ Coming Soon
 
              Ollama / Local AI Models
 ```
+
+<img width="1536" height="1024" alt="archicture 2" src="https://github.com/user-attachments/assets/fade6a9d-007e-434e-aa3a-917108b17416" />
+
+
+                    MAXie
+                      │
+          ┌───────────┴───────────┐
+          │                       │
+       Desktop                  Mobile
+          │                       │
+       Electron                 Flutter
+          │                       │
+          └───────────┬───────────┘
+                      │
+              Shared Companion
+                      │
+              ┌───────┴───────┐
+              │               │
+           Memory           AI Layer
+              │               │
+           Hive          FastAPI/Gemini
+              │               │
+              └───────┬───────┘
+                      │
+                 Cloud Sync
+
+
+
+<img width="1536" height="1024" alt="archicture" src="https://github.com/user-attachments/assets/272a2e15-d051-495c-b8e0-18f617a6584c" />
+
+
+
 
 ---
 
