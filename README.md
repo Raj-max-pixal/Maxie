@@ -358,6 +358,97 @@ Coming Soon
 
 ---
 
+## 🌐 Resources & Links
+
+<div align="center">
+
+<table>
+  <tr>
+    <th>🔗 Resource</th>
+    <th>🚀 Access</th>
+    <th>📌 Description</th>
+  </tr>
+
+  <tr>
+    <td><b>💻 GitHub Repository</b></td>
+    <td>
+      <a href="https://github.com/Raj-max-pixal/Maxie">
+        <img src="https://img.shields.io/badge/View-Repository-181717?style=for-the-badge&logo=github&logoColor=white">
+      </a>
+    </td>
+    <td>Source code, development & contributions</td>
+  </tr>
+
+  <tr>
+    <td><b>𝕏 X / Twitter</b></td>
+    <td>
+      <a href="https://x.com/Raja_x_20">
+        <img src="https://img.shields.io/badge/Follow-%40Raja__x__20-000000?style=for-the-badge&logo=x&logoColor=white">
+      </a>
+    </td>
+    <td>Updates, development progress & announcements</td>
+  </tr>
+
+  <tr>
+    <td><b>📝 Development Blog</b></td>
+    <td>
+      <a href="https://medium.com/@rajasaranyaraj20/im-building-maxie-an-ai-companion-that-lives-across-your-desktop-and-mobile-d9cbcddc07e2">
+        <img src="https://img.shields.io/badge/Read-Blog-000000?style=for-the-badge&logo=medium&logoColor=white">
+      </a>
+    </td>
+    <td>Behind-the-scenes development story & architecture</td>
+  </tr>
+
+  <tr>
+    <td><b>⬇️ Download MAXie</b></td>
+    <td>
+      <a href="https://maxie-download.vercel.app/">
+        <img src="https://img.shields.io/badge/Download-MAXie-6C63FF?style=for-the-badge">
+      </a>
+    </td>
+    <td>Get the latest available MAXie build</td>
+  </tr>
+
+  <tr>
+    <td><b>📦 Latest Release</b></td>
+    <td>
+      <a href="https://github.com/Raj-max-pixal/Maxie/releases/latest">
+        <img src="https://img.shields.io/badge/View-Latest%20Release-2EA44F?style=for-the-badge&logo=github&logoColor=white">
+      </a>
+    </td>
+    <td>Release notes, builds & downloadable packages</td>
+  </tr>
+
+  <tr>
+    <td><b>🎥 Live Demo</b></td>
+    <td>
+      <a href="https://youtu.be/G7vL_V50Bc0">
+        <img src="https://img.shields.io/badge/Watch-Live%20Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white">
+      </a>
+    </td>
+    <td>See MAXie in action across the experience</td>
+  </tr>
+
+</table>
+
+<br>
+
+### ⭐ Explore MAXie
+
+<a href="https://github.com/Raj-max-pixal/Maxie">
+  <img src="https://img.shields.io/github/stars/Raj-max-pixal/Maxie?style=for-the-badge&logo=github&label=Star%20MAXie">
+</a>
+
+<a href="https://github.com/Raj-max-pixal/Maxie/releases/latest">
+  <img src="https://img.shields.io/github/v/release/Raj-max-pixal/Maxie?style=for-the-badge&label=Latest%20Version">
+</a>
+
+<a href="https://maxie-download.vercel.app/">
+  <img src="https://img.shields.io/badge/Get%20MAXie-Download-6C63FF?style=for-the-badge">
+</a>
+
+</div>
+
 # 🏗 System Architecture
 
 ```
