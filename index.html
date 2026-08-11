@@ -4,13 +4,91 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#071225">
+    <meta name="description" content="MAXie — Your AI companion for tasks, habits, focus, and smart memory.">
     <title>MAXie</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="assets/icon-192.png">
     <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+
+    <!-- ═══════════════ MEMORY DETECTION PANEL (overlay) ═══════════════ -->
+    <div id="memoryDetectionOverlay" class="mem-overlay" role="dialog" aria-modal="true" aria-labelledby="memDetectTitle" hidden>
+      <div class="mem-panel" id="memoryDetectionPanel">
+        <div class="mem-header">
+          <span class="mem-brain-pulse">🧠</span>
+          <div>
+            <p id="memDetectTitle" class="mem-detect-title">New Memory Detected</p>
+            <p class="mem-detect-sub">MAXie noticed something important</p>
+          </div>
+          <button id="memIgnoreX" class="mem-close-btn" type="button" aria-label="Ignore">✕</button>
+        </div>
+
+        <div class="mem-meta-grid">
+          <div class="mem-meta-pill">
+            <span class="mem-pill-label">Category</span>
+            <span id="memCategory" class="mem-pill-value"></span>
+          </div>
+          <div class="mem-meta-pill">
+            <span class="mem-pill-label">Value</span>
+            <span id="memValue" class="mem-pill-value"></span>
+          </div>
+          <div class="mem-meta-pill">
+            <span class="mem-pill-label">Importance</span>
+            <span id="memStars" class="mem-pill-value mem-stars"></span>
+          </div>
+          <div class="mem-meta-pill">
+            <span class="mem-pill-label">Confidence</span>
+            <span id="memConfidence" class="mem-pill-value"></span>
+          </div>
+          <div class="mem-meta-pill">
+            <span class="mem-pill-label">Source</span>
+            <span class="mem-pill-value">Conversation</span>
+          </div>
+          <div class="mem-meta-pill">
+            <span class="mem-pill-label">Created</span>
+            <span class="mem-pill-value">Today</span>
+          </div>
+        </div>
+
+        <div class="mem-confidence-bar-wrap">
+          <div class="mem-confidence-track">
+            <div id="memConfidenceBar" class="mem-confidence-fill"></div>
+          </div>
+          <span id="memConfidencePct" class="mem-confidence-pct"></span>
+        </div>
+
+        <div class="mem-actions">
+          <button id="memSaveBtn" class="mem-btn-save" type="button">✅ Save</button>
+          <button id="memEditBtn" class="mem-btn-edit" type="button">✏️ Edit</button>
+          <button id="memIgnoreBtn" class="mem-btn-ignore" type="button">❌ Ignore</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ MEMORY EDIT DIALOG ═══════════════ -->
+    <div id="memEditOverlay" class="mem-overlay" role="dialog" aria-modal="true" hidden>
+      <div class="mem-edit-dialog">
+        <h3 class="mem-edit-title">✏️ Edit Memory</h3>
+        <label class="mem-edit-field">
+          <span>Category</span>
+          <input id="memEditCategory" type="text">
+        </label>
+        <label class="mem-edit-field">
+          <span>Value</span>
+          <textarea id="memEditValue" rows="3"></textarea>
+        </label>
+        <div class="mem-edit-actions">
+          <button id="memEditSave" class="mem-btn-save" type="button">Save Memory</button>
+          <button id="memEditCancel" class="mem-btn-ignore" type="button">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <main class="phone-shell" data-theme="aurora">
       <header class="app-topbar">
         <div class="brand-lockup">
@@ -25,6 +103,7 @@
         </button>
       </header>
 
+      <!-- ═══ HOME VIEW ═══ -->
       <section class="view is-active" id="view-home" data-view="home" aria-label="Home">
         <div class="hero-panel">
           <button id="companion" class="companion face-glow" type="button" aria-label="Talk to MAXie">
@@ -65,12 +144,13 @@
 
         <section class="feature-grid" aria-label="Feature shortcuts">
           <button data-jump="chat" type="button">AI Chat<span>Free local replies</span></button>
+          <button data-jump="memory" type="button">🧠 Memories<span>Smart AI memory</span></button>
           <button data-jump="tasks" type="button">Tasks<span>Reminders and habits</span></button>
-          <button data-jump="sync" type="button">PC Sync<span>Files and clipboard</span></button>
           <button data-jump="settings" type="button">Customize<span>Faces and themes</span></button>
         </section>
       </section>
 
+      <!-- ═══ CHAT VIEW ═══ -->
       <section class="view" id="view-chat" data-view="chat" aria-label="Chat">
         <section class="panel-card">
           <div class="section-title">
@@ -82,7 +162,7 @@
           </div>
           <div id="chatLog" class="chat-log" aria-live="polite"></div>
           <form id="chatForm" class="composer">
-            <input id="chatInput" type="text" placeholder="Ask MAXie anything">
+            <input id="chatInput" type="text" placeholder="Ask MAXie anything…">
             <button class="primary" type="submit">Send</button>
           </form>
         </section>
@@ -114,6 +194,69 @@
         </section>
       </section>
 
+      <!-- ═══ MEMORY VIEW ═══ -->
+      <section class="view" id="view-memory" data-view="memory" aria-label="Memory">
+        <div class="memory-hero">
+          <div class="memory-hero-icon">🧠</div>
+          <div>
+            <h2 class="memory-hero-title">MAXie Memories</h2>
+            <p class="memory-hero-sub">Everything I know about you</p>
+          </div>
+        </div>
+
+        <!-- Dashboard grid -->
+        <div class="mem-dashboard-grid" id="memDashboard">
+          <div class="mem-dash-tile" id="dash-memories">
+            <span class="mem-dash-emoji">🧠</span>
+            <span class="mem-dash-count" id="dashMemories">0</span>
+            <span class="mem-dash-label">Memories</span>
+          </div>
+          <div class="mem-dash-tile" id="dash-goals">
+            <span class="mem-dash-emoji">🎯</span>
+            <span class="mem-dash-count" id="dashGoals">0</span>
+            <span class="mem-dash-label">Goals</span>
+          </div>
+          <div class="mem-dash-tile" id="dash-favorites">
+            <span class="mem-dash-emoji">❤️</span>
+            <span class="mem-dash-count" id="dashFavorites">0</span>
+            <span class="mem-dash-label">Favorites</span>
+          </div>
+          <div class="mem-dash-tile" id="dash-projects">
+            <span class="mem-dash-emoji">📚</span>
+            <span class="mem-dash-count" id="dashProjects">0</span>
+            <span class="mem-dash-label">Projects</span>
+          </div>
+          <div class="mem-dash-tile mem-dash-tile--special" id="dash-relationship">
+            <span class="mem-dash-emoji">🔥</span>
+            <span class="mem-dash-count" id="dashRelationship">Lv 1</span>
+            <span class="mem-dash-label">Relationship</span>
+          </div>
+          <div class="mem-dash-tile" id="dash-important">
+            <span class="mem-dash-emoji">⭐</span>
+            <span class="mem-dash-count" id="dashImportant">0</span>
+            <span class="mem-dash-label">Important</span>
+          </div>
+        </div>
+
+        <!-- Memory list -->
+        <section class="panel-card" style="margin-top:.9rem">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Saved memories</div>
+              <h2>Knowledge base</h2>
+            </div>
+            <span id="memoryCountBadge">0 saved</span>
+          </div>
+          <ul id="memoryRecordList" class="memory-record-list" aria-label="Saved memories">
+            <li class="mem-empty-state">
+              <span>No memories yet.</span>
+              <small>Chat with MAXie and I'll remember the important stuff automatically!</small>
+            </li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- ═══ TASKS VIEW ═══ -->
       <section class="view" id="view-tasks" data-view="tasks" aria-label="Tasks">
         <section class="panel-card">
           <div class="section-title">
@@ -161,6 +304,7 @@
         </section>
       </section>
 
+      <!-- ═══ SYNC VIEW ═══ -->
       <section class="view" id="view-sync" data-view="sync" aria-label="Sync">
         <section class="panel-card">
           <div class="section-title">
@@ -199,6 +343,7 @@
         </section>
       </section>
 
+      <!-- ═══ SETTINGS VIEW ═══ -->
       <section class="view" id="view-settings" data-view="settings" aria-label="Settings">
         <section class="panel-card">
           <div class="section-title">
@@ -245,8 +390,8 @@
       <nav class="bottom-nav" aria-label="Main navigation">
         <button class="is-active" data-nav="home" type="button"><span class="nav-icon home"></span>Home</button>
         <button data-nav="chat" type="button"><span class="nav-icon chat"></span>Chat</button>
+        <button data-nav="memory" type="button"><span class="nav-icon memory"></span>Memory</button>
         <button data-nav="tasks" type="button"><span class="nav-icon tasks"></span>Tasks</button>
-        <button data-nav="sync" type="button"><span class="nav-icon sync"></span>Sync</button>
         <button data-nav="settings" type="button"><span class="nav-icon settings"></span>Settings</button>
       </nav>
     </main>
