@@ -5,7 +5,8 @@
 
 <div align="center">
 
-<img src="assets/banner.png" alt="MAXie Banner" width="100%">
+<img width="250" height="250" alt="logo" src="https://github.com/user-attachments/assets/5f59dda0-ed6e-4ccc-bb38-38543cd43aa0" />
+
 
 # 🐾 MAXie
 
