@@ -333,7 +333,9 @@ Expected showcase:
 
 | Desktop Companion | AI Chat | Coding Mode |
 |------------------|----------|-------------|
-| ![](assets/screenshots/home.png) | ![](assets/screenshots/chat.png) | ![](assets/screenshots/coding.png) |
+| <img width="452" height="346" alt="desktop companion" src="https://github.com/user-attachments/assets/2cb8bfe1-0b33-4b15-b944-a881d3895d18" />
+ | <img width="1918" height="1032" alt="settings" src="https://github.com/user-attachments/assets/1442b8a6-50c2-40bb-a2f1-0d54035ee0a4" />
+ | ![](assets/screenshots/coding.png) |
 
 | Gaming Mode | Music Mode | Sleeping |
 |-------------|------------|----------|
