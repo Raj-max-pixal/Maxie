@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/config/app_state.dart';
 import 'package:maxie_mobile/features/ai_chat/application/ai_settings_providers.dart';
+import 'package:maxie_mobile/features/voice/application/voice_state_providers.dart';
+import 'package:maxie_mobile/features/voice/domain/models/voice_state.dart';
 import 'package:maxie_mobile/services/connectivity_service.dart';
 import 'package:maxie_mobile/services/snackbar_service.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
@@ -18,6 +20,7 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final isOffline = ref.watch(offlineProvider);
     final aiSettings = ref.watch(aiSettingsProvider);
+    final voiceState = ref.watch(voiceStateProvider).valueOrNull;
 
     return PremiumScaffold(
       title: 'Settings',
@@ -125,13 +128,20 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 _SettingsSwitch(
                   title: 'Voice',
-                  subtitle: 'Prepared for speech input and MAXie voice output.',
+                  subtitle: 'Speech input and MAXie voice output.',
                   icon: Icons.mic_rounded,
-                  value: true,
-                  onChanged: (_) => _showFoundationMessage(
-                    context,
-                    'Voice settings are ready for Phase 3.',
-                  ),
+                  value: voiceState?.conversationModeEnabled ?? false,
+                  onChanged: (value) async {
+                    await ref.read(voiceRepositoryProvider).saveState(
+                          (voiceState ?? const VoiceState()).copyWith(
+                            conversationModeEnabled: value,
+                          ),
+                        );
+                    ref.invalidate(voiceStateProvider);
+                    if (context.mounted) {
+                      _showFoundationMessage(context, 'Voice setting saved.');
+                    }
+                  },
                 ),
                 const Divider(),
                 _SettingsSwitch(

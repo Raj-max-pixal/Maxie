@@ -23,12 +23,12 @@ class TasksScreen extends StatelessWidget {
           SizedBox(height: AppSpacing.lg),
           TaskCard(
             title: 'Prepare afternoon meeting notes',
-            subtitle: 'Placeholder task connected from Home quick actions.',
+            subtitle: 'Connected from Home quick actions.',
           ),
           SizedBox(height: AppSpacing.sm),
           TaskCard(
             title: 'Review Project Nebula draft',
-            subtitle: 'Future task logic will plug into this screen.',
+            subtitle: 'Ready for the productivity workflow.',
           ),
           SizedBox(height: AppSpacing.lg),
           PremiumCard(
@@ -37,7 +37,7 @@ class TasksScreen extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.calendar_month_rounded, color: AppColors.warning),
               title: Text('Calendar and tasks foundation ready'),
-              subtitle: Text('Phase 3 can connect real data without redesigning this flow.'),
+              subtitle: Text('Real task data can plug into this flow cleanly.'),
             ),
           ),
         ],

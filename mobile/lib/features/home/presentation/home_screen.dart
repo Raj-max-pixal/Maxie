@@ -130,7 +130,7 @@ class HomeScreen extends ConsumerWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _showFoundationMessage(
                     context,
-                    'Scan file foundation is ready for Phase 3.',
+                    'Scan file intake is ready for the document flow.',
                   ),
                   icon: const Icon(Icons.document_scanner_rounded),
                   label: const Text('Scan File'),
@@ -170,7 +170,7 @@ class HomeScreen extends ConsumerWidget {
                 color: AppColors.warmCoral,
                 onTap: () => _showFoundationMessage(
                   context,
-                  'Voice mode is ready as a Phase 3 entry point.',
+                  'Voice mode can be enabled from Settings.',
                 ),
               ),
               _QuickAction(

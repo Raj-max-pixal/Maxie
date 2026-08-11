@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/ai_chat/application/conversation_repository_provider.dart';
 import 'package:maxie_mobile/features/memory/application/memory_manager.dart';
-import 'package:maxie_mobile/features/memory/data/placeholder_memory_repository.dart';
+import 'package:maxie_mobile/features/memory/data/hive_memory_repository.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/features/memory/domain/repositories/memory_repository.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart';

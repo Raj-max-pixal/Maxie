@@ -9,6 +9,7 @@ import 'package:maxie_mobile/features/ai_chat/domain/models/chat_state.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/models/conversation.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/repositories/ai_repository.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/repositories/conversation_repository.dart';
+import 'package:maxie_mobile/features/ai_companion/application/companion_state_engine.dart';
 import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart';
@@ -90,6 +91,7 @@ class ChatController extends StateNotifier<ChatState> {
     );
 
     await _persist();
+    unawaited(_ref.read(companionStateEngineProvider.notifier).reactToChat());
 
     final memoryEnabled = _ref.read(aiSettingsProvider).memoryEnabled;
     if (memoryEnabled) {

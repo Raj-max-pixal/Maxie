@@ -4,6 +4,7 @@ import 'package:maxie_mobile/features/ai_chat/application/chat_controller.dart';
 import 'package:maxie_mobile/features/ai_chat/application/conversation_repository_provider.dart';
 import 'package:maxie_mobile/features/ai_companion/application/ai_companion_providers.dart';
 import 'package:maxie_mobile/features/ai_companion/application/companion_engine_providers.dart';
+import 'package:maxie_mobile/features/ai_companion/application/companion_state_engine.dart';
 import 'package:maxie_mobile/features/everywhere_mode/application/everywhere_mode_providers.dart';
 import 'package:maxie_mobile/features/floating_companion/application/floating_companion_providers.dart';
 import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
@@ -18,6 +19,8 @@ final appFoundationProvider = Provider<void>((ref) {
     ..watch(storageServiceProvider)
     ..watch(aiCompanionRepositoryProvider)
     ..watch(aiCompanionStateProvider)
+    ..watch(companionEmotionRepositoryProvider)
+    ..watch(companionEmotionProvider)
     ..watch(companionMoodEngineProvider)
     ..watch(companionModelProvider)
     ..watch(aiRepositoryProvider)
