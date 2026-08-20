@@ -42,6 +42,7 @@ class MemoryRecord {
     this.tags = const [],
     this.source = MemorySource.user,
     this.lastUsedAt,
+    this.usageCount = 0,
     this.conversationId,
     this.messageId,
     this.isPinned = false,
@@ -63,6 +64,7 @@ class MemoryRecord {
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? lastUsedAt;
+  final int usageCount;
   final String? conversationId;
   final String? messageId;
   final bool isPinned;
@@ -85,6 +87,7 @@ class MemoryRecord {
     MemorySource? source,
     DateTime? updatedAt,
     DateTime? lastUsedAt,
+    int? usageCount,
     String? conversationId,
     String? messageId,
     bool? isPinned,
@@ -106,6 +109,7 @@ class MemoryRecord {
       createdAt: createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       lastUsedAt: lastUsedAt ?? this.lastUsedAt,
+      usageCount: usageCount ?? this.usageCount,
       conversationId: conversationId ?? this.conversationId,
       messageId: messageId ?? this.messageId,
       isPinned: isPinned ?? this.isPinned,
@@ -130,6 +134,7 @@ class MemoryRecord {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'lastUsedAt': lastUsedAt?.toIso8601String(),
+      'usageCount': usageCount,
       'conversationId': conversationId,
       'messageId': messageId,
       'isPinned': isPinned,
@@ -165,6 +170,7 @@ class MemoryRecord {
       lastUsedAt: json['lastUsedAt'] == null
           ? null
           : DateTime.parse(json['lastUsedAt'] as String),
+      usageCount: (json['usageCount'] as num?)?.toInt() ?? 0,
       conversationId: json['conversationId'] as String?,
       messageId: json['messageId'] as String?,
       isPinned: (json['isPinned'] as bool?) ?? false,

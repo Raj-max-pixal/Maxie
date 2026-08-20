@@ -23,8 +23,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final date = DateTime.now();
-    final greeting = _timeGreeting(date);
     final memoryState = ref.watch(memoryManagerProvider);
+    final greeting = _timeGreeting(date, memoryState.memories);
     final latestMemory = _latestMemory(memoryState.memories);
     final summary = memoryState.summary;
 
@@ -70,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
             ],
           ).animate().fadeIn(duration: 260.ms).slideY(begin: -0.1, end: 0),
           const SizedBox(height: AppSpacing.xl),
-          _TodaysCompanionCard(now: date),
+          _TodaysCompanionCard(now: date, memories: memoryState.memories),
           const SizedBox(height: AppSpacing.lg),
           if (latestMemory != null)
             PremiumCard(
@@ -103,7 +103,7 @@ class HomeScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    _rotatingCompanionMessage(date),
+                    _rotatingCompanionMessage(date, memoryState.memories),
                     textAlign: TextAlign.center,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w900,
@@ -317,16 +317,17 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class _TodaysCompanionCard extends StatelessWidget {
-  const _TodaysCompanionCard({required this.now});
+  const _TodaysCompanionCard({required this.now, required this.memories});
 
   final DateTime now;
+  final List<MemoryRecord> memories;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final greeting = _timeGreeting(now);
+    final greeting = _timeGreeting(now, memories);
     final mood = _companionMood(now);
-    final message = _rotatingCompanionMessage(now);
+    final message = _rotatingCompanionMessage(now, memories);
 
     return PremiumCard(
       glowColor: AppColors.warmCoral,
@@ -426,48 +427,71 @@ class _QuickAction extends StatelessWidget {
   }
 }
 
-_CompanionGreeting _timeGreeting(DateTime now) {
+_CompanionGreeting _timeGreeting(DateTime now, List<MemoryRecord> memories) {
   final hour = now.hour;
+  
+  // Find interesting memories to include in the greeting
+  final projects = memories.where((m) => m.category == MemoryCategory.projects).toList()..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  final dreams = memories.where((m) => m.category == MemoryCategory.dreamCompanies).toList();
+  
+  String title = 'Good Morning Raj';
+  String icon = '☀️';
+  String detail = "Today's mission awaits.";
+  String detailIcon = '🎯';
+
   if (hour >= 5 && hour < 12) {
-    return const _CompanionGreeting(
-      icon: '\u{2600}\u{FE0F}',
-      title: 'Good Morning Raj',
-      detailIcon: '\u{1F3AF}',
-      detail: "Today's mission awaits.",
-    );
+    title = 'Good Morning Raj';
+    icon = '☀️';
+    if (projects.isNotEmpty) {
+      final p = projects.first;
+      if (now.difference(p.updatedAt).inDays <= 2) {
+        detail = 'Yesterday you worked on ${p.value}. Ready to continue?';
+      } else {
+        detail = 'Let\'s make progress on ${p.value} today.';
+      }
+    }
+  } else if (hour >= 12 && hour < 17) {
+    title = 'Good Afternoon Raj';
+    icon = '🌤️';
+    detailIcon = '✅';
+    detail = "Let's finish today's goals.";
+    if (dreams.isNotEmpty) {
+      detail = "Every step brings you closer to ${dreams.first.value}.";
+    }
+  } else if (hour >= 17 && hour < 22) {
+    title = 'Good Evening Raj';
+    icon = '🌙';
+    detailIcon = '💜';
+    detail = "You're doing great today.";
+    if (dreams.isNotEmpty) {
+      detail = "You're getting closer to your ${dreams.first.value} dream. Let's continue today's mission.";
+    }
+  } else {
+    title = 'Good Night Raj';
+    icon = '😴';
+    detailIcon = '🛌';
+    detail = "Don't forget to rest. We'll continue tomorrow.";
   }
-  if (hour >= 12 && hour < 17) {
-    return const _CompanionGreeting(
-      icon: '\u{1F324}',
-      title: 'Good Afternoon Raj',
-      detailIcon: '\u{2705}',
-      detail: "Let's finish today's goals.",
-    );
-  }
-  if (hour >= 17 && hour < 22) {
-    return const _CompanionGreeting(
-      icon: '\u{1F306}',
-      title: 'Good Evening Raj',
-      detailIcon: '\u{1F49C}',
-      detail: "You're doing great today.",
-    );
-  }
-  return const _CompanionGreeting(
-    icon: '\u{1F319}',
-    title: 'Good Night Raj',
-    detailIcon: '\u{1F6CC}',
-    detail: "Don't forget to recharge yourself too.",
+  
+  return _CompanionGreeting(
+    icon: icon,
+    title: title,
+    detailIcon: detailIcon,
+    detail: detail,
   );
 }
 
-String _rotatingCompanionMessage(DateTime now) {
-  const messages = [
-    "You've got this \u{1F49C}",
+String _rotatingCompanionMessage(DateTime now, List<MemoryRecord> memories) {
+  final messages = [
+    "You've got this 💜",
     "I'm always here.",
     'Ready to build something amazing?',
     "Today's a good day to learn.",
-    "Let's win Shipaton.",
   ];
+  final goals = memories.where((m) => m.category == MemoryCategory.goals).toList();
+  if (goals.isNotEmpty) {
+    messages.add("Let's focus on: ${goals.first.value}");
+  }
   return messages[(now.day + now.hour) % messages.length];
 }
 

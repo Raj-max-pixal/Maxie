@@ -6,6 +6,7 @@ import 'package:maxie_mobile/features/ai_chat/application/chat_controller.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/models/chat_message.dart';
 import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
+import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
 import 'package:maxie_mobile/widgets/maxie_companion_view.dart';
@@ -245,7 +246,19 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                   return;
                 }
                 Navigator.of(dialogContext).pop();
-                _showMessage('Memory saved.');
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          MaxieCompanionView(size: 24, state: CompanionPresence.happy),
+                          const SizedBox(width: AppSpacing.sm),
+                          const Text('Got it! Updated.'),
+                        ],
+                      ),
+                    ),
+                  );
               },
               child: const Text('Save'),
             ),
@@ -626,7 +639,7 @@ class _MemorySuggestionCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
-                    ),
+                    ).animate().shimmer(duration: 1200.ms, delay: 400.ms),
                     const SizedBox(height: 4),
                     Text(
                       suggestion.memory.title,
@@ -656,6 +669,17 @@ class _MemorySuggestionCard extends StatelessWidget {
               FilledButton.icon(
                 onPressed: () {
                   onSave();
+                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          MaxieCompanionView(size: 24, state: CompanionPresence.happy),
+                          const SizedBox(width: AppSpacing.sm),
+                          const Text('I\'ll remember that.'),
+                        ],
+                      ),
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.bookmark_add_rounded),
                 label: const Text('Save'),
@@ -666,7 +690,9 @@ class _MemorySuggestionCard extends StatelessWidget {
                 label: const Text('Edit'),
               ),
               OutlinedButton.icon(
-                onPressed: onIgnore,
+                onPressed: () {
+                  onIgnore();
+                },
                 icon: const Icon(Icons.close_rounded),
                 label: const Text('Ignore'),
               ),
@@ -681,7 +707,7 @@ class _MemorySuggestionCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ).animate().fadeIn(duration: 240.ms).slideY(begin: 0.04, end: 0);
   }
 }
 
@@ -702,69 +728,42 @@ class _MemoryMetaGrid extends StatelessWidget {
       runSpacing: AppSpacing.sm,
       children: [
         _MemoryMetaPill(
-          label: 'Category',
-          value: _categoryLabel(memory.category),
+          label: 'Confidence',
+          value: '${(confidence * 100).round()}%',
+          color: AppColors.success,
         ),
         _MemoryMetaPill(
           label: 'Importance',
           value: _stars(memory.importance.weight),
-        ),
-        _MemoryMetaPill(
-          label: 'Confidence',
-          value: '${(confidence * 100).round()}%',
+          color: AppColors.warning,
         ),
         _MemoryMetaPill(
           label: 'Source',
           value: memory.source.name.toUpperCase(),
         ),
         _MemoryMetaPill(label: 'Created', value: created),
-        _MemoryMetaPill(label: 'Used', value: used),
+        _MemoryMetaPill(label: 'Used', value: '$used (${memory.usageCount}x)'),
       ],
     );
-  }
-
-  String _categoryLabel(MemoryCategory category) {
-    return switch (category) {
-      MemoryCategory.userProfile => 'User Profile',
-      MemoryCategory.goals => 'Goals',
-      MemoryCategory.dreamCompanies => 'Dream Companies',
-      MemoryCategory.projects => 'Projects',
-      MemoryCategory.skills => 'Skills',
-      MemoryCategory.interests => 'Interests',
-      MemoryCategory.favoriteApps => 'Favorite Apps',
-      MemoryCategory.favoriteSongs => 'Favorite Songs',
-      MemoryCategory.favoriteMovies => 'Favorite Movies',
-      MemoryCategory.favoriteGames => 'Favorite Games',
-      MemoryCategory.college => 'College',
-      MemoryCategory.friends => 'Friends',
-      MemoryCategory.family => 'Family',
-      MemoryCategory.birthdays => 'Birthday',
-      MemoryCategory.importantDates => 'Important Dates',
-      MemoryCategory.achievements => 'Achievements',
-      MemoryCategory.habits => 'Habits',
-      MemoryCategory.dailyRoutine => 'Daily Routine',
-      MemoryCategory.preferences => 'Preferences',
-      MemoryCategory.pinned => 'Pinned',
-      MemoryCategory.conversation => 'Conversation',
-    };
   }
 
   String _stars(int weight) => List.filled(weight.clamp(1, 5), '★').join();
 }
 
 class _MemoryMetaPill extends StatelessWidget {
-  const _MemoryMetaPill({required this.label, required this.value});
+  const _MemoryMetaPill({required this.label, required this.value, this.color});
 
   final String label;
   final String value;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: const Color(0xFF0E1624),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.darkStroke),
       ),
       child: Column(
@@ -776,14 +775,18 @@ class _MemoryMetaPill extends StatelessWidget {
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: Colors.white54,
               fontWeight: FontWeight.w700,
+              fontSize: 9,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             value,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
+            ).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: color ?? Colors.white,
+            ),
           ),
         ],
       ),

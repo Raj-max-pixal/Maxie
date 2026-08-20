@@ -49,7 +49,7 @@ class MaxieCompanionView extends StatelessWidget {
               height: size * 0.56,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(size * 0.18),
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [style.bodyStart, style.bodyEnd],
