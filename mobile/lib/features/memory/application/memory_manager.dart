@@ -68,7 +68,9 @@ class MemoryBrainState {
 }
 
 class MemoryManager extends StateNotifier<MemoryBrainState> {
-  MemoryManager({required this._service}) : super(MemoryBrainState.initial());
+  MemoryManager({required MemoryService service})
+    : _service = service,
+      super(MemoryBrainState.initial());
 
   final MemoryService _service;
 

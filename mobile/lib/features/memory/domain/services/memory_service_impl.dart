@@ -11,9 +11,10 @@ import 'package:maxie_mobile/features/memory/domain/services/memory_timeline.dar
 
 class DefaultMemoryService implements MemoryService {
   DefaultMemoryService({
-    required this._memoryRepository,
-    required this._conversationRepository,
-  });
+    required MemoryRepository memoryRepository,
+    required ConversationRepository conversationRepository,
+  }) : _memoryRepository = memoryRepository,
+       _conversationRepository = conversationRepository;
 
   final MemoryRepository _memoryRepository;
   final ConversationRepository _conversationRepository;

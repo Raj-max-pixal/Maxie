@@ -33,11 +33,13 @@ final chatControllerProvider = StateNotifierProvider<ChatController, ChatState>(
 
 class ChatController extends StateNotifier<ChatState> {
   ChatController({
-    required this._ref,
+    required Ref ref,
     required this.aiRepository,
     required this.conversationRepository,
-    required this._memoryService,
-  }) : super(ChatState.initial());
+    required MemoryService memoryService,
+  }) : _ref = ref,
+       _memoryService = memoryService,
+       super(ChatState.initial());
 
   final Ref _ref;
   final AiRepository aiRepository;
