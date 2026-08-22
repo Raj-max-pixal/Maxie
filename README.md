@@ -297,9 +297,9 @@ MAXie can express dozens of emotions.
 | Productivity Features | ✅ Complete |
 | Offline AI | ✅ Complete |
 | Local LLM Support | ✅ Complete |
-| Voice Chat | 🚧 In Progress |
+| Voice Chat | ✅ Complete (Phase 7 SpeechSynthesis/Rec) |
 | Plugin System | 📅 Planned |
-| Mobile Companion | 📅 Planned |
+| Mobile Companion | ✅ Complete (Phase 6.5 & 7) |
 | Cloud Sync | 📅 Planned |
 
 ---

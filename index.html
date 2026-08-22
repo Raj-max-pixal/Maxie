@@ -90,6 +90,7 @@
     </div>
 
     <main class="phone-shell" data-theme="aurora">
+      <div id="inAppShimejiContainer" class="in-app-shimeji-container"></div>
       <header class="app-topbar">
         <div class="brand-lockup">
           <span class="brand-orb">M</span>
@@ -152,17 +153,32 @@
 
       <!-- ═══ CHAT VIEW ═══ -->
       <section class="view" id="view-chat" data-view="chat" aria-label="Chat">
+        <!-- Companion Card Dashboard inside Chat -->
+        <div class="shimeji-companion-card" id="chatCompanionCard" style="margin-bottom: 0.8rem; border-color: var(--mint); background: rgba(88, 240, 210, 0.04);">
+          <div class="shimeji-card-left">
+            <div class="shimeji-card-avatar" id="chatCompanionAvatar" style="background: linear-gradient(135deg, var(--gold), var(--sky)); width: 42px; height: 42px; border-radius: 8px;">🐾</div>
+            <div class="shimeji-card-info">
+              <strong id="chatCompanionName">MAXie</strong>
+              <small><span id="chatCompanionMood">calm</span> | <span id="chatCompanionRelationship">Stranger (Lv 1)</span></small>
+            </div>
+          </div>
+          <div class="shimeji-card-right" style="display: flex; gap: 0.4rem; align-items: center;">
+            <button id="voiceSynthToggle" type="button" style="padding: 4px; font-size: 14px; min-width: 36px; min-height: 36px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 50%; color: var(--muted); cursor: pointer;" title="Toggle Speech Synthesis">🔇</button>
+          </div>
+        </div>
+
         <section class="panel-card">
           <div class="section-title">
             <div>
               <div class="section-kicker">AI chat</div>
-              <h2>Free/local mode</h2>
+              <h2 id="chatHeading">Chatting with MAXie</h2>
             </div>
             <span id="aiModeBadge">On-device</span>
           </div>
           <div id="chatLog" class="chat-log" aria-live="polite"></div>
           <form id="chatForm" class="composer">
-            <input id="chatInput" type="text" placeholder="Ask MAXie anything…">
+            <button id="voiceRecBtn" type="button" style="min-width: 42px; min-height: 42px; padding: 0; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 8px; font-size: 16px; cursor: pointer; color: var(--text);" title="Push to Talk">🎤</button>
+            <input id="chatInput" type="text" placeholder="Ask anything…">
             <button class="primary" type="submit">Send</button>
           </form>
         </section>
@@ -343,6 +359,138 @@
         </section>
       </section>
 
+      <!-- ═══ SHIMEJI VIEW ═══ -->
+      <section class="view" id="view-shimeji" data-view="shimeji" aria-label="Shimeji">
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Companion pets</div>
+              <h2 id="shimejiTitle">Anime Shimeji Engine</h2>
+            </div>
+            <span id="shimejiActiveCount">0 active</span>
+          </div>
+
+          <!-- Character store / selection list -->
+          <div class="shimeji-grid" id="companionList" style="display: grid; gap: 0.8rem; margin-top: 0.5rem;">
+            <!-- Dynamically populated from JS -->
+          </div>
+        </section>
+
+        <!-- Customization panel -->
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Pet settings</div>
+              <h2>Customization</h2>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>In-App Pet Simulation</span>
+            <select id="inAppShimejiToggle">
+              <option value="false">Off</option>
+              <option value="true">On</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Floating Overlay (Draw Over Apps)</span>
+            <select id="overlayShimejiToggle">
+              <option value="false">Off</option>
+              <option value="true">On</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Pet Size: <strong id="petSizeVal">100px</strong></span>
+            <input type="range" id="shimejiSize" min="50" max="180" value="100">
+          </label>
+
+          <label class="field">
+            <span>Movement Speed: <strong id="petSpeedVal">1.0x</strong></span>
+            <input type="range" id="shimejiSpeed" min="5" max="20" value="10">
+          </label>
+
+          <label class="field">
+            <span>Opacity: <strong id="petOpacityVal">100%</strong></span>
+            <input type="range" id="shimejiOpacity" min="20" max="100" value="100">
+          </label>
+
+          <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-between;">
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="shimejiSound" style="width: 20px; min-height: 20px;" checked>
+              <span>Sound Effects</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="shimejiBatterySaver" style="width: 20px; min-height: 20px;">
+              <span>Battery Saver</span>
+            </label>
+          </div>
+
+          <label class="field" id="soundVolField">
+            <span>Sound Volume: <strong id="soundVolVal">50%</strong></span>
+            <input type="range" id="shimejiSoundVol" min="0" max="100" value="50">
+          </label>
+        </section>
+
+        <!-- Actions panel -->
+        <section class="panel-card">
+          <div class="section-title">
+            <div>
+              <div class="section-kicker">Quick actions</div>
+              <h2>Interactions</h2>
+            </div>
+          </div>
+          <div class="quick-actions" style="margin-bottom: 0;">
+            <button id="shimejiFeedBtn" type="button">🍔 Feed</button>
+            <button id="shimejiDanceBtn" type="button">♪ Dance</button>
+            <button id="shimejiSleepBtn" type="button">💤 Sleep</button>
+          </div>
+          <div class="quick-actions" style="margin-top: 0.5rem; margin-bottom: 0;">
+            <button id="shimejiListenBtn" type="button">🎤 Listen</button>
+            <button id="shimejiResetBtn" type="button">🌀 Reset Pos</button>
+          </div>
+        </section>
+
+        <!-- Developer Debug Panel -->
+        <section class="panel-card" id="shimejiDebugPanel" style="border-color: var(--gold); display: none;">
+          <div class="section-title">
+            <h2 style="color: var(--gold);">🛠️ Dev Debug Mode</h2>
+            <button id="shimejiDebugClose" type="button" style="background: rgba(255,211,107,0.1); border-color: var(--gold); padding: 2px 8px; font-size: 11px;">Close</button>
+          </div>
+          <div style="font-size: 11px; display: grid; gap: 0.4rem; color: var(--muted);">
+            <div>FPS: <strong id="debugFps" style="color: var(--text);">0</strong></div>
+            <div>Active Pets: <strong id="debugPets" style="color: var(--text);">0</strong></div>
+            <div>Pos/Vel: <strong id="debugState" style="color: var(--text);">N/A</strong></div>
+            <div>XP/Friendship: <strong id="debugStats" style="color: var(--text);">N/A</strong></div>
+          </div>
+          <div class="composer" style="margin-top: 0.6rem;">
+            <select id="debugSpawnSelect" style="min-height: 38px; padding: 4px 8px; font-size: 11px;">
+              <option value="maxie">MAXie</option>
+              <option value="mimi">Mimi</option>
+              <option value="kuro">Kuro</option>
+              <option value="luna">Luna</option>
+              <option value="nova">Nova</option>
+            </select>
+            <button id="debugSpawnBtn" class="primary" type="button" style="min-height: 38px; padding: 4px 10px; font-size: 11px;">Spawn</button>
+          </div>
+          <div class="composer" style="margin-top: 0.4rem;">
+            <select id="debugAnimSelect" style="min-height: 38px; padding: 4px 8px; font-size: 11px;">
+              <option value="idle">Idle</option>
+              <option value="walk">Walk</option>
+              <option value="run">Run</option>
+              <option value="jump">Jump</option>
+              <option value="sleep">Sleep</option>
+              <option value="dance">Dance</option>
+              <option value="happy">Happy</option>
+              <option value="angry">Angry</option>
+            </select>
+            <button id="debugAnimBtn" class="primary" type="button" style="min-height: 38px; padding: 4px 10px; font-size: 11px;">Force Anim</button>
+          </div>
+          <button id="debugResetStateBtn" class="danger-button" type="button" style="width: 100%; margin-top: 0.4rem; min-height: 38px; font-size: 11px;">Reset Engine State</button>
+        </section>
+      </section>
+
       <!-- ═══ SETTINGS VIEW ═══ -->
       <section class="view" id="view-settings" data-view="settings" aria-label="Settings">
         <section class="panel-card">
@@ -392,10 +540,32 @@
         <button data-nav="chat" type="button"><span class="nav-icon chat"></span>Chat</button>
         <button data-nav="memory" type="button"><span class="nav-icon memory"></span>Memory</button>
         <button data-nav="tasks" type="button"><span class="nav-icon tasks"></span>Tasks</button>
+        <button data-nav="shimeji" type="button"><span class="nav-icon shimeji"></span>Shimeji</button>
         <button data-nav="settings" type="button"><span class="nav-icon settings"></span>Settings</button>
       </nav>
     </main>
 
+    <script src="animations/animationRegistry.js"></script>
+    <script src="renderer/petPhysics.js"></script>
+    <script src="renderer/petBrain.js"></script>
+    <script src="shimejiSound.js"></script>
+    <script src="inAppShimeji.js"></script>
+    <script src="lib/companion/companionState.js"></script>
+    <script src="lib/companion/personality/personalityEngine.js"></script>
+    <script src="lib/companion/mood/moodEngine.js"></script>
+    <script src="lib/companion/memory/importanceFilter.js"></script>
+    <script src="lib/companion/memory/memoryStore.js"></script>
+    <script src="lib/companion/relationship/relationshipEngine.js"></script>
+    <script src="lib/companion/reactions/reactionEngine.js"></script>
+    <script src="lib/companion/activities/activityEngine.js"></script>
+    <script src="lib/ai/providers/gemini.js"></script>
+    <script src="lib/ai/providers/ollama.js"></script>
+    <script src="lib/ai/providers/offline.js"></script>
+    <script src="lib/ai/prompts/characterPrompts.js"></script>
+    <script src="lib/ai/router/aiRouter.js"></script>
+    <script src="lib/voice/speech/speechRec.js"></script>
+    <script src="lib/voice/tts/ttsSynthesis.js"></script>
+    <script src="lib/companion/companionEngine.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

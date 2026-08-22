@@ -1,0 +1,16 @@
+{
+  "id": "nova",
+  "name": "Nova",
+  "displayName": "Nova",
+  "personality": "Energetic",
+  "theme": "candy",
+  "unlock": {
+    "type": "xp",
+    "value": 1500
+  },
+  "animations": [
+    "idle", "walk", "run", "jump", "fall", "land", "sit", "sleep", "wake", "dance",
+    "happy", "sad", "angry", "surprised", "love", "hungry", "bored", "excited",
+    "eat", "listen", "think", "wave", "drag", "throw"
+  ]
+}

@@ -608,7 +608,7 @@ h2 {
   bottom: 0;
   z-index: 10;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   width: min(100%, 430px);
   padding: .45rem .5rem max(.45rem, env(safe-area-inset-bottom));
   transform: translateX(-50%);
@@ -733,3 +733,106 @@ h2 {
     scroll-behavior: auto !important;
   }
 }
+
+/* ═══════════════ SHIMEJI ENGINE STYLES ═══════════════ */
+
+.nav-icon.shimeji {
+  position: relative;
+  border-radius: 6px 6px 3px 3px;
+}
+.nav-icon.shimeji::before,
+.nav-icon.shimeji::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  top: -2px;
+}
+.nav-icon.shimeji::before { left: 2px; }
+.nav-icon.shimeji::after { right: 2px; }
+
+/* Shimeji Companion Card styles */
+.shimeji-companion-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(16, 27, 51, 0.82);
+  padding: 0.8rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.shimeji-companion-card.is-active {
+  border-color: var(--mint);
+  background: rgba(88, 240, 210, 0.08);
+}
+
+.shimeji-companion-card.is-locked {
+  opacity: 0.65;
+  filter: grayscale(0.5);
+  background: rgba(5, 12, 26, 0.4);
+}
+
+.shimeji-card-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.shimeji-card-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--mint), var(--sky));
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.shimeji-companion-card.is-locked .shimeji-card-avatar {
+  background: var(--muted);
+  box-shadow: none;
+}
+
+.shimeji-card-info {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.shimeji-card-info strong {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.shimeji-card-info small {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.shimeji-card-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shimeji-card-right input[type="checkbox"] {
+  width: 22px;
+  min-height: 22px;
+  accent-color: var(--mint);
+  cursor: pointer;
+}
+
+/* In-app shimeji container overlay rules */
+.in-app-shimeji-container {
+  position: absolute;
+  inset: 0 0 56px 0;
+  height: calc(100% - 56px);
+  pointer-events: none;
+  z-index: 99;
+  overflow: hidden;
+}
+

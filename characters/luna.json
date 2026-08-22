@@ -1,0 +1,16 @@
+{
+  "id": "luna",
+  "name": "Luna",
+  "displayName": "Luna",
+  "personality": "Curious",
+  "theme": "aurora",
+  "unlock": {
+    "type": "tasks",
+    "value": 3
+  },
+  "animations": [
+    "idle", "walk", "run", "jump", "fall", "land", "sit", "sleep", "wake", "dance",
+    "happy", "sad", "angry", "surprised", "love", "hungry", "bored", "excited",
+    "eat", "listen", "think", "wave", "drag", "throw"
+  ]
+}

@@ -9,7 +9,12 @@ const files = [
   "styles.css",
   "app.js",
   "manifest.webmanifest",
-  "service-worker.js"
+  "service-worker.js",
+  "shimeji.html",
+  "shimeji.css",
+  "shimeji.js",
+  "shimejiSound.js",
+  "inAppShimeji.js"
 ];
 
 function copyFile(relativePath) {
@@ -22,6 +27,7 @@ function copyFile(relativePath) {
 function copyDir(relativePath) {
   const sourceDir = path.join(root, relativePath);
   const targetDir = path.join(outDir, relativePath);
+  if (!fs.existsSync(sourceDir)) return;
   fs.mkdirSync(targetDir, { recursive: true });
   for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
     const child = path.join(relativePath, entry.name);
@@ -35,5 +41,9 @@ fs.mkdirSync(outDir, { recursive: true });
 
 for (const file of files) copyFile(file);
 copyDir("assets");
+copyDir("animations");
+copyDir("characters");
+copyDir("renderer");
+copyDir("lib");
 
 console.log(`Prepared MAXie mobile web bundle at ${path.relative(root, outDir)}`);

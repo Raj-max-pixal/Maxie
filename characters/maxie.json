@@ -1,0 +1,15 @@
+{
+  "id": "maxie",
+  "name": "MAXie",
+  "displayName": "MAXie",
+  "personality": "Friendly",
+  "theme": "aurora",
+  "unlock": {
+    "type": "free"
+  },
+  "animations": [
+    "idle", "walk", "run", "jump", "fall", "land", "sit", "sleep", "wake", "dance",
+    "happy", "sad", "angry", "surprised", "love", "hungry", "bored", "excited",
+    "eat", "listen", "think", "wave", "drag", "throw"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "kuro",
+  "name": "Kuro",
+  "displayName": "Kuro",
+  "personality": "Lazy",
+  "theme": "mono",
+  "unlock": {
+    "type": "friendship",
+    "value": 8
+  },
+  "animations": [
+    "idle", "walk", "run", "jump", "fall", "land", "sit", "sleep", "wake", "dance",
+    "happy", "sad", "angry", "surprised", "love", "hungry", "bored", "excited",
+    "eat", "listen", "think", "wave", "drag", "throw"
+  ]
+}
