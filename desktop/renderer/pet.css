@@ -1,0 +1,1169 @@
+:root {
+  color-scheme: dark;
+  --mint: #72d6b2;
+  --sky: #82b5f7;
+  --rose: #f2859a;
+  --gold: #e8be65;
+  --ink: #17201e;
+  --panel: rgba(35, 38, 44, .94);
+  --text: #f4f1e8;
+  --line: rgba(255, 255, 255, .2);
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  user-select: none;
+}
+
+.pet-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+}
+
+.pet {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: var(--pet-size, 180px);
+  height: var(--pet-size, 180px);
+  transform: translateX(-50%);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: grab;
+  -webkit-app-region: no-drag;
+  touch-action: none;
+  z-index: 2;
+}
+
+.pet:active {
+  cursor: grabbing;
+}
+
+.pet.is-adventuring {
+  opacity: .96;
+  transform: translateX(18px) scale(.94);
+  transition: opacity .4s ease, transform .4s ease;
+}
+
+.body {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  width: 68%;
+  height: 72%;
+  transform: translateX(-50%);
+  border-radius: 46% 46% 38% 38%;
+  background: linear-gradient(145deg, var(--mint), var(--sky));
+  box-shadow: inset -16px -20px 0 rgba(0, 0, 0, .12);
+  animation: breathe 2.8s ease-in-out infinite;
+  transition: filter .18s ease, opacity .18s ease;
+}
+
+.pet.is-transitioning .body {
+  filter: brightness(1.08) saturate(1.08);
+}
+
+.custom-avatar {
+  position: absolute;
+  inset: 4%;
+  z-index: 4;
+  border-radius: 42%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.reaction-prop {
+  position: absolute;
+  right: -10%;
+  top: -18%;
+  z-index: 6;
+  min-width: 34px;
+  min-height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(35, 38, 44, .88);
+  border: 2px solid rgba(255, 255, 255, .36);
+  color: var(--text);
+  font-size: 24px;
+  opacity: 0;
+  transform: translateY(6px) scale(.86);
+  pointer-events: none;
+}
+
+.reaction-prop::before {
+  content: "";
+}
+
+.sparkles {
+  position: absolute;
+  inset: -18%;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sparkles::before,
+.sparkles::after {
+  position: absolute;
+  color: var(--gold);
+  font-size: 22px;
+  font-weight: 700;
+  content: "*";
+}
+
+.sparkles::before {
+  right: 0;
+  top: 18%;
+}
+
+.sparkles::after {
+  left: 4%;
+  top: 38%;
+}
+
+.blush {
+  position: absolute;
+  top: 58%;
+  width: 15%;
+  height: 8%;
+  border-radius: 999px;
+  background: rgba(242, 133, 154, .62);
+  opacity: .85;
+}
+
+.blush.left { left: 18%; }
+.blush.right { right: 18%; }
+
+.state-sleep .reaction-prop,
+.state-yawn .reaction-prop,
+.state-laugh .reaction-prop,
+.state-cry .reaction-prop,
+.state-dance .reaction-prop,
+.state-sing .reaction-prop,
+.state-eat .reaction-prop,
+.state-hungry .reaction-prop,
+.state-drink .reaction-prop,
+.state-full .reaction-prop,
+.state-thinking .reaction-prop,
+.state-watching .reaction-prop,
+.state-happy .reaction-prop,
+.state-angry .reaction-prop,
+.state-surprised .reaction-prop,
+.state-wave .reaction-prop,
+.state-listen .reaction-prop,
+.state-typing .reaction-prop,
+.state-gaming .reaction-prop,
+.state-win .reaction-prop,
+.state-lose .reaction-prop,
+.state-notification .reaction-prop,
+.state-message .reaction-prop {
+  opacity: 1;
+  animation: prop-pop 1.2s ease-in-out infinite;
+}
+
+.state-happy .sparkles,
+.state-dance .sparkles,
+.state-sing .sparkles,
+.state-celebrate .sparkles,
+.state-win .sparkles,
+.state-message .sparkles,
+.state-notification .sparkles,
+.state-surprised .sparkles {
+  opacity: 1;
+  animation: sparkle-twinkle .85s ease-in-out infinite;
+}
+
+.body.has-avatar {
+  background: transparent;
+  box-shadow: none;
+}
+
+.body.has-avatar .ear,
+.body.has-avatar .face,
+.body.has-avatar .arm,
+.body.has-avatar .leg {
+  opacity: 0;
+}
+
+.shadow {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 12px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .28);
+  filter: blur(2px);
+}
+
+.ear {
+  position: absolute;
+  top: -8%;
+  width: 32%;
+  height: 32%;
+  border-radius: 70% 70% 35% 35%;
+  background: inherit;
+}
+
+.ear.left { left: 8%; transform: rotate(-28deg); }
+.ear.right { right: 8%; transform: rotate(28deg); }
+
+.face {
+  position: absolute;
+  inset: 16% 12% 20%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .28);
+  border: 3px solid rgba(255, 255, 255, .52);
+}
+
+.face::before,
+.face::after {
+  position: absolute;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+
+.eye {
+  position: absolute;
+  top: 42%;
+  width: 12%;
+  height: 17%;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: blink 5s infinite;
+}
+
+.eye.left { left: 28%; }
+.eye.right { right: 28%; }
+
+.mouth {
+  position: absolute;
+  left: 50%;
+  top: 64%;
+  width: 30%;
+  height: 16%;
+  transform: translateX(-50%);
+  border-bottom: 4px solid var(--ink);
+  border-radius: 0 0 999px 999px;
+}
+
+.tear {
+  position: absolute;
+  right: 22%;
+  top: 57%;
+  width: 8%;
+  height: 13%;
+  border-radius: 50% 50% 60% 60%;
+  background: var(--sky);
+  opacity: 0;
+}
+
+.arm,
+.leg {
+  position: absolute;
+  background: inherit;
+  border-radius: 999px;
+}
+
+.arm {
+  top: 44%;
+  width: 28%;
+  height: 18%;
+}
+
+.arm.left { left: -16%; transform: rotate(28deg); }
+.arm.right { right: -16%; transform: rotate(-28deg); }
+
+.leg {
+  bottom: -5%;
+  width: 26%;
+  height: 20%;
+}
+
+.leg.left { left: 18%; }
+.leg.right { right: 18%; }
+
+.speech-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--pet-size, 180px) + 4px);
+  width: max-content;
+  max-width: 220px;
+  transform: translateX(-50%);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 9px 11px;
+  font-size: 13px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .28);
+  -webkit-app-region: no-drag;
+  z-index: 8;
+}
+
+.speech-bubble::after {
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  content: "";
+}
+
+.quick-menu {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: grid;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  -webkit-app-region: no-drag;
+  z-index: 10;
+}
+
+.quick-menu[hidden] {
+  display: none;
+}
+
+.quick-menu button {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .08);
+  color: var(--text);
+  padding: 6px 8px;
+  font: inherit;
+}
+
+.world-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.home-layer {
+  position: absolute;
+  inset: auto 8px 8px 8px;
+  height: 44px;
+  z-index: 0;
+  display: flex;
+  align-items: end;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.home-item {
+  min-width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .18);
+  font-size: 19px;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .22));
+}
+
+.companion-pet {
+  position: absolute;
+  left: 12%;
+  bottom: 30px;
+  width: calc(var(--pet-size, 180px) * .42);
+  height: calc(var(--pet-size, 180px) * .42);
+  z-index: 2;
+  border-radius: 46% 46% 38% 38%;
+  background: linear-gradient(145deg, var(--sky), var(--mint));
+  box-shadow: inset -8px -10px 0 rgba(0, 0, 0, .12), 0 12px 20px rgba(0, 0, 0, .2);
+  opacity: 0;
+  transform: translateX(-20px) scale(.85);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+
+.companion-pet.is-visible {
+  opacity: .96;
+  transform: translateX(0) scale(1);
+  animation: companion-bob 1.2s ease-in-out infinite;
+}
+
+.companion-face::before,
+.companion-face::after {
+  position: absolute;
+  top: 42%;
+  width: 9%;
+  height: 13%;
+  border-radius: 50%;
+  background: var(--ink);
+  content: "";
+}
+
+.companion-face::before { left: 33%; }
+.companion-face::after { right: 33%; }
+
+.companion-pet::after {
+  position: absolute;
+  left: 50%;
+  top: 63%;
+  width: 24%;
+  height: 12%;
+  transform: translateX(-50%);
+  border-bottom: 3px solid var(--ink);
+  border-radius: 0 0 999px 999px;
+  content: "";
+}
+
+.world-item {
+  position: absolute;
+  top: -38px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .24);
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .28));
+  font-size: 24px;
+  animation: world-drop 3.2s ease-in forwards;
+}
+
+.world-butterfly,
+.world-bird,
+.world-balloon,
+.world-kite {
+  animation: world-float 4s ease-in-out forwards;
+}
+
+.world-ball,
+.world-football,
+.world-yoyo {
+  animation: world-roll 3.4s ease-in-out forwards;
+}
+
+.world-ufo,
+.world-dragon,
+.world-meteor,
+.world-rainbow,
+.world-treasure,
+.world-robot,
+.world-fireworks,
+.world-package,
+.world-pizza,
+.world-cake {
+  animation: cinematic-pass 4s ease-in-out forwards;
+}
+
+.state-walk .body { animation: walk .52s ease-in-out infinite; }
+.state-run .body { animation: run .28s ease-in-out infinite; }
+.state-jump .body { animation: jump .65s ease-out infinite; }
+.state-sit .body { height: 62%; border-radius: 48% 48% 44% 44%; }
+.state-sleep .body { animation: sleep 3s ease-in-out infinite; filter: saturate(.72); }
+.state-sleep .eye { height: 4%; border-radius: 999px; animation: none; }
+.state-dance .body { animation: dance .55s ease-in-out infinite; }
+.state-wave .arm.right { transform-origin: left center; animation: wave .55s ease-in-out infinite; }
+.state-eat .mouth { height: 20%; border: 0; border-radius: 50%; background: var(--ink); }
+.state-hungry .body { animation: hungry .8s ease-in-out infinite; }
+.state-hungry .mouth { height: 18%; border: 0; border-radius: 50%; background: var(--ink); }
+.state-drink .mouth { width: 16%; height: 20%; border: 0; border-radius: 50%; background: var(--ink); }
+.state-full .body { animation: full 1.5s ease-in-out infinite; }
+.state-full .eye { height: 4%; border-radius: 999px; animation: none; }
+.state-cry .tear { opacity: 1; animation: cry 1.1s ease-in infinite; }
+.state-laugh .mouth { height: 22%; border: 0; border-radius: 0 0 999px 999px; background: var(--ink); }
+.state-sing .mouth { height: 24%; width: 22%; border: 0; border-radius: 50%; background: var(--ink); animation: sing-mouth .45s ease-in-out infinite; }
+.state-yawn .mouth { width: 24%; height: 22%; border: 0; border-radius: 50%; background: var(--ink); animation: yawn-mouth 1.2s ease-in-out infinite; }
+.state-happy .body { animation: happy 1.1s ease-in-out infinite; }
+.state-happy .mouth { height: 20%; border-bottom-width: 5px; }
+.state-angry .eye { height: 9%; border-radius: 999px; transform: rotate(-12deg); }
+.state-angry .eye.right { transform: rotate(12deg); }
+.state-angry .mouth { width: 24%; height: 12%; border-top: 4px solid var(--ink); border-bottom: 0; top: 70%; }
+.state-surprised .eye { height: 20%; width: 14%; }
+.state-surprised .mouth { height: 24%; width: 20%; border: 0; border-radius: 50%; background: var(--ink); }
+.state-watching .body { animation: watching 2s ease-in-out infinite; }
+.state-watching .eye { width: 14%; height: 19%; }
+.state-focused .eye { height: 12%; border-radius: 999px; }
+.state-focused .body { animation: focused 1.4s ease-in-out infinite; }
+.state-gaming .body { animation: gaming .45s ease-in-out infinite; }
+.state-win .body { animation: celebrate .42s ease-in-out infinite; }
+.state-lose .tear { opacity: 1; animation: cry 1.1s ease-in infinite; }
+.state-lose .mouth { width: 26%; height: 12%; border-top: 4px solid var(--ink); border-bottom: 0; top: 72%; }
+.state-notification .body { animation: notification .38s ease-in-out infinite; }
+.state-message .body { animation: happy 1s ease-in-out infinite; }
+.state-listen .body { animation: listen 1.4s ease-in-out infinite; }
+.state-listen .ear.left { transform: rotate(-48deg) translateY(-4px); }
+.state-listen .ear.right { transform: rotate(48deg) translateY(-4px); }
+.state-listen .eye { height: 20%; }
+.state-celebrate .body { animation: celebrate .5s ease-in-out infinite; }
+.state-fall .body { transform: translateX(-50%) rotate(84deg); animation: none; }
+.state-stretch .body { animation: stretch 1.1s ease-in-out infinite; }
+.state-thinking .mouth { width: 10%; border-radius: 50%; border: 0; background: var(--ink); }
+.state-typing .arm.left, .state-typing .arm.right { animation: typing .25s ease-in-out infinite alternate; }
+.state-sleep .reaction-prop::before { content: "Zzz"; font-size: 14px; font-weight: 700; }
+.state-yawn .reaction-prop::before { content: "Zzz"; font-size: 14px; font-weight: 700; }
+.state-laugh .reaction-prop::before { content: "😂"; }
+.state-cry .reaction-prop::before { content: "😭"; }
+.state-dance .reaction-prop::before { content: "♪"; font-weight: 700; color: var(--rose); }
+.state-sing .reaction-prop::before { content: "🎤"; }
+.state-eat .reaction-prop::before { content: "🍔"; }
+.state-hungry .reaction-prop::before { content: "🍔"; }
+.state-drink .reaction-prop::before { content: "🥤"; }
+.state-full .reaction-prop::before { content: "♥"; color: var(--rose); font-weight: 700; }
+.state-thinking .reaction-prop::before { content: "?"; font-weight: 700; }
+.state-watching .reaction-prop::before { content: "▶"; color: #ff4b4b; font-weight: 700; }
+.state-happy .reaction-prop::before { content: "♥"; color: var(--rose); font-weight: 700; }
+.state-angry .reaction-prop::before { content: "!"; color: var(--rose); font-weight: 700; }
+.state-surprised .reaction-prop::before { content: "!!"; color: var(--gold); font-size: 18px; font-weight: 700; }
+.state-wave .reaction-prop::before { content: "👋"; }
+.state-listen .reaction-prop::before { content: "♪"; color: var(--gold); font-weight: 700; }
+.state-typing .reaction-prop::before { content: "⌨"; font-weight: 700; }
+.state-gaming .reaction-prop::before { content: "★"; color: var(--gold); font-weight: 700; }
+.state-win .reaction-prop::before { content: "✓"; color: var(--mint); font-weight: 700; }
+.state-lose .reaction-prop::before { content: "😭"; }
+.state-notification .reaction-prop::before { content: "!"; color: var(--rose); font-weight: 700; }
+.state-message .reaction-prop::before { content: "♥"; color: var(--rose); font-weight: 700; }
+
+@keyframes breathe {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+}
+
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(.12); }
+}
+
+@keyframes walk {
+  0%, 100% { transform: translateX(-50%) rotate(-3deg); }
+  50% { transform: translateX(-50%) translateY(-5px) rotate(3deg); }
+}
+
+@keyframes run {
+  0%, 100% { transform: translateX(-50%) rotate(-8deg); }
+  50% { transform: translateX(-50%) translateY(-11px) rotate(8deg); }
+}
+
+@keyframes jump {
+  0%, 100% { transform: translateX(-50%) translateY(0) scaleY(1); }
+  45% { transform: translateX(-50%) translateY(-34px) scaleY(1.05); }
+}
+
+@keyframes sleep {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-4deg); }
+  50% { transform: translateX(-50%) translateY(4px) rotate(-4deg); }
+}
+
+@keyframes dance {
+  0%, 100% { transform: translateX(-50%) rotate(-14deg); }
+  50% { transform: translateX(-50%) rotate(14deg); }
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(-20deg); }
+  50% { transform: rotate(-78deg); }
+}
+
+@keyframes cry {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(26px); opacity: 0; }
+}
+
+@keyframes celebrate {
+  0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+  50% { transform: translateX(-50%) translateY(-16px) scale(1.05); }
+}
+
+@keyframes happy {
+  0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+  50% { transform: translateX(-50%) translateY(-9px) scale(1.04); }
+}
+
+@keyframes listen {
+  0%, 100% { transform: translateX(-50%) rotate(-2deg); }
+  50% { transform: translateX(-50%) rotate(2deg); }
+}
+
+@keyframes sing-mouth {
+  0%, 100% { transform: translateX(-50%) scaleY(.72); }
+  50% { transform: translateX(-50%) scaleY(1.12); }
+}
+
+@keyframes yawn-mouth {
+  0%, 100% { transform: translateX(-50%) scale(.7); }
+  50% { transform: translateX(-50%) scale(1.18); }
+}
+
+@keyframes hungry {
+  0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+  50% { transform: translateX(-50%) translateY(2px) scale(.96); }
+}
+
+@keyframes full {
+  0%, 100% { transform: translateX(-50%) translateY(0) scale(1.02); }
+  50% { transform: translateX(-50%) translateY(4px) scale(1.06); }
+}
+
+@keyframes focused {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-1deg); }
+  50% { transform: translateX(-50%) translateY(-3px) rotate(1deg); }
+}
+
+@keyframes gaming {
+  0%, 100% { transform: translateX(-50%) rotate(-8deg) translateY(0); }
+  50% { transform: translateX(-50%) rotate(8deg) translateY(-8px); }
+}
+
+@keyframes notification {
+  0%, 100% { transform: translateX(-50%) rotate(-6deg); }
+  50% { transform: translateX(-50%) rotate(6deg); }
+}
+
+@keyframes watching {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(3px); }
+}
+
+@keyframes stretch {
+  0%, 100% { transform: translateX(-50%) scaleY(1); }
+  50% { transform: translateX(-50%) scaleY(1.16); }
+}
+
+@keyframes typing {
+  from { top: 50%; }
+  to { top: 58%; }
+}
+
+@keyframes prop-pop {
+  0%, 100% { transform: translateY(6px) scale(.9) rotate(-4deg); }
+  50% { transform: translateY(-5px) scale(1.08) rotate(4deg); }
+}
+
+@keyframes sparkle-twinkle {
+  0%, 100% { transform: scale(.9) rotate(-4deg); }
+  50% { transform: scale(1.15) rotate(5deg); }
+}
+
+.state-headphones .reaction-prop,
+.state-idea .reaction-prop,
+.state-writing .reaction-prop,
+.state-plan .reaction-prop,
+.state-highfive .reaction-prop,
+.state-attention .reaction-prop,
+.state-sunny .reaction-prop,
+.state-rainy .reaction-prop,
+.state-cold .reaction-prop,
+.state-cloudy .reaction-prop,
+.state-popcorn .reaction-prop,
+.state-thumbsup .reaction-prop,
+.state-error .reaction-prop,
+.state-success .reaction-prop,
+.state-rubberduck .reaction-prop,
+.state-controller .reaction-prop,
+.state-duck .reaction-prop,
+.state-clean .reaction-prop,
+.state-mousechase .reaction-prop,
+.state-butterfly .reaction-prop,
+.state-upsidedown .reaction-prop,
+.state-rocket .reaction-prop,
+.state-ghost .reaction-prop,
+.state-gift .reaction-prop,
+.state-hat .reaction-prop,
+.state-balloon .reaction-prop,
+.state-toy .reaction-prop,
+.state-hug .reaction-prop,
+.state-bed .reaction-prop,
+.state-snore .reaction-prop,
+.state-climb .reaction-prop,
+.state-grab .reaction-prop,
+.state-hang .reaction-prop,
+.state-edgewalk .reaction-prop,
+.state-windowedge .reaction-prop,
+.state-ceilingwalk .reaction-prop,
+.state-wallwalk .reaction-prop,
+.state-leap .reaction-prop,
+.state-land .reaction-prop,
+.state-slip .reaction-prop,
+.state-recover .reaction-prop,
+.state-sitwindow .reaction-prop,
+.state-explore .reaction-prop,
+.state-laptop .reaction-prop,
+.state-battery .reaction-prop,
+.state-worry .reaction-prop {
+  opacity: 1;
+  animation: prop-pop 1.2s ease-in-out infinite;
+}
+
+.state-coffee .reaction-prop,
+.state-football .reaction-prop,
+.state-yoyo .reaction-prop,
+.state-kite .reaction-prop,
+.state-bone .reaction-prop,
+.state-teddy .reaction-prop,
+.state-book .reaction-prop,
+.state-phone .reaction-prop,
+.state-guitar .reaction-prop,
+.state-switch .reaction-prop,
+.state-umbrella .reaction-prop,
+.state-wind .reaction-prop,
+.state-snowman .reaction-prop,
+.state-icecream .reaction-prop,
+.state-blanket .reaction-prop,
+.state-blushhappy .reaction-prop,
+.state-love .reaction-prop,
+.state-shy .reaction-prop,
+.state-dizzy .reaction-prop,
+.state-sparklehappy .reaction-prop {
+  opacity: 1;
+  animation: prop-pop 1.2s ease-in-out infinite;
+}
+
+.state-mirror .reaction-prop,
+.state-bubbles .reaction-prop,
+.state-selfie .reaction-prop,
+.state-pizza .reaction-prop,
+.state-cake .reaction-prop,
+.state-costume .reaction-prop,
+.state-package .reaction-prop,
+.state-raincoat .reaction-prop,
+.state-mask .reaction-prop,
+.state-juice .reaction-prop,
+.state-ufo .reaction-prop,
+.state-dragon .reaction-prop,
+.state-meteor .reaction-prop,
+.state-rainbow .reaction-prop,
+.state-treasure .reaction-prop,
+.state-robot .reaction-prop,
+.state-fireworks .reaction-prop,
+.state-adventure .reaction-prop,
+.state-family .reaction-prop,
+.state-evolve .reaction-prop,
+.state-story .reaction-prop {
+  opacity: 1;
+  animation: prop-pop 1.2s ease-in-out infinite;
+}
+
+.state-idea .sparkles,
+.state-highfive .sparkles,
+.state-thumbsup .sparkles,
+.state-success .sparkles,
+.state-sunny .sparkles,
+.state-love .sparkles,
+.state-blushhappy .sparkles,
+.state-sparklehappy .sparkles,
+.state-gift .sparkles {
+  opacity: 1;
+  animation: sparkle-twinkle .85s ease-in-out infinite;
+}
+
+.state-headphones .body { animation: listen 1.2s ease-in-out infinite; }
+.state-headphones .face {
+  box-shadow:
+    -19px 10px 0 -9px #23262c,
+    19px 10px 0 -9px #23262c;
+}
+
+.state-headphones .face::before {
+  left: 8%;
+  right: 8%;
+  top: 2%;
+  height: 34%;
+  border-top: 5px solid #23262c;
+  border-radius: 999px 999px 0 0;
+  opacity: 1;
+}
+
+.state-headphones .face::after {
+  left: -8%;
+  right: -8%;
+  top: 43%;
+  height: 21%;
+  border-left: 9px solid #23262c;
+  border-right: 9px solid #23262c;
+  border-radius: 999px;
+  opacity: 1;
+}
+.state-idea .body { animation: happy 1s ease-in-out infinite; }
+.state-writing .arm.left, .state-writing .arm.right { animation: typing .35s ease-in-out infinite alternate; }
+.state-plan .body { animation: focused 1.2s ease-in-out infinite; }
+.state-highfive .arm.right { transform-origin: left center; animation: wave .42s ease-in-out infinite; }
+.state-attention .body { animation: jump .9s ease-out infinite; }
+.state-sunny .body { animation: happy 1.2s ease-in-out infinite; }
+.state-rainy .body { animation: sleep 2.2s ease-in-out infinite; }
+.state-cold .body { filter: saturate(.8); animation: hungry .55s ease-in-out infinite; }
+.state-cloudy .body { animation: watching 2s ease-in-out infinite; }
+.state-popcorn .mouth { height: 20%; border: 0; border-radius: 50%; background: var(--ink); }
+.state-thumbsup .arm.right { transform-origin: left center; animation: wave .7s ease-in-out infinite; }
+.state-error .eye { height: 20%; width: 14%; }
+.state-error .mouth { width: 24%; height: 12%; border-top: 4px solid var(--ink); border-bottom: 0; top: 70%; }
+.state-success .body { animation: celebrate .5s ease-in-out infinite; }
+.state-rubberduck .body { animation: happy 1.1s ease-in-out infinite; }
+.state-controller .body { animation: gaming .45s ease-in-out infinite; }
+.state-duck .body { animation: walk .6s ease-in-out infinite; filter: hue-rotate(58deg) saturate(1.25); }
+.state-clean .arm.right { transform-origin: left center; animation: clean-sweep .45s ease-in-out infinite; }
+.state-mousechase .body { animation: run .32s ease-in-out infinite; }
+.state-butterfly .body { animation: jump .85s ease-out infinite; }
+.state-upsidedown .body { transform: translateX(-50%) rotate(180deg); animation: upside-bob 2s ease-in-out infinite; }
+.state-rocket .body { animation: rocket-launch .9s ease-in-out infinite; }
+.state-ghost .body { animation: ghost-float 2s ease-in-out infinite; opacity: .62; filter: saturate(.55); }
+.state-gift .body,
+.state-hat .body,
+.state-balloon .body,
+.state-toy .body,
+.state-hug .body { animation: happy 1s ease-in-out infinite; }
+.state-hug .arm.left { transform: rotate(-28deg) translateX(14%); }
+.state-hug .arm.right { transform: rotate(28deg) translateX(-14%); }
+.state-bed .body,
+.state-snore .body { animation: sleep 3s ease-in-out infinite; filter: saturate(.72); }
+.state-bed .eye,
+.state-snore .eye { height: 4%; border-radius: 999px; animation: none; }
+.state-climb .body { animation: climb .65s ease-in-out infinite; }
+.state-grab .arm.left,
+.state-grab .arm.right,
+.state-hang .arm.left,
+.state-hang .arm.right { top: 28%; transform-origin: center; animation: grab-paws .7s ease-in-out infinite; }
+.state-hang .body { animation: hang-sway 1.4s ease-in-out infinite; }
+.state-edgewalk .body,
+.state-windowedge .body { animation: edge-balance .8s ease-in-out infinite; }
+.state-ceilingwalk .body { animation: ceiling-walk .8s ease-in-out infinite; }
+.state-wallwalk .body { animation: wall-walk .75s ease-in-out infinite; }
+.state-leap .body { animation: leap .7s cubic-bezier(.16, .84, .33, 1) infinite; }
+.state-land .body { animation: land .55s ease-out infinite; }
+.state-slip .body { animation: slip .65s ease-in-out infinite; }
+.state-recover .body { animation: recover .7s ease-in-out infinite; }
+.state-sitwindow .body { height: 58%; animation: sit-window 1.4s ease-in-out infinite; }
+.state-explore .body { animation: explore 1.15s ease-in-out infinite; }
+.state-laptop .body { animation: focused 1.15s ease-in-out infinite; }
+.state-laptop .arm.left,
+.state-laptop .arm.right { animation: typing .3s ease-in-out infinite alternate; }
+.state-battery .body { animation: hungry .9s ease-in-out infinite; filter: saturate(.85); }
+.state-worry .body { animation: worried-shake .35s ease-in-out infinite; filter: saturate(.8); }
+.state-worry .mouth { width: 24%; height: 12%; border-top: 4px solid var(--ink); border-bottom: 0; top: 70%; }
+.state-coffee .body,
+.state-book .body,
+.state-phone .body { animation: focused 1.2s ease-in-out infinite; }
+.state-football .body,
+.state-yoyo .body,
+.state-switch .body { animation: gaming .45s ease-in-out infinite; }
+.state-kite .body,
+.state-balloon .body { animation: ghost-float 1.4s ease-in-out infinite; }
+.state-bone .body,
+.state-teddy .body { animation: happy 1s ease-in-out infinite; }
+.state-guitar .body { animation: dance .65s ease-in-out infinite; }
+.state-umbrella .body,
+.state-blanket .body { animation: sleep 2.3s ease-in-out infinite; filter: saturate(.85); }
+.state-wind .body { animation: wind-blow .62s ease-in-out infinite; }
+.state-snowman .body { animation: happy 1.5s ease-in-out infinite; filter: saturate(.65) brightness(1.1); }
+.state-icecream .body { animation: happy 1s ease-in-out infinite; }
+.state-blushhappy .body,
+.state-love .body,
+.state-sparklehappy .body { animation: happy .9s ease-in-out infinite; }
+.state-blushhappy .blush,
+.state-love .blush,
+.state-shy .blush,
+.state-sparklehappy .blush { opacity: 1; transform: scale(1.25); }
+.state-love .eye,
+.state-sparklehappy .eye { height: 19%; width: 14%; }
+.state-shy .eye { height: 4%; border-radius: 999px; animation: none; }
+.state-shy .mouth { width: 16%; height: 10%; border-bottom-width: 3px; }
+.state-dizzy .body { animation: dizzy-spin .9s ease-in-out infinite; }
+.state-dizzy .eye { height: 11%; border-radius: 999px; transform: rotate(25deg); }
+.state-mirror .body,
+.state-selfie .body,
+.state-story .body { animation: focused 1.2s ease-in-out infinite; }
+.state-bubbles .body,
+.state-rainbow .body,
+.state-fireworks .body { animation: happy .85s ease-in-out infinite; }
+.state-pizza .body,
+.state-cake .body,
+.state-juice .body { animation: full 1.15s ease-in-out infinite; }
+.state-costume .body,
+.state-raincoat .body,
+.state-mask .body { animation: happy 1.15s ease-in-out infinite; filter: saturate(1.12); }
+.state-package .body,
+.state-treasure .body { animation: jump .8s ease-out infinite; }
+.state-ufo .body,
+.state-dragon .body,
+.state-meteor .body,
+.state-robot .body,
+.state-adventure .body { animation: rocket-launch .95s ease-in-out infinite; }
+.state-family .body { animation: hug-pulse 1.1s ease-in-out infinite; }
+.state-evolve .body { animation: evolve-glow 1.1s ease-in-out infinite; }
+.state-message .body { animation: happy .9s ease-in-out infinite; }
+.state-notification .eye,
+.state-message .eye,
+.state-attention .eye { height: 20%; width: 14%; }
+.state-rainy .eye,
+.state-cloudy .eye,
+.state-headphones .eye {
+  height: 4%;
+  border-radius: 999px;
+  animation: none;
+}
+
+.state-laugh .reaction-prop::before { content: "\1F602"; }
+.state-cry .reaction-prop::before { content: "\1F62D"; }
+.state-dance .reaction-prop::before { content: "\266A"; font-weight: 700; color: var(--rose); }
+.state-sing .reaction-prop::before { content: "\1F3A4"; }
+.state-eat .reaction-prop::before,
+.state-hungry .reaction-prop::before { content: "\1F354"; }
+.state-drink .reaction-prop::before { content: "\1F964"; }
+.state-full .reaction-prop::before,
+.state-happy .reaction-prop::before,
+.state-message .reaction-prop::before { content: "\2665"; color: var(--rose); font-weight: 700; }
+.state-watching .reaction-prop::before { content: "\25B6"; color: #ff4b4b; font-weight: 700; }
+.state-wave .reaction-prop::before,
+.state-highfive .reaction-prop::before { content: "\1F44B"; }
+.state-listen .reaction-prop::before { content: "\266A"; color: var(--gold); font-weight: 700; }
+.state-headphones .reaction-prop::before { content: "\1F3A7"; }
+.state-typing .reaction-prop::before { content: "\2328"; font-weight: 700; }
+.state-gaming .reaction-prop::before { content: "\2605"; color: var(--gold); font-weight: 700; }
+.state-win .reaction-prop::before,
+.state-success .reaction-prop::before,
+.state-thumbsup .reaction-prop::before { content: "\2713"; color: var(--mint); font-weight: 700; }
+.state-lose .reaction-prop::before { content: "\1F62D"; }
+.state-notification .reaction-prop::before,
+.state-error .reaction-prop::before,
+.state-attention .reaction-prop::before { content: "!"; color: var(--rose); font-weight: 700; }
+.state-idea .reaction-prop::before { content: "\1F4A1"; }
+.state-writing .reaction-prop::before { content: "\270E"; font-weight: 700; }
+.state-plan .reaction-prop::before { content: "\2713"; color: var(--mint); font-weight: 700; }
+.state-sunny .reaction-prop::before { content: "\2600"; color: var(--gold); font-weight: 700; }
+.state-rainy .reaction-prop::before { content: "\2602"; color: var(--sky); font-weight: 700; }
+.state-cold .reaction-prop::before { content: "\2744"; color: var(--sky); font-weight: 700; }
+.state-cloudy .reaction-prop::before { content: "\2601"; color: var(--text); font-weight: 700; }
+.state-popcorn .reaction-prop::before { content: "\1F37F"; }
+.state-rubberduck .reaction-prop::before,
+.state-duck .reaction-prop::before { content: "\1F986"; }
+.state-controller .reaction-prop::before { content: "\1F3AE"; }
+.state-clean .reaction-prop::before { content: "\1F9F9"; }
+.state-mousechase .reaction-prop::before { content: "\2197"; color: var(--gold); font-weight: 700; }
+.state-butterfly .reaction-prop::before { content: "\1F98B"; }
+.state-upsidedown .reaction-prop::before,
+.state-bed .reaction-prop::before,
+.state-snore .reaction-prop::before { content: "Zzz"; font-size: 14px; font-weight: 700; }
+.state-rocket .reaction-prop::before { content: "\1F680"; }
+.state-ghost .reaction-prop::before { content: "\1F47B"; }
+.state-gift .reaction-prop::before { content: "\1F381"; }
+.state-hat .reaction-prop::before { content: "\1F3A9"; }
+.state-balloon .reaction-prop::before { content: "\1F388"; }
+.state-toy .reaction-prop::before { content: "\1F9F8"; }
+.state-hug .reaction-prop::before { content: "\2665"; color: var(--rose); font-weight: 700; }
+.state-climb .reaction-prop::before,
+.state-wallwalk .reaction-prop::before { content: "\2191"; color: var(--gold); font-weight: 700; }
+.state-grab .reaction-prop::before,
+.state-hang .reaction-prop::before { content: "\25CF"; color: var(--gold); font-weight: 700; }
+.state-edgewalk .reaction-prop::before,
+.state-windowedge .reaction-prop::before,
+.state-sitwindow .reaction-prop::before { content: "\2501"; color: var(--mint); font-weight: 700; }
+.state-ceilingwalk .reaction-prop::before { content: "\21BB"; color: var(--sky); font-weight: 700; }
+.state-leap .reaction-prop::before { content: "\21A5"; color: var(--gold); font-weight: 700; }
+.state-land .reaction-prop::before,
+.state-recover .reaction-prop::before { content: "\2713"; color: var(--mint); font-weight: 700; }
+.state-slip .reaction-prop::before { content: "!"; color: var(--rose); font-weight: 700; }
+.state-explore .reaction-prop::before { content: "?"; color: var(--gold); font-weight: 700; }
+.state-laptop .reaction-prop::before { content: "\1F4BB"; }
+.state-battery .reaction-prop::before { content: "\1F50B"; }
+.state-worry .reaction-prop::before { content: "!"; color: var(--rose); font-weight: 700; }
+.state-coffee .reaction-prop::before { content: "\2615"; }
+.state-football .reaction-prop::before { content: "\26BD"; }
+.state-yoyo .reaction-prop::before { content: "\25CE"; color: var(--gold); font-weight: 700; }
+.state-kite .reaction-prop::before { content: "\25C7"; color: var(--sky); font-weight: 700; }
+.state-bone .reaction-prop::before { content: "\1F9B4"; }
+.state-teddy .reaction-prop::before { content: "\1F9F8"; }
+.state-book .reaction-prop::before { content: "\1F4DA"; }
+.state-phone .reaction-prop::before { content: "\1F4F1"; }
+.state-guitar .reaction-prop::before { content: "\1F3B8"; }
+.state-switch .reaction-prop::before { content: "\1F3AE"; }
+.state-umbrella .reaction-prop::before { content: "\2602"; color: var(--sky); font-weight: 700; }
+.state-wind .reaction-prop::before { content: "\27A4"; color: var(--sky); font-weight: 700; }
+.state-snowman .reaction-prop::before { content: "\2603"; color: var(--sky); font-weight: 700; }
+.state-icecream .reaction-prop::before { content: "\1F366"; }
+.state-blanket .reaction-prop::before { content: "\25A3"; color: var(--rose); font-weight: 700; }
+.state-blushhappy .reaction-prop::before,
+.state-love .reaction-prop::before,
+.state-sparklehappy .reaction-prop::before { content: "\2665"; color: var(--rose); font-weight: 700; }
+.state-shy .reaction-prop::before { content: "..."; color: var(--rose); font-size: 14px; font-weight: 700; }
+.state-dizzy .reaction-prop::before { content: "@"; color: var(--gold); font-weight: 700; }
+.state-mirror .reaction-prop::before { content: "\25C9"; color: var(--sky); font-weight: 700; }
+.state-bubbles .reaction-prop::before { content: "oO"; color: var(--sky); font-size: 14px; font-weight: 700; }
+.state-selfie .reaction-prop::before { content: "\1F4F7"; }
+.state-pizza .reaction-prop::before { content: "\1F355"; }
+.state-cake .reaction-prop::before { content: "\1F382"; }
+.state-costume .reaction-prop::before { content: "\1F3AD"; }
+.state-package .reaction-prop::before { content: "\1F4E6"; }
+.state-raincoat .reaction-prop::before { content: "\2602"; color: var(--sky); font-weight: 700; }
+.state-mask .reaction-prop::before { content: "+"; color: var(--mint); font-weight: 700; }
+.state-juice .reaction-prop::before { content: "\1F964"; }
+.state-ufo .reaction-prop::before { content: "\25CE"; color: var(--sky); font-weight: 700; }
+.state-dragon .reaction-prop::before { content: "\2726"; color: var(--rose); font-weight: 700; }
+.state-meteor .reaction-prop::before { content: "\2604"; color: var(--gold); font-weight: 700; }
+.state-rainbow .reaction-prop::before { content: "\25D2"; color: var(--gold); font-weight: 700; }
+.state-treasure .reaction-prop::before { content: "\1F381"; }
+.state-robot .reaction-prop::before { content: "\1F916"; }
+.state-fireworks .reaction-prop::before { content: "\2736"; color: var(--gold); font-weight: 700; }
+.state-adventure .reaction-prop::before { content: "\2192"; color: var(--mint); font-weight: 700; }
+.state-family .reaction-prop::before { content: "\2665"; color: var(--rose); font-weight: 700; }
+.state-evolve .reaction-prop::before { content: "\2605"; color: var(--gold); font-weight: 700; }
+.state-story .reaction-prop::before { content: "\270E"; color: var(--mint); font-weight: 700; }
+
+@keyframes world-drop {
+  0% { transform: translate(0, 0) scale(.7) rotate(-10deg); opacity: 0; }
+  12% { opacity: 1; }
+  78% { transform: translate(calc(var(--drift) * 22px), calc(var(--pet-size, 180px) + 28px)) scale(1) rotate(8deg); opacity: 1; }
+  100% { transform: translate(calc(var(--drift) * 28px), calc(var(--pet-size, 180px) + 42px)) scale(.9) rotate(0); opacity: 0; }
+}
+
+@keyframes world-float {
+  0% { transform: translate(-24px, calc(var(--pet-size, 180px) + 24px)) scale(.75); opacity: 0; }
+  18% { opacity: 1; }
+  72% { opacity: 1; }
+  100% { transform: translate(calc(var(--drift) * 88px), 16px) scale(1.05); opacity: 0; }
+}
+
+@keyframes world-roll {
+  0% { transform: translate(-70px, calc(var(--pet-size, 180px) + 32px)) rotate(0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate(92px, calc(var(--pet-size, 180px) + 32px)) rotate(540deg); opacity: 0; }
+}
+
+@keyframes cinematic-pass {
+  0% { transform: translate(-110px, calc(var(--pet-size, 180px) * .34)) scale(.82) rotate(-8deg); opacity: 0; }
+  16% { opacity: 1; }
+  72% { opacity: 1; }
+  100% { transform: translate(130px, 10px) scale(1.08) rotate(10deg); opacity: 0; }
+}
+
+@keyframes companion-bob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.03); }
+}
+
+@keyframes clean-sweep {
+  0%, 100% { transform: rotate(-18deg) translateX(0); }
+  50% { transform: rotate(-72deg) translateX(5px); }
+}
+
+@keyframes upside-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(180deg); }
+  50% { transform: translateX(-50%) translateY(5px) rotate(180deg); }
+}
+
+@keyframes rocket-launch {
+  0%, 100% { transform: translateX(-50%) translateY(8px) rotate(-6deg); }
+  50% { transform: translateX(-50%) translateY(-30px) rotate(6deg); }
+}
+
+@keyframes ghost-float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-12px); }
+}
+
+@keyframes climb {
+  0%, 100% { transform: translateX(-50%) translateY(6px) rotate(-4deg); }
+  50% { transform: translateX(-50%) translateY(-10px) rotate(4deg); }
+}
+
+@keyframes grab-paws {
+  0%, 100% { transform: rotate(-42deg) translateY(-2px); }
+  50% { transform: rotate(-72deg) translateY(-8px); }
+}
+
+@keyframes hang-sway {
+  0%, 100% { transform: translateX(-50%) translateY(8px) rotate(-7deg); }
+  50% { transform: translateX(-50%) translateY(10px) rotate(7deg); }
+}
+
+@keyframes edge-balance {
+  0%, 100% { transform: translateX(-50%) rotate(-7deg); }
+  50% { transform: translateX(-50%) rotate(7deg) translateY(-3px); }
+}
+
+@keyframes ceiling-walk {
+  0%, 100% { transform: translateX(-50%) rotate(180deg) translateY(0); }
+  50% { transform: translateX(-50%) rotate(180deg) translateY(8px); }
+}
+
+@keyframes wall-walk {
+  0%, 100% { transform: translateX(-50%) rotate(82deg) translateY(0); }
+  50% { transform: translateX(-50%) rotate(82deg) translateY(-8px); }
+}
+
+@keyframes leap {
+  0%, 100% { transform: translateX(-50%) translateY(0) scaleY(.92); }
+  45% { transform: translateX(-50%) translateY(-44px) scaleY(1.08); }
+}
+
+@keyframes land {
+  0% { transform: translateX(-50%) translateY(-18px) scaleY(1.08); }
+  55% { transform: translateX(-50%) translateY(4px) scaleY(.82) scaleX(1.08); }
+  100% { transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+@keyframes slip {
+  0%, 100% { transform: translateX(-50%) rotate(0); }
+  40% { transform: translateX(-50%) rotate(24deg) translateX(8px); }
+  70% { transform: translateX(-50%) rotate(82deg) translateX(12px); }
+}
+
+@keyframes recover {
+  0% { transform: translateX(-50%) rotate(82deg); }
+  60% { transform: translateX(-50%) rotate(-8deg); }
+  100% { transform: translateX(-50%) rotate(0); }
+}
+
+@keyframes sit-window {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-2deg); }
+  50% { transform: translateX(-50%) translateY(2px) rotate(2deg); }
+}
+
+@keyframes explore {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-3deg); }
+  50% { transform: translateX(-50%) translateY(-6px) rotate(3deg); }
+}
+
+@keyframes worried-shake {
+  0%, 100% { transform: translateX(-50%) translateX(0) rotate(-2deg); }
+  50% { transform: translateX(-50%) translateX(4px) rotate(2deg); }
+}
+
+@keyframes wind-blow {
+  0%, 100% { transform: translateX(-50%) translateX(-6px) rotate(-12deg); }
+  50% { transform: translateX(-50%) translateX(14px) rotate(18deg); }
+}
+
+@keyframes dizzy-spin {
+  0%, 100% { transform: translateX(-50%) rotate(-10deg); }
+  50% { transform: translateX(-50%) rotate(18deg) translateY(3px); }
+}
+
+@keyframes hug-pulse {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.08); }
+}
+
+@keyframes evolve-glow {
+  0%, 100% { transform: translateX(-50%) scale(1); filter: brightness(1) saturate(1); }
+  50% { transform: translateX(-50%) scale(1.08); filter: brightness(1.25) saturate(1.25); }
+}

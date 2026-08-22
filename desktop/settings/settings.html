@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MAXie Settings</title>
+    <link rel="stylesheet" href="settings.css">
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header>
+        <div>
+          <p>Desktop companion settings</p>
+          <h1>MAXie</h1>
+        </div>
+        <button id="openFolder" type="button">Open folder</button>
+      </header>
+
+      <section class="grid">
+        <article class="panel">
+          <h2>Appearance</h2>
+          <label>Name <input id="name" type="text" maxlength="18"></label>
+          <label>Personality
+            <select id="style">
+              <option>Cute</option>
+              <option>Funny</option>
+              <option>Chill</option>
+              <option>Motivational</option>
+              <option>Gamer</option>
+              <option>Nerd</option>
+              <option>Professional</option>
+            </select>
+          </label>
+          <label>Pet size <span id="sizeValue" class="value"></span><input id="size" type="range" min="120" max="260" step="5"></label>
+          <label>Animation speed <span id="speedValue" class="value"></span><input id="speed" type="range" min="0.5" max="2" step="0.1"></label>
+          <label>Theme
+            <select id="theme">
+              <option value="mint">Mint</option>
+              <option value="rose">Rose</option>
+              <option value="gold">Gold</option>
+              <option value="sky">Sky</option>
+            </select>
+          </label>
+          <label>Upload pet image <input id="avatarUpload" type="file" accept="image/*"></label>
+          <button id="deleteAvatar" type="button">Delete Image</button>
+          <img id="avatarPreview" class="avatar-preview" alt="Processed pet preview">
+        </article>
+
+        <article class="panel">
+          <h2>AI Provider</h2>
+          <label>Provider
+            <select id="provider">
+              <option value="ollama">Ollama</option>
+              <option value="gemini">Gemini API</option>
+              <option value="openai-compatible">OpenAI-compatible API</option>
+            </select>
+          </label>
+          <label>Endpoint <input id="endpoint" type="text"></label>
+          <label>Model <input id="model" type="text"></label>
+          <label>API key <input id="apiKey" type="password" autocomplete="off"></label>
+          <button id="testAi" type="button">Test AI</button>
+          <p id="aiResult" class="muted"></p>
+        </article>
+
+        <article class="panel">
+          <h2>Permissions</h2>
+          <div class="row">
+            <button id="showPet" type="button">Show MAXie</button>
+            <button id="hidePet" type="button">Hide MAXie</button>
+            <button id="photoPet" type="button">Photo Mode</button>
+          </div>
+          <label class="check"><input id="activeApp" type="checkbox"> Detect active app</label>
+          <label class="check"><input id="notifications" type="checkbox"> Notifications</label>
+          <label class="check"><input id="systemInfo" type="checkbox"> System info</label>
+          <label class="check"><input id="clickThroughIdle" type="checkbox"> Click-through while idle</label>
+          <label class="check"><input id="followMouse" type="checkbox"> Follow mouse</label>
+          <label class="check"><input id="startup" type="checkbox"> Start with Windows</label>
+        </article>
+
+        <article class="panel">
+          <h2>Movement</h2>
+          <label class="check"><input id="moveRandomWalking" type="checkbox"> Random Walking</label>
+          <label class="check"><input id="moveEdgeWalking" type="checkbox"> Edge Walking</label>
+          <label class="check"><input id="moveWindowEdgeWalking" type="checkbox"> Window Edge Walking (experimental)</label>
+          <label class="check"><input id="moveWallClimbing" type="checkbox"> Wall Climbing</label>
+          <label class="check"><input id="moveCeilingWalking" type="checkbox"> Ceiling Walking</label>
+          <label class="check"><input id="moveHanging" type="checkbox"> Hanging</label>
+          <label class="check"><input id="moveJumpBetweenWindows" type="checkbox"> Jump Between Windows (experimental)</label>
+          <label class="check"><input id="moveSlipAndFall" type="checkbox"> Slip & Fall Animation</label>
+          <label class="check"><input id="moveSitOnWindow" type="checkbox"> Sit On Window (experimental)</label>
+          <label class="check"><input id="moveFollowMouse" type="checkbox"> Follow Mouse</label>
+          <label class="check"><input id="moveAvoidMouse" type="checkbox"> Avoid Mouse</label>
+          <label class="check"><input id="movePhysicsMode" type="checkbox"> Physics Mode</label>
+          <label class="check"><input id="moveGravity" type="checkbox"> Gravity</label>
+          <label class="check"><input id="moveBounceLanding" type="checkbox"> Bounce Landing</label>
+          <label class="check"><input id="moveIdleExploration" type="checkbox"> Idle Exploration</label>
+          <label>Movement Speed <span id="moveSpeedValue" class="value"></span><input id="moveSpeed" type="range" min="0.5" max="2" step="0.1"></label>
+          <label>Exploration Frequency <span id="moveFrequencyValue" class="value"></span><input id="moveFrequency" type="range" min="0" max="1" step="0.05"></label>
+          <label>Jump Height <span id="moveJumpValue" class="value"></span><input id="moveJump" type="range" min="0" max="1" step="0.05"></label>
+          <label>Gravity Strength <span id="moveGravityValue" class="value"></span><input id="moveGravityStrength" type="range" min="0" max="2" step="0.05"></label>
+          <label>Fall Chance <span id="moveFallValue" class="value"></span><input id="moveFallChance" type="range" min="0" max="0.5" step="0.01"></label>
+          <p class="muted">Experimental window movement uses safe screen-edge approximations because Electron cannot reliably walk on every third-party window border.</p>
+        </article>
+
+        <article class="panel">
+          <h2>Viral Features</h2>
+          <label>Your name <input id="userName" type="text" maxlength="24" placeholder="Raj"></label>
+          <label>Birthday <input id="birthday" type="date"></label>
+          <label class="check"><input id="randomMoments" type="checkbox"> Random funny moments</label>
+          <label class="check"><input id="surpriseGifts" type="checkbox"> Surprise gifts</label>
+          <label class="check"><input id="voice" type="checkbox"> Voice</label>
+          <label class="check"><input id="productivity" type="checkbox"> Productivity reminders</label>
+          <label class="check"><input id="nightSleep" type="checkbox"> Real sleep at night</label>
+          <label class="check"><input id="memeLines" type="checkbox"> Meme reactions</label>
+          <label class="check"><input id="festivals" type="checkbox"> Birthday and festival mode</label>
+          <label class="check"><input id="demoMode" type="checkbox"> Demo Mode</label>
+          <div class="row">
+            <button id="giftTest" type="button">Gift Test</button>
+            <button id="gameTest" type="button">Mini Game</button>
+          </div>
+          <p id="featureStatus" class="muted"></p>
+        </article>
+
+        <article class="panel">
+          <h2>World</h2>
+          <label class="check"><input id="worldEnabled" type="checkbox"> Living desktop world</label>
+          <label class="check"><input id="toysEnabled" type="checkbox"> Toys and props</label>
+          <label class="check"><input id="weatherEnabled" type="checkbox"> Weather reactions</label>
+          <label>World frequency <span id="worldFrequencyValue" class="value"></span><input id="worldFrequency" type="range" min="0" max="1" step="0.05"></label>
+          <label>Weather mode
+            <select id="weatherMode">
+              <option value="auto">Auto offline</option>
+              <option value="rain">Rain</option>
+              <option value="wind">Wind</option>
+              <option value="snow">Snow</option>
+              <option value="hot">Hot</option>
+              <option value="cold">Cold</option>
+            </select>
+          </label>
+          <p class="muted">Auto weather is offline and heuristic. Real live weather needs a location/provider later.</p>
+        </article>
+
+        <article class="panel">
+          <h2>Next Level</h2>
+          <label class="check"><input id="petInteractions" type="checkbox"> Pet-to-pet interaction</label>
+          <label class="check"><input id="familySystem" type="checkbox"> Family system</label>
+          <label class="check"><input id="evolution" type="checkbox"> Evolution</label>
+          <label class="check"><input id="homeBuilder" type="checkbox"> Home builder</label>
+          <label class="check"><input id="adventures" type="checkbox"> Adventures</label>
+          <label class="check"><input id="storyEngine" type="checkbox"> Story engine</label>
+          <label class="check"><input id="moodWheel" type="checkbox"> Mood wheel</label>
+          <label class="check"><input id="cinematicEvents" type="checkbox"> Cinematic events</label>
+          <label class="check"><input id="seasonalUpdates" type="checkbox"> Seasonal updates</label>
+          <label class="check"><input id="pluginMarketplace" type="checkbox"> Local plugin marketplace</label>
+          <label>Event frequency <span id="nextFrequencyValue" class="value"></span><input id="nextFrequency" type="range" min="0" max="1" step="0.05"></label>
+          <p class="muted">Marketplace is local/free: plugins live in the project plugins folder.</p>
+        </article>
+
+        <article class="panel">
+          <h2>Memory</h2>
+          <textarea id="memoryText" rows="6" placeholder="One memory per line"></textarea>
+          <div class="row">
+            <button id="saveMemory" type="button">Save memory</button>
+            <button id="exportMemory" type="button">Export</button>
+            <label class="file">Import <input id="importMemory" type="file" accept="application/json"></label>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>AI Chat</h2>
+          <textarea id="chatLog" rows="5" readonly></textarea>
+          <label>Message <input id="chatInput" type="text" placeholder="Talk to MAXie"></label>
+          <button id="sendChat" type="button">Send</button>
+          <p class="muted">Offline-first: use Ollama for local AI.</p>
+        </article>
+
+        <article class="panel">
+          <h2>Intelligence</h2>
+          <label class="check"><input id="aiMemory" type="checkbox"> AI memory</label>
+          <label class="check"><input id="habitLearning" type="checkbox"> Habit learning</label>
+          <label class="check"><input id="routineLearning" type="checkbox"> Daily routine learning</label>
+          <label class="check"><input id="conversationMemory" type="checkbox"> Conversation memory</label>
+          <label class="check"><input id="contextAwareness" type="checkbox"> Context awareness</label>
+          <label class="check"><input id="moodEngine" type="checkbox"> Mood engine</label>
+          <label class="check"><input id="emotionEngine" type="checkbox"> Emotion engine</label>
+          <label class="check"><input id="offlineAi" type="checkbox"> Offline AI first</label>
+          <label class="check"><input id="smartReminders" type="checkbox"> Smart reminders</label>
+          <label class="check"><input id="taskSuggestions" type="checkbox"> Task suggestions</label>
+          <p class="muted">Privacy-first: app names/titles are used for context; typed text is not captured.</p>
+        </article>
+
+        <article class="panel">
+          <h2>Productivity</h2>
+          <label>Pomodoro minutes <input id="pomodoro" type="number" min="5" max="90" value="25"></label>
+          <label>Reminder text <input id="reminderText" type="text" placeholder="Drink water"></label>
+          <button id="startReminder" type="button">Start reminder</button>
+          <p id="reminderStatus" class="muted"></p>
+        </article>
+
+        <article class="panel">
+          <h2>System</h2>
+          <dl id="systemStatus"></dl>
+          <button id="refreshSystem" type="button">Refresh</button>
+        </article>
+
+        <article class="panel">
+          <h2>Friendship</h2>
+          <dl id="friendshipStatus"></dl>
+          <h3>Needs</h3>
+          <dl id="needsStatus"></dl>
+          <h3>Inventory</h3>
+          <dl id="inventoryStatus"></dl>
+          <h3>Evolution</h3>
+          <dl id="evolutionStatus"></dl>
+          <h3>Story</h3>
+          <p id="storyStatus" class="muted"></p>
+          <div id="achievements" class="chips"></div>
+        </article>
+      </section>
+    </main>
+    <script src="../utils/imageProcessor.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>
