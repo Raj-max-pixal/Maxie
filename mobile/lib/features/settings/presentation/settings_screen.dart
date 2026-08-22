@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/config/app_state.dart';
 import 'package:maxie_mobile/features/ai_chat/application/ai_settings_providers.dart';
+import 'package:maxie_mobile/features/everywhere_mode/application/everywhere_mode_providers.dart';
 import 'package:maxie_mobile/features/voice/application/voice_state_providers.dart';
 import 'package:maxie_mobile/features/voice/domain/models/voice_state.dart';
 import 'package:maxie_mobile/services/connectivity_service.dart';
@@ -21,6 +22,7 @@ class SettingsScreen extends ConsumerWidget {
     final isOffline = ref.watch(offlineProvider);
     final aiSettings = ref.watch(aiSettingsProvider);
     final voiceState = ref.watch(voiceStateProvider).valueOrNull;
+    final shimejiEnabled = ref.watch(shimejiEnabledProvider);
 
     return PremiumScaffold(
       title: 'Settings',
@@ -33,6 +35,31 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: 'Grouped foundations for premium companion controls.',
           ),
           const SizedBox(height: AppSpacing.lg),
+          PremiumCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _SettingsGroupTitle('Everywhere Mode (Shimeji)'),
+                const SizedBox(height: AppSpacing.sm),
+                _SettingsSwitch(
+                  title: 'Screen Pet',
+                  subtitle: 'Let MAXie walk on your screen over other apps.',
+                  icon: Icons.pets_rounded,
+                  value: shimejiEnabled,
+                  onChanged: (value) async {
+                    ref.read(shimejiEnabledProvider.notifier).state = value;
+                    final foundation = ref.read(everywhereModeFoundationProvider);
+                    if (value) {
+                      await foundation.prepareOverlay();
+                    } else {
+                      await foundation.stopOverlay();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
           PremiumCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
