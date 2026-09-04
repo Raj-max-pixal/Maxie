@@ -15,7 +15,6 @@ class MaxieCompanionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = _styleForState(state);
     return Semantics(
       label: 'MAXie companion is ${state.name}',
       child: SizedBox.square(
@@ -30,8 +29,8 @@ class MaxieCompanionView extends StatelessWidget {
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        style.glow.withValues(alpha: 0.58),
-                        style.accent.withValues(alpha: 0.22),
+                        AppColors.seed.withValues(alpha: 0.55),
+                        AppColors.calmTeal.withValues(alpha: 0.20),
                         Colors.transparent,
                       ],
                     ),
@@ -49,14 +48,14 @@ class MaxieCompanionView extends StatelessWidget {
               height: size * 0.56,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(size * 0.18),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [style.bodyStart, style.bodyEnd],
+                  colors: [Color(0xFF7C3AED), Color(0xFF06B6D4)],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: style.glow.withValues(alpha: 0.55),
+                    color: AppColors.seed.withValues(alpha: 0.55),
                     blurRadius: 28,
                   ),
                 ],
@@ -98,84 +97,12 @@ class MaxieCompanionView extends StatelessWidget {
               ),
             )
                 .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                .moveY(
-                  begin: -style.floatDistance,
-                  end: style.floatDistance,
-                  duration: style.duration,
-                  curve: Curves.easeInOut,
-                ),
+                .moveY(begin: -4, end: 5, duration: 1500.ms, curve: Curves.easeInOut),
           ],
         ),
       ),
     );
   }
-}
-
-_CompanionVisualStyle _styleForState(CompanionPresence state) {
-  return switch (state) {
-    CompanionPresence.happy => const _CompanionVisualStyle(
-        glow: AppColors.calmTeal,
-        accent: Color(0xFF67E8F9),
-        bodyStart: Color(0xFF14B8A6),
-        bodyEnd: Color(0xFF7C3AED),
-        floatDistance: 7,
-        duration: Duration(milliseconds: 1300),
-      ),
-    CompanionPresence.excited ||
-    CompanionPresence.celebrating ||
-    CompanionPresence.dancing =>
-      const _CompanionVisualStyle(
-        glow: AppColors.warmCoral,
-        accent: Color(0xFFFDE68A),
-        bodyStart: Color(0xFFF97316),
-        bodyEnd: Color(0xFF7C3AED),
-        floatDistance: 10,
-        duration: Duration(milliseconds: 900),
-      ),
-    CompanionPresence.sleeping => const _CompanionVisualStyle(
-        glow: Color(0xFF818CF8),
-        accent: Color(0xFFC4B5FD),
-        bodyStart: Color(0xFF4338CA),
-        bodyEnd: Color(0xFF0F172A),
-        floatDistance: 3,
-        duration: Duration(milliseconds: 2300),
-      ),
-    CompanionPresence.thinking || CompanionPresence.listening =>
-      const _CompanionVisualStyle(
-        glow: AppColors.warning,
-        accent: Color(0xFFFDE68A),
-        bodyStart: Color(0xFF06B6D4),
-        bodyEnd: Color(0xFF7C3AED),
-        floatDistance: 5,
-        duration: Duration(milliseconds: 1600),
-      ),
-    _ => const _CompanionVisualStyle(
-        glow: AppColors.seed,
-        accent: AppColors.calmTeal,
-        bodyStart: Color(0xFF7C3AED),
-        bodyEnd: Color(0xFF06B6D4),
-        floatDistance: 5,
-        duration: Duration(milliseconds: 1500),
-      ),
-  };
-}
-
-class _CompanionVisualStyle {
-  const _CompanionVisualStyle({
-    required this.glow,
-    required this.accent,
-    required this.bodyStart,
-    required this.bodyEnd,
-    required this.floatDistance,
-    required this.duration,
-  });
-
-  final Color glow;
-  final Color accent;
-  final Color bodyStart;
-  final Color bodyEnd;
-  final double floatDistance;
-  final Duration duration;
 }
 
 class _Eye extends StatelessWidget {

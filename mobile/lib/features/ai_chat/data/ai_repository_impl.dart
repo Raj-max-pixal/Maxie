@@ -14,20 +14,14 @@ class AiRepositoryImpl implements AiRepository {
   bool _cancelled = false;
 
   @override
-  Future<AiResponse> complete(
-    List<ChatMessage> messages, {
-    String? systemPrompt,
-  }) {
-    return _provider.complete(messages, systemPrompt: systemPrompt);
+  Future<AiResponse> complete(List<ChatMessage> messages) {
+    return _provider.complete(messages);
   }
 
   @override
-  Stream<String> streamResponse(
-    List<ChatMessage> messages, {
-    String? systemPrompt,
-  }) async* {
+  Stream<String> streamResponse(List<ChatMessage> messages) async* {
     _cancelled = false;
-    final response = await complete(messages, systemPrompt: systemPrompt);
+    final response = await complete(messages);
     final chunks = _chunkText(response.text);
 
     for (final chunk in chunks) {

@@ -24,7 +24,9 @@ class AiCompanionState {
 
   factory AiCompanionState.fromJson(Map<dynamic, dynamic> json) {
     return AiCompanionState(
-      presence: _presenceFromName(json['presence'] as String?),
+      presence: CompanionPresence.values.byName(
+        json['presence'] as String? ?? 'idle',
+      ),
       displayName: json['displayName'] as String? ?? 'MAXie',
       statusMessage:
           json['statusMessage'] as String? ?? 'Ready when you are.',
@@ -50,13 +52,4 @@ class AiCompanionState {
       statusMessage: statusMessage ?? this.statusMessage,
     );
   }
-}
-
-CompanionPresence _presenceFromName(String? name) {
-  for (final presence in CompanionPresence.values) {
-    if (presence.name == name) {
-      return presence;
-    }
-  }
-  return CompanionPresence.idle;
 }

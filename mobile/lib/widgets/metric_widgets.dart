@@ -7,11 +7,13 @@ class XpProgressCard extends StatelessWidget {
   const XpProgressCard({
     required this.level,
     required this.progress,
+    this.xpLabel,
     super.key,
   });
 
   final int level;
   final double progress;
+  final String? xpLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +37,8 @@ class XpProgressCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            '${(progress * 100).round()}% to the next level',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: Colors.white70,
-            ),
+            xpLabel ?? '${(progress * 100).round()}% to the next level',
+            style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
           ),
         ],
       ),
@@ -71,9 +71,9 @@ class StatCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(
             value,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
           Text(label, style: Theme.of(context).textTheme.bodySmall),
         ],

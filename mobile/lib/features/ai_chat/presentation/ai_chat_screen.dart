@@ -4,9 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/ai_chat/application/chat_controller.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/models/chat_message.dart';
-import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
-import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
 import 'package:maxie_mobile/widgets/maxie_companion_view.dart';
@@ -101,6 +99,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                             onCopy: () => _copyText(message.content),
                             onRetry: () =>
                                 chatController.regenerateLastResponse(),
+                            onSave: () async {
+                              await chatController.saveMessageAsMemory(message);
+                              _showMessage('Saved to Memory Brain.');
+                            },
                           )
                           .animate()
                           .fadeIn(duration: 180.ms)
@@ -113,16 +115,25 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _ErrorStrip(message: chatState.errorMessage!),
             ),
-          if (chatState.pendingMemorySuggestion != null)
+          if (chatState.pendingMemoryCandidates.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: _MemorySuggestionCard(
-                suggestion: chatState.pendingMemorySuggestion!,
-                onSave: chatController.acceptPendingMemory,
-                onEdit: () =>
-                    _editPendingMemory(chatState.pendingMemorySuggestion!),
-                onIgnore: chatController.ignorePendingMemory,
-              ).animate().fadeIn(duration: 220.ms).slideY(begin: 0.06, end: 0),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Column(
+                children: [
+                  for (final candidate in chatState.pendingMemoryCandidates)
+                    _MemorySuggestionCard(
+                      candidate: candidate,
+                      onSave: () async {
+                        await chatController.saveMemoryCandidate(candidate);
+                        _showMessage("I'll remember that.");
+                      },
+                      onIgnore: () {
+                        chatController.ignoreMemoryCandidate(candidate.id);
+                        _showMessage('Memory ignored.');
+                      },
+                    ),
+                ],
+              ),
             ),
           SafeArea(
             top: false,
@@ -132,15 +143,17 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                 children: [
                   IconButton.filledTonal(
                     tooltip: 'Voice input',
-                    onPressed: () =>
-                        _showMessage('Voice input foundation is ready.'),
+                    onPressed: () => _showMessage(
+                      'Voice is a preview; type now for the live demo loop.',
+                    ),
                     icon: const Icon(Icons.mic_rounded),
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   IconButton.filledTonal(
                     tooltip: 'Upload image',
-                    onPressed: () =>
-                        _showMessage('Gemini Vision placeholder is ready.'),
+                    onPressed: () => _showMessage(
+                      'Image chat is previewed; text chat is live for Shipathon.',
+                    ),
                     icon: const Icon(Icons.image_rounded),
                   ),
                   const SizedBox(width: AppSpacing.xs),
@@ -193,79 +206,6 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  Future<void> _editPendingMemory(MemorySuggestion suggestion) async {
-    final titleController = TextEditingController(
-      text: suggestion.memory.title,
-    );
-    final valueController = TextEditingController(
-      text: suggestion.memory.value,
-    );
-
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Edit Memory'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              TextField(
-                controller: valueController,
-                maxLines: 3,
-                decoration: const InputDecoration(labelText: 'Value'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () async {
-                final updated = suggestion.memory.copyWith(
-                  title: titleController.text.trim().isEmpty
-                      ? suggestion.memory.title
-                      : titleController.text.trim(),
-                  value: valueController.text.trim().isEmpty
-                      ? suggestion.memory.value
-                      : valueController.text.trim(),
-                  updatedAt: DateTime.now(),
-                );
-                await ref
-                    .read(memoryManagerProvider.notifier)
-                    .saveMemory(updated);
-                if (!context.mounted || !dialogContext.mounted) {
-                  return;
-                }
-                Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        children: [
-                          MaxieCompanionView(size: 24, state: CompanionPresence.happy),
-                          const SizedBox(width: AppSpacing.sm),
-                          const Text('Got it! Updated.'),
-                        ],
-                      ),
-                    ),
-                  );
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _scrollToBottom() {
@@ -339,11 +279,13 @@ class _ChatBubble extends StatelessWidget {
     required this.message,
     required this.onCopy,
     required this.onRetry,
+    required this.onSave,
   });
 
   final ChatMessage message;
   final VoidCallback onCopy;
   final VoidCallback onRetry;
+  final VoidCallback onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -396,7 +338,7 @@ class _ChatBubble extends StatelessWidget {
                         tooltip: 'Dislike',
                         onPressed: () => _showInlineMessage(
                           context,
-                          'Feedback saved for future tuning.',
+                          'Feedback saved for this conversation.',
                         ),
                         icon: const Icon(
                           Icons.thumb_down_alt_outlined,
@@ -404,11 +346,8 @@ class _ChatBubble extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        tooltip: 'Save to future memory',
-                        onPressed: () => _showInlineMessage(
-                          context,
-                          'Future memory save hook is ready.',
-                        ),
+                        tooltip: 'Save to memory',
+                        onPressed: onSave,
                         icon: const Icon(Icons.bookmark_add_outlined, size: 18),
                       ),
                     ],
@@ -426,6 +365,74 @@ class _ChatBubble extends StatelessWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class _MemorySuggestionCard extends StatelessWidget {
+  const _MemorySuggestionCard({
+    required this.candidate,
+    required this.onSave,
+    required this.onIgnore,
+  });
+
+  final MemoryCandidate candidate;
+  final VoidCallback onSave;
+  final VoidCallback onIgnore;
+
+  @override
+  Widget build(BuildContext context) {
+    return PremiumCard(
+      glowColor: AppColors.warmCoral,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.psychology_rounded, color: AppColors.warmCoral),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  'Should I remember this?',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              Chip(label: Text('${(candidate.confidence * 100).round()}%')),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(candidate.title),
+          const SizedBox(height: 4),
+          Text(
+            candidate.value,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: onSave,
+                  icon: const Icon(Icons.check_rounded),
+                  label: const Text('Save'),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onIgnore,
+                  icon: const Icon(Icons.close_rounded),
+                  label: const Text('Ignore'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ).animate().fadeIn(duration: 220.ms).slideY(begin: 0.08, end: 0);
   }
 }
 
@@ -603,211 +610,6 @@ class _ErrorStrip extends StatelessWidget {
       ),
     );
   }
-}
-
-class _MemorySuggestionCard extends StatelessWidget {
-  const _MemorySuggestionCard({
-    required this.suggestion,
-    required this.onSave,
-    required this.onEdit,
-    required this.onIgnore,
-  });
-
-  final MemorySuggestion suggestion;
-  final Future<void> Function() onSave;
-  final VoidCallback onEdit;
-  final VoidCallback onIgnore;
-
-  @override
-  Widget build(BuildContext context) {
-    return PremiumCard(
-      glowColor: AppColors.calmTeal,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const MaxieCompanionView(size: 68),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '🧠 New Memory Detected',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ).animate().shimmer(duration: 1200.ms, delay: 400.ms),
-                    const SizedBox(height: 4),
-                    Text(
-                      suggestion.memory.title,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text(
-                      suggestion.memory.value,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          _MemoryMetaGrid(
-            memory: suggestion.memory,
-            confidence: suggestion.confidence,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.xs,
-            children: [
-              FilledButton.icon(
-                onPressed: () {
-                  onSave();
-                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        children: [
-                          MaxieCompanionView(size: 24, state: CompanionPresence.happy),
-                          const SizedBox(width: AppSpacing.sm),
-                          const Text('I\'ll remember that.'),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.bookmark_add_rounded),
-                label: const Text('Save'),
-              ),
-              OutlinedButton.icon(
-                onPressed: onEdit,
-                icon: const Icon(Icons.edit_rounded),
-                label: const Text('Edit'),
-              ),
-              OutlinedButton.icon(
-                onPressed: () {
-                  onIgnore();
-                },
-                icon: const Icon(Icons.close_rounded),
-                label: const Text('Ignore'),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            suggestion.reason,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: Colors.white70),
-          ),
-        ],
-      ),
-    ).animate().fadeIn(duration: 240.ms).slideY(begin: 0.04, end: 0);
-  }
-}
-
-class _MemoryMetaGrid extends StatelessWidget {
-  const _MemoryMetaGrid({required this.memory, required this.confidence});
-
-  final MemoryRecord memory;
-  final double confidence;
-
-  @override
-  Widget build(BuildContext context) {
-    final created = _formatRelativeDate(memory.createdAt);
-    final used = memory.lastUsedAt == null
-        ? 'Never'
-        : _formatRelativeDate(memory.lastUsedAt!);
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: [
-        _MemoryMetaPill(
-          label: 'Confidence',
-          value: '${(confidence * 100).round()}%',
-          color: AppColors.success,
-        ),
-        _MemoryMetaPill(
-          label: 'Importance',
-          value: _stars(memory.importance.weight),
-          color: AppColors.warning,
-        ),
-        _MemoryMetaPill(
-          label: 'Source',
-          value: memory.source.name.toUpperCase(),
-        ),
-        _MemoryMetaPill(label: 'Created', value: created),
-        _MemoryMetaPill(label: 'Used', value: '$used (${memory.usageCount}x)'),
-      ],
-    );
-  }
-
-  String _stars(int weight) => List.filled(weight.clamp(1, 5), '★').join();
-}
-
-class _MemoryMetaPill extends StatelessWidget {
-  const _MemoryMetaPill({required this.label, required this.value, this.color});
-
-  final String label;
-  final String value;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0E1624),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkStroke),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Colors.white54,
-              fontWeight: FontWeight.w700,
-              fontSize: 9,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: color ?? Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-String _formatRelativeDate(DateTime date) {
-  final now = DateTime.now();
-  final deltaDays = DateTime(
-    now.year,
-    now.month,
-    now.day,
-  ).difference(DateTime(date.year, date.month, date.day)).inDays;
-  if (deltaDays <= 0) {
-    return 'Today';
-  }
-  if (deltaDays == 1) {
-    return 'Yesterday';
-  }
-  return '${date.month}/${date.day}/${date.year}';
 }
 
 class _ContentBlock {

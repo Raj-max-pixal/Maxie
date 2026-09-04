@@ -10,5 +10,6 @@ class AppRoutes {
   static const String aiChat = '/ai-chat';
   static const String memory = '/memory';
   static const String pet = '/pet';
+  static const String shimeji = '/shimeji';
   static const String tasks = '/tasks';
 }

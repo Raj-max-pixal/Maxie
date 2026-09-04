@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
-import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
-import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
+import 'package:maxie_mobile/features/memory/application/memory_manager.dart';
+import 'package:maxie_mobile/features/pet/application/pet_providers.dart';
+import 'package:maxie_mobile/features/pet/domain/models/pet_state.dart';
 import 'package:maxie_mobile/navigation/app_routes.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
@@ -23,10 +25,18 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final date = DateTime.now();
-    final memoryState = ref.watch(memoryManagerProvider);
-    final greeting = _timeGreeting(date, memoryState.memories);
-    final latestMemory = _latestMemory(memoryState.memories);
-    final summary = memoryState.summary;
+    final pet = ref.watch(petStateProvider).valueOrNull ?? const PetState();
+    final memorySummary = ref.watch(memoryBrainSummaryProvider).valueOrNull;
+    final memoryTimeline = ref.watch(memoryBrainTimelineProvider).valueOrNull;
+    final memoryCount = memorySummary?.totalMemories ?? 0;
+    final pinnedCount = memorySummary?.pinnedMemories ?? 0;
+    final recentMemories = [
+      ...?memoryTimeline?.groups.expand((group) => group.memories),
+    ].where((memory) => !memory.isArchived).toList();
+    final recentMemory = recentMemories.isEmpty ? null : recentMemories.first;
+    final friendshipLevel = (pet.affinity ~/ 100) + 1;
+    final friendshipProgress = (pet.affinity % 100) / 100;
+    final greeting = _timeGreeting(date);
 
     return PremiumScaffold(
       child: ListView(
@@ -45,14 +55,14 @@ class HomeScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _smartGreetingTitle(greeting.title, summary),
+                      greeting.title,
                       style: theme.textTheme.titleSmall?.copyWith(
                         color: const Color(0xFFE9D5FF),
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     Text(
-                      _smartGreetingDetail(date, summary, latestMemory),
+                      '${_weekday(date)}, ${date.day} ${_month(date)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.white54,
                       ),
@@ -70,51 +80,46 @@ class HomeScreen extends ConsumerWidget {
             ],
           ).animate().fadeIn(duration: 260.ms).slideY(begin: -0.1, end: 0),
           const SizedBox(height: AppSpacing.xl),
-          _TodaysCompanionCard(now: date, memories: memoryState.memories),
+          _TodaysCompanionCard(
+            now: date,
+            pet: pet,
+            memoryCount: memoryCount,
+            pinnedCount: pinnedCount,
+          ),
           const SizedBox(height: AppSpacing.lg),
-          if (latestMemory != null)
-            PremiumCard(
-              glowColor: AppColors.calmTeal,
-              child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.psychology_rounded, color: AppColors.calmTeal),
-                title: Text('You recently shared ${latestMemory.title}'),
-                subtitle: Text(latestMemory.value),
-              ),
-            ).animate().fadeIn(duration: 260.ms).slideY(begin: 0.06, end: 0),
-          if (latestMemory != null) const SizedBox(height: AppSpacing.lg),
           PremiumCard(
-            padding: const EdgeInsets.fromLTRB(18, 24, 18, 20),
-            glowColor: AppColors.calmTeal,
-            child: Column(
-              children: [
-                const MaxieCompanionView(
-                  state: CompanionPresence.happy,
-                  size: 190,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF202A3D),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    _rotatingCompanionMessage(date, memoryState.memories),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
+                padding: const EdgeInsets.fromLTRB(18, 24, 18, 20),
+                glowColor: AppColors.calmTeal,
+                child: Column(
+                  children: [
+                    const MaxieCompanionView(
+                      state: CompanionPresence.happy,
+                      size: 190,
                     ),
-                  ),
+                    const SizedBox(height: AppSpacing.md),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF202A3D),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        _rotatingCompanionMessage(date),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ).animate().fadeIn(duration: 360.ms).scale(
-                begin: const Offset(0.96, 0.96),
-              ),
+              )
+              .animate()
+              .fadeIn(duration: 360.ms)
+              .scale(begin: const Offset(0.96, 0.96)),
           const SizedBox(height: AppSpacing.lg),
           Row(
             children: [
@@ -130,7 +135,7 @@ class HomeScreen extends ConsumerWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _showFoundationMessage(
                     context,
-                    'Scan file intake is ready for the document flow.',
+                    'Drop a note into chat and MAXie will suggest memories from it.',
                   ),
                   icon: const Icon(Icons.document_scanner_rounded),
                   label: const Text('Scan File'),
@@ -141,7 +146,7 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.lg),
           const SectionTitle(
             title: 'Quick Actions',
-            subtitle: 'Your core entry points into MAXie.',
+            subtitle: 'Chat, remember, and grow your companion.',
           ),
           const SizedBox(height: AppSpacing.sm),
           GridView.count(
@@ -170,7 +175,7 @@ class HomeScreen extends ConsumerWidget {
                 color: AppColors.warmCoral,
                 onTap: () => _showFoundationMessage(
                   context,
-                  'Voice mode can be enabled from Settings.',
+                  'For the demo, type a message and watch Memory Brain react.',
                 ),
               ),
               _QuickAction(
@@ -182,7 +187,12 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          const XpProgressCard(level: 12, progress: 0.72),
+          XpProgressCard(
+            level: friendshipLevel,
+            progress: friendshipProgress,
+            xpLabel:
+                '${pet.affinity % 100}/100 XP to level ${friendshipLevel + 1}',
+          ),
           const SizedBox(height: AppSpacing.lg),
           GridView.count(
             crossAxisCount: 2,
@@ -191,49 +201,77 @@ class HomeScreen extends ConsumerWidget {
             crossAxisSpacing: AppSpacing.md,
             mainAxisSpacing: AppSpacing.md,
             childAspectRatio: 1.25,
-            children: const [
+            children: [
               StatCard(
-                label: 'Daily Streak',
-                value: '7 days',
+                label: 'Friendship XP',
+                value: '${pet.affinity}',
                 icon: Icons.local_fire_department_rounded,
                 color: AppColors.warning,
               ),
               StatCard(
-                label: 'XP Earned',
-                value: '2,840',
+                label: 'Memories',
+                value: '$memoryCount',
                 icon: Icons.bolt_rounded,
                 color: AppColors.warmCoral,
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          const SectionTitle(
+          PremiumCard(
+            glowColor: AppColors.warmCoral,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(
+                Icons.ios_share_rounded,
+                color: AppColors.warmCoral,
+              ),
+              title: const Text('Share your MAXie moment'),
+              subtitle: const Text(
+                'Copy a #BuildInPublic post after saving a memory.',
+              ),
+              trailing: IconButton(
+                tooltip: 'Copy post',
+                onPressed: () => _copyLaunchPost(context, memoryCount, pet),
+                icon: const Icon(Icons.copy_rounded),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          SectionTitle(
             title: "Today's Summary",
-            subtitle: 'A calm snapshot of what matters now.',
+            subtitle: pet.lastAction == 'Idle'
+                ? 'Start a chat to wake up the companion loop.'
+                : 'Latest companion moment: ${pet.lastAction}.',
           ),
           const SizedBox(height: AppSpacing.sm),
-          const TaskCard(
-            title: '3 high-priority meetings scheduled',
-            subtitle: 'MAXie will help you prepare context.',
+          TaskCard(
+            title: memoryCount == 0
+                ? 'Tell MAXie one personal fact'
+                : '$memoryCount memories are active',
+            subtitle: memoryCount == 0
+                ? 'Try: "my birthday is..." or "I am building..."'
+                : '$pinnedCount pinned memories guide the companion.',
           ),
           const SizedBox(height: AppSpacing.sm),
-          const TaskCard(
-            title: 'Draft for Project Nebula is ready',
-            subtitle: 'Review it when you have a clear moment.',
+          TaskCard(
+            title: 'Companion mood: ${_moodLabel(pet.mood)}',
+            subtitle: 'Chat and saved memories change MAXie in real time.',
           ),
           const SizedBox(height: AppSpacing.lg),
           const SectionTitle(title: 'Memory Preview'),
           const SizedBox(height: AppSpacing.sm),
-          const MemoryCard(
-            title: 'You prefer morning planning',
-            subtitle: 'Pinned from your companion setup.',
-            isPinned: true,
+          MemoryCard(
+            title: recentMemory?.title ?? 'No personal memory yet',
+            subtitle:
+                recentMemory?.value ??
+                'Save a memory from chat to make this screen personal.',
+            isPinned: recentMemory?.isPinned ?? false,
           ),
           const SizedBox(height: AppSpacing.lg),
           PremiumCard(
             glowColor: AppColors.seed,
             child: Text(
-              '"Small steps still count. I will keep track with you."',
+              '"Small steps still count. I will remember what matters and grow with you."',
               style: theme.textTheme.titleMedium?.copyWith(
                 color: const Color(0xFFE9D5FF),
                 fontWeight: FontWeight.w800,
@@ -243,42 +281,6 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  MemoryRecord? _latestMemory(List<MemoryRecord> memories) {
-    if (memories.isEmpty) {
-      return null;
-    }
-    final sorted = [...memories]..sort((left, right) => right.updatedAt.compareTo(left.updatedAt));
-    return sorted.first;
-  }
-
-  String _smartGreetingTitle(String fallback, MemorySummary summary) {
-    if (summary.totalMemories == 0) {
-      return fallback;
-    }
-    if (summary.relationshipLevel >= 20) {
-      return 'Welcome back, MAXie remembers a lot about you';
-    }
-    return '$fallback - MAXie is learning you well';
-  }
-
-  String _smartGreetingDetail(
-    DateTime date,
-    MemorySummary summary,
-    MemoryRecord? latestMemory,
-  ) {
-    final base = '${_weekday(date)}, ${date.day} ${_month(date)}';
-    if (latestMemory == null) {
-      return base;
-    }
-    if (latestMemory.category == MemoryCategory.projects) {
-      return '$base · Yesterday you worked on ${latestMemory.title}.';
-    }
-    if (summary.relationshipLevel >= 18) {
-      return '$base · You and MAXie have shared ${summary.totalMemories} memories.';
-    }
-    return '$base · Last time you mentioned ${latestMemory.title}.';
   }
 
   String _weekday(DateTime date) {
@@ -308,26 +310,39 @@ class HomeScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
       );
+  }
+
+  void _copyLaunchPost(BuildContext context, int memoryCount, PetState pet) {
+    final post =
+        'I am building MAXie for RevenueCat Shipathon: an AI companion that remembers you and grows with every chat. Today MAXie has $memoryCount memories and ${pet.affinity} friendship XP. #BuildInPublic #Shipathon';
+    Clipboard.setData(ClipboardData(text: post));
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('Launch post copied.')));
   }
 }
 
 class _TodaysCompanionCard extends StatelessWidget {
-  const _TodaysCompanionCard({required this.now, required this.memories});
+  const _TodaysCompanionCard({
+    required this.now,
+    required this.pet,
+    required this.memoryCount,
+    required this.pinnedCount,
+  });
 
   final DateTime now;
-  final List<MemoryRecord> memories;
+  final PetState pet;
+  final int memoryCount;
+  final int pinnedCount;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final greeting = _timeGreeting(now, memories);
+    final greeting = _timeGreeting(now);
     final mood = _companionMood(now);
-    final message = _rotatingCompanionMessage(now, memories);
+    final message = _rotatingCompanionMessage(now);
 
     return PremiumCard(
       glowColor: AppColors.warmCoral,
@@ -343,17 +358,28 @@ class _TodaysCompanionCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           _CompanionLine(icon: greeting.icon, text: greeting.title),
           _CompanionLine(icon: greeting.detailIcon, text: greeting.detail),
-          const _CompanionLine(
+          _CompanionLine(
             icon: '\u{2728}',
-            text: 'You completed 3 tasks today.',
+            text: pet.lastAction == 'Idle'
+                ? 'Start with one chat message.'
+                : 'Last action: ${pet.lastAction}.',
           ),
-          const _CompanionLine(icon: '\u{1F525}', text: '7 day streak'),
-          const _CompanionLine(icon: '\u{1F49C}', text: 'Friendship Level 12'),
-          const _CompanionLine(
+          _CompanionLine(
+            icon: '\u{1F525}',
+            text: '$memoryCount memories active',
+          ),
+          _CompanionLine(
+            icon: '\u{1F49C}',
+            text: 'Friendship Level ${(pet.affinity ~/ 100) + 1}',
+          ),
+          _CompanionLine(
             icon: '\u{1F381}',
-            text: 'Daily Reward Available',
+            text: '$pinnedCount pinned memories guide MAXie',
           ),
-          _CompanionLine(icon: mood.icon, text: 'Companion Mood: ${mood.label}'),
+          _CompanionLine(
+            icon: mood.icon,
+            text: 'Companion Mood: ${_moodLabel(pet.mood)}',
+          ),
           _CompanionLine(icon: '\u{1F4AC}', text: message),
         ],
       ),
@@ -378,9 +404,9 @@ class _CompanionLine extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -417,9 +443,9 @@ class _QuickAction extends StatelessWidget {
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
         ],
       ),
@@ -427,72 +453,61 @@ class _QuickAction extends StatelessWidget {
   }
 }
 
-_CompanionGreeting _timeGreeting(DateTime now, List<MemoryRecord> memories) {
+_CompanionGreeting _timeGreeting(DateTime now) {
   final hour = now.hour;
-  
-  // Find interesting memories to include in the greeting
-  final projects = memories.where((m) => m.category == MemoryCategory.projects).toList()..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-  final dreams = memories.where((m) => m.category == MemoryCategory.dreamCompanies).toList();
-  
-  String title = 'Good Morning Raj';
-  String icon = '☀️';
-  String detail = "Today's mission awaits.";
-  String detailIcon = '🎯';
-
   if (hour >= 5 && hour < 12) {
-    title = 'Good Morning Raj';
-    icon = '☀️';
-    if (projects.isNotEmpty) {
-      final p = projects.first;
-      if (now.difference(p.updatedAt).inDays <= 2) {
-        detail = 'Yesterday you worked on ${p.value}. Ready to continue?';
-      } else {
-        detail = 'Let\'s make progress on ${p.value} today.';
-      }
-    }
-  } else if (hour >= 12 && hour < 17) {
-    title = 'Good Afternoon Raj';
-    icon = '🌤️';
-    detailIcon = '✅';
-    detail = "Let's finish today's goals.";
-    if (dreams.isNotEmpty) {
-      detail = "Every step brings you closer to ${dreams.first.value}.";
-    }
-  } else if (hour >= 17 && hour < 22) {
-    title = 'Good Evening Raj';
-    icon = '🌙';
-    detailIcon = '💜';
-    detail = "You're doing great today.";
-    if (dreams.isNotEmpty) {
-      detail = "You're getting closer to your ${dreams.first.value} dream. Let's continue today's mission.";
-    }
-  } else {
-    title = 'Good Night Raj';
-    icon = '😴';
-    detailIcon = '🛌';
-    detail = "Don't forget to rest. We'll continue tomorrow.";
+    return const _CompanionGreeting(
+      icon: '\u{2600}\u{FE0F}',
+      title: 'Good Morning',
+      detailIcon: '\u{1F3AF}',
+      detail: "Today's mission awaits.",
+    );
   }
-  
-  return _CompanionGreeting(
-    icon: icon,
-    title: title,
-    detailIcon: detailIcon,
-    detail: detail,
+  if (hour >= 12 && hour < 17) {
+    return const _CompanionGreeting(
+      icon: '\u{1F324}',
+      title: 'Good Afternoon',
+      detailIcon: '\u{2705}',
+      detail: "Let's finish today's goals.",
+    );
+  }
+  if (hour >= 17 && hour < 22) {
+    return const _CompanionGreeting(
+      icon: '\u{1F306}',
+      title: 'Good Evening',
+      detailIcon: '\u{1F49C}',
+      detail: "You're doing great today.",
+    );
+  }
+  return const _CompanionGreeting(
+    icon: '\u{1F319}',
+    title: 'Good Night',
+    detailIcon: '\u{1F6CC}',
+    detail: "Don't forget to recharge yourself too.",
   );
 }
 
-String _rotatingCompanionMessage(DateTime now, List<MemoryRecord> memories) {
-  final messages = [
-    "You've got this 💜",
+String _rotatingCompanionMessage(DateTime now) {
+  const messages = [
+    "You've got this \u{1F49C}",
     "I'm always here.",
     'Ready to build something amazing?',
     "Today's a good day to learn.",
+    "Let's win Shipathon.",
   ];
-  final goals = memories.where((m) => m.category == MemoryCategory.goals).toList();
-  if (goals.isNotEmpty) {
-    messages.add("Let's focus on: ${goals.first.value}");
-  }
   return messages[(now.day + now.hour) % messages.length];
+}
+
+String _moodLabel(PetMood mood) {
+  return switch (mood) {
+    PetMood.happy => 'Happy',
+    PetMood.focused => 'Focused',
+    PetMood.sleepy => 'Sleepy',
+    PetMood.listening => 'Listening',
+    PetMood.dancing => 'Dancing',
+    PetMood.loving => 'Loving',
+    PetMood.neutral => 'Neutral',
+  };
 }
 
 _CompanionMood _companionMood(DateTime now) {

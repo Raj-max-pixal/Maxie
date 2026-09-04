@@ -1,11 +1,9 @@
-import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
+import 'package:maxie_mobile/features/memory/domain/models/memory_entry.dart';
 
 abstract interface class MemoryRepository {
-  Future<List<MemoryRecord>> readMemories();
+  Future<List<MemoryEntry>> readMemories();
 
-  Future<void> saveMemory(MemoryRecord entry);
+  Future<void> saveMemory(MemoryEntry entry);
 
   Future<void> deleteMemory(String id);
-
-  Future<void> clearMemories();
 }
