@@ -91,6 +91,8 @@ class HealthService {
       case BatteryState.full:
         _sendFullBatteryReaction();
         break;
+      case BatteryState.connectedNotCharging:
+        break;
       case BatteryState.unknown:
         break;
     }

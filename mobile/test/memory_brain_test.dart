@@ -38,8 +38,6 @@ void main() {
           value: 'Jazz',
           createdAt: now,
           updatedAt: now,
-          priority: MemoryPriority.normal,
-          importance: MemoryImportance.medium,
           confidence: 0.4,
         ),
         MemoryRecord(
@@ -88,8 +86,6 @@ void main() {
           tags: const ['music'],
           createdAt: now,
           updatedAt: now,
-          priority: MemoryPriority.normal,
-          importance: MemoryImportance.medium,
           confidence: 0.5,
         ),
       ];

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/settings_section.dart';
-import '../widgets/settings_tile.dart';
-import '../providers/settings_provider.dart';
-import '../../home/presentation/providers/overlay_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
+import 'package:maxie_mobile/features/settings/presentation/providers/settings_provider.dart';
+import 'package:maxie_mobile/features/settings/presentation/widgets/settings_section.dart';
+import 'package:maxie_mobile/features/settings/presentation/widgets/settings_tile.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -40,7 +40,7 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ),
               SettingsTile(
-                icon: Icons.quick_actions,
+                icon: Icons.flash_on,
                 title: 'Quick Actions',
                 subtitle: 'Chat, settings, music controls',
                 trailing: Switch(

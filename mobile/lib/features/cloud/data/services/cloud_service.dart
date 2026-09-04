@@ -1,13 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import '../../../../core/constants/app_constants.dart';
 
 /// Cloud backup & sync service
 /// Uses Google Drive / Firebase for cloud storage
 /// All data is encrypted before upload
-class CloudService {
+class CloudService extends ChangeNotifier {
   final SharedPreferences _prefs;
 
   CloudService(this._prefs);
@@ -26,18 +27,13 @@ class CloudService {
 
   /// Login with Google
   Future<bool> loginWithGoogle() async {
-    try {
-      // Simulated Google login - in production use google_sign_in package
-      await Future.delayed(const Duration(seconds: 1));
-      await _prefs.setBool(AppConstants.cloudLoginKey, true);
-      await _prefs.setString(AppConstants.userEmailKey, 'user@gmail.com');
-      await _prefs.setString(AppConstants.userIdKey, 'user_${DateTime.now().millisecondsSinceEpoch}');
-      debugPrint('Cloud: Google login successful');
-      return true;
-    } catch (e) {
-      debugPrint('Cloud: Google login failed: $e');
-      return false;
-    }
+    await Future.delayed(const Duration(milliseconds: 400));
+    await _prefs.setBool(AppConstants.cloudLoginKey, true);
+    await _prefs.setString(AppConstants.userEmailKey, 'demo@maxie.app');
+    await _prefs.setString(AppConstants.userIdKey, 'offline_demo_user');
+    debugPrint('Cloud: Offline demo login enabled');
+    notifyListeners();
+    return true;
   }
 
   /// Logout
@@ -46,12 +42,14 @@ class CloudService {
     await _prefs.remove(AppConstants.userEmailKey);
     await _prefs.remove(AppConstants.userIdKey);
     debugPrint('Cloud: Logged out');
+    notifyListeners();
   }
 
   /// Backup all data to cloud
   Future<bool> backup() async {
     if (!isLoggedIn) return false;
     _isSyncing = true;
+    notifyListeners();
 
     try {
       // Collect all data
@@ -69,9 +67,16 @@ class CloudService {
         }
       }
 
-      // In production, upload to Google Drive / Firebase
-      // Simulated upload
-      await Future.delayed(const Duration(seconds: 2));
+      final uid = userId;
+      if (uid != null && uid != 'offline_demo_user') {
+        // Upload to Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection('backup')
+            .doc('latest')
+            .set(backup);
+      }
 
       await _prefs.setString(
           AppConstants.lastSyncTimeKey, DateTime.now().toIso8601String());
@@ -80,32 +85,55 @@ class CloudService {
 
       debugPrint('Cloud: Backup completed');
       _isSyncing = false;
+      notifyListeners();
       return true;
     } catch (e) {
       debugPrint('Cloud: Backup failed: $e');
       _isSyncing = false;
+      notifyListeners();
       return false;
     }
   }
+
 
   /// Restore data from cloud
   Future<bool> restore() async {
     if (!isLoggedIn) return false;
     _isSyncing = true;
+    notifyListeners();
 
     try {
-      // In production, download from Google Drive / Firebase
-      // Simulated download
-      await Future.delayed(const Duration(seconds: 2));
+      final uid = userId;
+      Map<String, dynamic>? backup;
 
-      final backupJson = _prefs.getString(AppConstants.lastBackupKey);
-      if (backupJson == null) {
+      if (uid != null && uid != 'offline_demo_user') {
+        // Download from Firestore
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection('backup')
+            .doc('latest')
+            .get();
+        if (doc.exists && doc.data() != null) {
+          backup = doc.data();
+        }
+      }
+
+      if (backup == null) {
+        // Fallback to local backup json
+        final backupJson = _prefs.getString(AppConstants.lastBackupKey);
+        if (backupJson != null) {
+          backup = jsonDecode(backupJson) as Map<String, dynamic>;
+        }
+      }
+
+      if (backup == null) {
         debugPrint('Cloud: No backup found');
         _isSyncing = false;
+        notifyListeners();
         return false;
       }
 
-      final backup = jsonDecode(backupJson) as Map<String, dynamic>;
       final data = backup['data'] as Map<String, dynamic>;
 
       // Restore all data
@@ -127,10 +155,12 @@ class CloudService {
 
       debugPrint('Cloud: Restore completed');
       _isSyncing = false;
+      notifyListeners();
       return true;
     } catch (e) {
       debugPrint('Cloud: Restore failed: $e');
       _isSyncing = false;
+      notifyListeners();
       return false;
     }
   }
@@ -139,6 +169,7 @@ class CloudService {
   Future<bool> sync() async {
     if (!isLoggedIn) return false;
     _isSyncing = true;
+    notifyListeners();
 
     try {
       // Upload local changes
@@ -149,10 +180,12 @@ class CloudService {
 
       debugPrint('Cloud: Sync completed');
       _isSyncing = false;
+      notifyListeners();
       return true;
     } catch (e) {
       debugPrint('Cloud: Sync failed: $e');
       _isSyncing = false;
+      notifyListeners();
       return false;
     }
   }
@@ -171,10 +204,20 @@ class CloudService {
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
+
+  /// Get sync preference for a feature
+  bool getSyncPref(String key) => _prefs.getBool('sync_$key') ?? true;
+
+  /// Set sync preference for a feature
+  Future<void> setSyncPref(String key, bool value) async {
+    await _prefs.setBool('sync_$key', value);
+    notifyListeners();
+  }
 }
 
+
 /// Cloud service provider
-final cloudServiceProvider = Provider<CloudService>((ref) {
+final cloudServiceProvider = ChangeNotifierProvider<CloudService>((ref) {
   throw UnimplementedError('CloudService must be initialized');
 });
 

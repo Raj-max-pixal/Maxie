@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:battery_plus/battery_plus.dart';
-import '../providers/overlay_provider.dart';
-import '../../home/presentation/providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
 
 class FloatingStatusBar extends ConsumerStatefulWidget {
   const FloatingStatusBar({super.key});

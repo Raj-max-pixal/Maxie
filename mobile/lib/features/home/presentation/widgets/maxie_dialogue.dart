@@ -51,7 +51,7 @@ class MaxieDialogue extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
-                        color: Colors.indigo.shade950,
+                        color: Colors.indigo.shade900,
                       ),
                     ),
                   ),

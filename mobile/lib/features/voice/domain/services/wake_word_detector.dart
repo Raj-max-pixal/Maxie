@@ -48,7 +48,6 @@ class WakeWordDetector {
       localeId: 'en_US',
       cancelOnError: false,
       listenMode: ListenMode.confirmation,
-      autoPunctuation: false,
     );
   }
 

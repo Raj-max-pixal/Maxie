@@ -23,7 +23,7 @@ class ProfilePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade950,
+              color: Colors.indigo.shade900,
             ),
           ),
           const SizedBox(height: 20),
@@ -136,7 +136,7 @@ class ProfilePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade950,
+              color: Colors.indigo.shade900,
             ),
           ),
           const SizedBox(height: 12),
@@ -162,7 +162,7 @@ class ProfilePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade950,
+              color: Colors.indigo.shade900,
             ),
           ),
           const SizedBox(height: 12),
@@ -196,7 +196,7 @@ class ProfilePanel extends ConsumerWidget {
           ),
           Text(
             value,
-            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.indigo.shade950),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.indigo.shade900),
           ),
         ],
       ),
@@ -252,7 +252,7 @@ class ProfilePanel extends ConsumerWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: isUnlocked ? Colors.amber.shade950 : Colors.grey.shade600,
+                    color: isUnlocked ? Colors.amber.shade900 : Colors.grey.shade600,
                   ),
                 ),
                 const SizedBox(height: 4),

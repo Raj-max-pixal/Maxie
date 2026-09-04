@@ -8,7 +8,7 @@ import 'package:maxie_mobile/features/ai_companion/domain/models/companion_emoti
 import 'package:maxie_mobile/features/ai_companion/domain/repositories/ai_companion_repository.dart';
 import 'package:maxie_mobile/features/ai_companion/domain/repositories/companion_emotion_repository.dart';
 import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
-import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
+import 'package:maxie_mobile/features/memory/domain/models/memory_entry.dart';
 import 'package:maxie_mobile/features/memory/domain/repositories/memory_repository.dart';
 import 'package:maxie_mobile/features/pet/application/pet_providers.dart';
 import 'package:maxie_mobile/features/pet/domain/models/pet_state.dart';
@@ -296,17 +296,11 @@ class CompanionStateEngine extends StateNotifier<AsyncValue<CompanionEmotion>> {
     }
     final now = _now();
     await repository.saveMemory(
-      MemoryRecord(
+      MemoryEntry(
         id: 'companion-${now.microsecondsSinceEpoch}',
-        category: MemoryCategory.habits,
-        title: 'Companion interaction',
-        value: '$value. MAXie became ${_labelForEmotion(emotion.type)}.',
+        title:
+            'Companion interaction: $value. MAXie became ${_labelForEmotion(emotion.type)}.',
         createdAt: now,
-        updatedAt: now,
-        priority: MemoryPriority.low,
-        importance: MemoryImportance.medium,
-        confidence: 0.8,
-        source: MemorySource.system,
         tags: const ['companion', 'emotion'],
       ),
     );

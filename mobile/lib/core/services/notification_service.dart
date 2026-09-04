@@ -54,7 +54,7 @@ class NotificationService {
     );
 
     await _plugin.initialize(
-      initSettings,
+      settings: initSettings,
       onDidReceiveNotificationResponse: _onNotificationTap,
     );
 
@@ -175,10 +175,10 @@ class NotificationService {
     );
 
     await _plugin.show(
-      id,
-      title,
-      body,
-      NotificationDetails(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: NotificationDetails(
         android: androidDetails,
         iOS: iOSDetails,
       ),
@@ -207,21 +207,19 @@ class NotificationService {
     );
 
     await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      NotificationDetails(android: androidDetails),
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails: NotificationDetails(android: androidDetails),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
     );
   }
 
   /// Cancel a scheduled reminder by ID.
   Future<void> cancelReminder(int id) async {
-    await _plugin.cancel(id);
+    await _plugin.cancel(id: id);
   }
 
   // ---------------------------------------------------------------------------
@@ -303,14 +301,12 @@ class NotificationService {
     );
 
     await _plugin.zonedSchedule(
-      id,
-      'Habit Reminder: $habitName 📋',
-      'Don\'t forget to complete your habit: $habitName',
-      scheduledDate,
-      NotificationDetails(android: androidDetails),
+      id: id,
+      title: 'Habit Reminder: $habitName 📋',
+      body: 'Don\'t forget to complete your habit: $habitName',
+      scheduledDate: scheduledDate,
+      notificationDetails: NotificationDetails(android: androidDetails),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       payload: 'habit',
       // No matchAndroidDateTime: true because we want it to repeat
     );
@@ -321,7 +317,7 @@ class NotificationService {
 
   /// Cancel a habit reminder.
   Future<void> cancelHabitReminder(int id) async {
-    await _plugin.cancel(id);
+    await _plugin.cancel(id: id);
   }
 
   // ---------------------------------------------------------------------------
@@ -346,21 +342,19 @@ class NotificationService {
     final tzDate = tz.TZDateTime.from(scheduledDate, tz.local);
 
     await _plugin.zonedSchedule(
-      id,
-      'Goal Progress: $goalTitle 🎯',
-      'Keep working on your $goalCategory goal: "$goalTitle"',
-      tzDate,
-      NotificationDetails(android: androidDetails),
+      id: id,
+      title: 'Goal Progress: $goalTitle 🎯',
+      body: 'Keep working on your $goalCategory goal: "$goalTitle"',
+      scheduledDate: tzDate,
+      notificationDetails: NotificationDetails(android: androidDetails),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       payload: 'goal',
     );
   }
 
   /// Cancel a goal reminder.
   Future<void> cancelGoalReminder(int id) async {
-    await _plugin.cancel(id);
+    await _plugin.cancel(id: id);
   }
 
   // ---------------------------------------------------------------------------

@@ -22,7 +22,7 @@ class ToyItem extends StatelessWidget {
           height: 48,
           child: _getVisualForType()
               .animate(onPlay: (controller) => controller.repeat(reverse: true))
-              .translate(y: -6, duration: 800.ms, curve: Curves.easeInOutSine)
+              .moveY(end: -6, duration: 800.ms, curve: Curves.easeInOutSine)
               .scale(end: const Offset(1.05, 1.05), duration: 800.ms, curve: Curves.easeInOutSine),
         ),
       ),

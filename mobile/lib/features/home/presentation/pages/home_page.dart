@@ -248,7 +248,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ],
       ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.indigo.shade950),
+        icon: Icon(icon, color: Colors.indigo.shade900),
         onPressed: onTap,
       ),
     );
@@ -277,7 +277,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             'Lvl $level',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade950,
+              color: Colors.indigo.shade900,
             ),
           ),
         ],

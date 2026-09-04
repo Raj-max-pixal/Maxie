@@ -98,7 +98,7 @@ class PetCustomization {
     this.wings,
     this.aura,
     this.trail,
-    this.color = Color(0xFF6C63FF),
+    this.color = const Color(0xFF6C63FF),
     this.size = 1.0,
     this.animationSpeed = 1.0,
     this.name = 'MAXie',

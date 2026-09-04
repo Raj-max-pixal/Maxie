@@ -12,6 +12,9 @@ class ChatMessageModel {
   final bool isVoiceMessage;
   final String? voiceUrl;
 
+  String get text => content;
+  bool get isUser => sender == MessageSender.user;
+
   const ChatMessageModel({
     required this.id,
     required this.content,

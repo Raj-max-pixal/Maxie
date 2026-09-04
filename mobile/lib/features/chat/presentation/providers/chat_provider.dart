@@ -13,6 +13,45 @@ final chatServiceProvider = Provider<AIChatService>((ref) {
   return AIChatService(useOfflineMode: true);
 });
 
+final chatProvider =
+    StateNotifierProvider<LegacyChatNotifier, List<ChatMessageModel>>((ref) {
+      return LegacyChatNotifier(ref);
+    });
+
+class LegacyChatNotifier extends StateNotifier<List<ChatMessageModel>> {
+  LegacyChatNotifier(this._ref) : super([]);
+
+  final Ref _ref;
+
+  Future<void> sendMessage(String content) async {
+    final userMessage = ChatMessageModel(
+      id: uuid.v4(),
+      content: content,
+      sender: MessageSender.user,
+      timestamp: DateTime.now(),
+    );
+    state = [...state, userMessage];
+
+    final response = await _ref.read(chatServiceProvider).generateResponse(
+          content,
+          petName: 'MAXie',
+        );
+    state = [
+      ...state,
+      ChatMessageModel(
+        id: uuid.v4(),
+        content: response,
+        sender: MessageSender.assistant,
+        timestamp: DateTime.now(),
+      ),
+    ];
+  }
+
+  void clearHistory() {
+    state = [];
+  }
+}
+
 final conversationsProvider =
     StateNotifierProvider<ConversationsNotifier, List<ConversationModel>>((ref) {
   return ConversationsNotifier(ref);

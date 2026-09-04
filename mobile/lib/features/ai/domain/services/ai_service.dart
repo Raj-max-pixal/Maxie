@@ -1,13 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/repositories/gemini_repository.dart';
-import '../data/models/personality_profile.dart';
-import '../../home/presentation/providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/ai/data/models/personality_profile.dart';
+import 'package:maxie_mobile/features/ai/data/repositories/gemini_repository.dart';
 
 class AIService {
   final GeminiRepository _geminiRepository;
 
   AIService({required GeminiRepository geminiRepository})
-      : _geminiRepository = geminiRepository;
+    : _geminiRepository = geminiRepository;
 
   Future<String> chatWithMaxie(
     String userMessage,

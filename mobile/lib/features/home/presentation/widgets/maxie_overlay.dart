@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/overlay_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
 
 class MaxieOverlay extends ConsumerWidget {
   const MaxieOverlay({super.key});
@@ -12,19 +12,24 @@ class MaxieOverlay extends ConsumerWidget {
     if (!overlayState.isEnabled) {
       return const SizedBox.shrink();
     }
+    final maxieWidget = overlayState.getWidget('maxie_character');
+    if (maxieWidget == null || !maxieWidget.isVisible) {
+      return const SizedBox.shrink();
+    }
 
     return Positioned(
-      left: overlayState.position.dx,
-      top: overlayState.position.dy,
+      left: maxieWidget.position.dx,
+      top: maxieWidget.position.dy,
       child: GestureDetector(
         onPanUpdate: (details) {
-          ref.read(overlayProvider.notifier).updatePosition(
-            overlayState.position + details.delta,
+          ref.read(overlayProvider.notifier).updateWidgetPosition(
+            maxieWidget.id,
+            maxieWidget.position + details.delta,
           );
         },
         child: Container(
-          width: overlayState.size,
-          height: overlayState.size,
+          width: maxieWidget.size,
+          height: maxieWidget.size,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             boxShadow: [

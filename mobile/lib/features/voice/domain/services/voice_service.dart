@@ -34,19 +34,11 @@ class VoiceService {
   }
 
   Future<void> _initStt() async {
-    await _stt.initialize();
-    
-    _stt.setRecognitionResultHandler((result) {
-      _lastRecognizedText = result.recognizedWords;
-    });
-    
-    _stt.setSoundLevelHandler((level) {
-      // Sound level feedback
-    });
-    
-    _stt.setErrorHandler((error) {
-      _isListening = false;
-    });
+    await _stt.initialize(
+      onError: (_) {
+        _isListening = false;
+      },
+    );
   }
 
   Future<void> speak(String text) async {
@@ -81,7 +73,6 @@ class VoiceService {
       },
       cancelOnError: true,
       listenMode: ListenMode.confirmation,
-      autoPunctuation: true,
     );
     
     return _isListening;

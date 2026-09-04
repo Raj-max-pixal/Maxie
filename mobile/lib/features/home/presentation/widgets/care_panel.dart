@@ -32,7 +32,7 @@ class CarePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade950,
+              color: Colors.indigo.shade900,
             ),
           ),
           const SizedBox(height: 16),
@@ -108,7 +108,7 @@ class CarePanel extends ConsumerWidget {
                       '${maxieState.points} Pts',
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber.shade950,
+                        color: Colors.amber.shade900,
                       ),
                     ),
                   ],
@@ -132,7 +132,7 @@ class CarePanel extends ConsumerWidget {
         border: Border.all(color: Colors.indigo.shade50),
         boxShadow: [
           BoxShadow(
-            color: Colors.indigo.shade950.withOpacity(0.05),
+            color: Colors.indigo.shade900.withOpacity(0.05),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -256,7 +256,7 @@ class CarePanel extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey.shade150),
+            border: Border.all(color: Colors.grey.shade100),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.02),

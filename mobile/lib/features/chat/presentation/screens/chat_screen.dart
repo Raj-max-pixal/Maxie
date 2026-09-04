@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/widgets/glass_card.dart';
-import '../providers/chat_provider.dart';
+import 'package:maxie_mobile/features/chat/presentation/providers/chat_provider.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -24,7 +24,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void _sendMessage() {
     final text = _messageController.text.trim();
     if (text.isEmpty) return;
-    ref.read(chatServiceProvider.notifier).sendMessage(text);
+    ref.read(chatProvider.notifier).sendMessage(text);
     _messageController.clear();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
@@ -38,8 +38,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final chatState = ref.watch(chatServiceProvider);
-    final messages = chatState.messages;
+    final messages = ref.watch(chatProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +52,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.cleaning_services_outlined),
-            onPressed: () => ref.read(chatServiceProvider.notifier).clearHistory(),
+            onPressed: () => ref.read(chatProvider.notifier).clearHistory(),
             tooltip: 'Clear chat',
           ),
         ],
