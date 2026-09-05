@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/pet_provider.dart';
-import '../../data/models/pet_model.dart';
+import 'package:maxie_mobile/features/pets/presentation/providers/pet_provider.dart';
+import 'package:maxie_mobile/features/pets/data/models/pet_model.dart';
 
 /// The main Shimeji-style pet animation widget that renders the pet
 /// with smooth 60fps animations, emotions, and interactions.
@@ -30,8 +30,8 @@ class _PetAnimationWidgetState extends ConsumerState<PetAnimationWidget>
   // Visual effects
   Color _auraColor = Colors.transparent;
   bool _showSparkles = false;
-  List<Offset> _sparklePositions = [];
-  List<double> _sparkleOpacities = [];
+  final List<Offset> _sparklePositions = [];
+  final List<double> _sparkleOpacities = [];
 
   @override
   void initState() {

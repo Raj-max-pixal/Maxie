@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
-import '../../features/dashboard/presentation/screens/calendar_screen.dart';
-import '../../features/pets/presentation/screens/pet_shop_screen.dart';
-import '../../features/pets/presentation/screens/pet_customize_screen.dart';
-import '../../features/pets/presentation/screens/pet_interaction_screen.dart';
-import '../../features/chat/presentation/screens/chat_screen.dart';
-import '../../features/chat/presentation/screens/voice_chat_screen.dart';
-import '../../features/productivity/presentation/screens/todo_screen.dart';
-import '../../features/productivity/presentation/screens/notes_screen.dart';
-import '../../features/productivity/presentation/screens/habit_screen.dart';
-import '../../features/productivity/presentation/screens/pomodoro_screen.dart';
-import '../../features/productivity/presentation/screens/goals_screen.dart';
-import '../../features/gamification/presentation/screens/profile_screen.dart';
-import '../../features/gamification/presentation/screens/achievements_screen.dart';
-import '../../features/gamification/presentation/screens/daily_rewards_screen.dart';
-import '../../features/settings/presentation/screens/settings_screen.dart';
-import '../../features/settings/presentation/screens/appearance_screen.dart';
-import '../../features/settings/presentation/screens/voice_settings_screen.dart';
-import '../../features/settings/presentation/screens/accessibility_screen.dart';
-import '../../features/cloud/presentation/screens/cloud_sync_screen.dart';
-import '../../features/pc_companion/presentation/screens/pc_companion_screen.dart';
+import 'package:maxie_mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:maxie_mobile/features/dashboard/presentation/screens/calendar_screen.dart';
+import 'package:maxie_mobile/features/pets/presentation/screens/pet_shop_screen.dart';
+import 'package:maxie_mobile/features/pets/presentation/screens/pet_customize_screen.dart';
+import 'package:maxie_mobile/features/pets/presentation/screens/pet_interaction_screen.dart';
+import 'package:maxie_mobile/features/chat/presentation/screens/chat_screen.dart';
+import 'package:maxie_mobile/features/chat/presentation/screens/voice_chat_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/todo_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/notes_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/habit_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/pomodoro_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/goals_screen.dart';
+import 'package:maxie_mobile/features/gamification/presentation/screens/profile_screen.dart';
+import 'package:maxie_mobile/features/gamification/presentation/screens/achievements_screen.dart';
+import 'package:maxie_mobile/features/gamification/presentation/screens/daily_rewards_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/settings_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/appearance_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/voice_settings_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/accessibility_screen.dart';
+import 'package:maxie_mobile/features/cloud/presentation/screens/cloud_sync_screen.dart';
+import 'package:maxie_mobile/features/pc_companion/presentation/screens/pc_companion_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -37,61 +37,61 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: DashboardScreen(),
             ),
           ),
           GoRoute(
             path: '/shop',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: PetShopScreen(),
             ),
           ),
           GoRoute(
             path: '/chat',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: ChatScreen(),
             ),
           ),
           GoRoute(
             path: '/todo',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: TodoScreen(),
             ),
           ),
           GoRoute(
             path: '/notes',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: NotesScreen(),
             ),
           ),
           GoRoute(
             path: '/habits',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: HabitScreen(),
             ),
           ),
           GoRoute(
             path: '/pomodoro',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: PomodoroScreen(),
             ),
           ),
           GoRoute(
             path: '/goals',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: GoalsScreen(),
             ),
           ),
           GoRoute(
             path: '/achievements',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: AchievementsScreen(),
             ),
           ),
           GoRoute(
             path: '/profile',
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: ProfileScreen(),
             ),
           ),
@@ -114,47 +114,47 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/voice-chat',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => VoiceChatScreen(),
+        builder: (context, state) => const VoiceChatScreen(),
       ),
       GoRoute(
         path: '/settings',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => SettingsScreen(),
+        builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
         path: '/settings/appearance',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => AppearanceScreen(),
+        builder: (context, state) => const AppearanceScreen(),
       ),
       GoRoute(
         path: '/settings/voice',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => VoiceSettingsScreen(),
+        builder: (context, state) => const VoiceSettingsScreen(),
       ),
       GoRoute(
         path: '/settings/accessibility',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => AccessibilityScreen(),
+        builder: (context, state) => const AccessibilityScreen(),
       ),
       GoRoute(
         path: '/cloud',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => CloudSyncScreen(),
+        builder: (context, state) => const CloudSyncScreen(),
       ),
       GoRoute(
         path: '/pc-companion',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => PCCompanionScreen(),
+        builder: (context, state) => const PCCompanionScreen(),
       ),
       GoRoute(
         path: '/calendar',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => CalendarScreen(),
+        builder: (context, state) => const CalendarScreen(),
       ),
       GoRoute(
         path: '/daily-rewards',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => DailyRewardsScreen(),
+        builder: (context, state) => const DailyRewardsScreen(),
       ),
     ],
   );
@@ -238,7 +238,9 @@ class AppShell extends StatelessWidget {
     if (location.startsWith('/chat')) return 2;
     if (location.startsWith('/todo') || location.startsWith('/notes') || 
         location.startsWith('/habits') || location.startsWith('/pomodoro') ||
-        location.startsWith('/goals')) return 3;
+        location.startsWith('/goals')) {
+      return 3;
+    }
     if (location.startsWith('/achievements') || location.startsWith('/profile')) return 4;
     return 0;
   }

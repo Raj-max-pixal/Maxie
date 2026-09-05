@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/theme/app_colors.dart';
-import 'package:mobile/theme/app_constants.dart';
-import 'package:mobile/theme/app_typography.dart';
+import 'app_colors.dart';
+import 'app_constants.dart';
+import 'app_typography.dart';
 
 final lightThemeProvider = Provider((ref) => AppTheme.lightTheme);
 final darkThemeProvider = Provider((ref) => AppTheme.darkTheme);

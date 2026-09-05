@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/services/pc_companion_service.dart';
-import '../../../shared/widgets/glass_card.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/pc_companion/data/services/pc_companion_service.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
 
 class PCCompanionScreen extends ConsumerWidget {
   const PCCompanionScreen({super.key});
@@ -238,7 +238,7 @@ class PCCompanionScreen extends ConsumerWidget {
       children: [
         Icon(icon, color: AppConstants.primaryPurple.withOpacity(0.7), size: 18),
         const SizedBox(width: 10),
-        Text(label + ':',
+        Text('$label:',
           style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(0.6)),
         ),
         const Spacer(),

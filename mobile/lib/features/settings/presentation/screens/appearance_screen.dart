@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/theme_provider.dart';
-import '../../../shared/widgets/glass_card.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/settings/presentation/providers/theme_provider.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
 
 class AppearanceScreen extends ConsumerWidget {
   const AppearanceScreen({super.key});
@@ -273,7 +273,7 @@ class AppearanceScreen extends ConsumerWidget {
               ],
             ),
           ),
-          if (trailing != null) trailing,
+          ?trailing,
         ],
       ),
     );

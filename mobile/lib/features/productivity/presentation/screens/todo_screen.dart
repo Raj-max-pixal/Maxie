@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 import 'package:intl/intl.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 
 class TodoItem {
   final String id;

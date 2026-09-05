@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../models/chat_message_model.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/chat/data/models/chat_message_model.dart';
 
 class AIChatService {
   final String? apiKey;
@@ -289,31 +289,41 @@ class AIChatService {
     final allText = userMessages.join(' ').toLowerCase();
     final topics = <String>[];
 
-    if (allText.contains('work') || allText.contains('job'))
+    if (allText.contains('work') || allText.contains('job')) {
       topics.add('work');
+    }
     if (allText.contains('study') || allText.contains('learn') ||
-        allText.contains('school'))
+        allText.contains('school')) {
       topics.add('studies');
-    if (allText.contains('game') || allText.contains('play'))
+    }
+    if (allText.contains('game') || allText.contains('play')) {
       topics.add('gaming');
+    }
     if (allText.contains('food') || allText.contains('eat') ||
-        allText.contains('cook'))
+        allText.contains('cook')) {
       topics.add('food');
-    if (allText.contains('music') || allText.contains('song'))
+    }
+    if (allText.contains('music') || allText.contains('song')) {
       topics.add('music');
-    if (allText.contains('movie') || allText.contains('film'))
+    }
+    if (allText.contains('movie') || allText.contains('film')) {
       topics.add('movies');
-    if (allText.contains('book') || allText.contains('read'))
+    }
+    if (allText.contains('book') || allText.contains('read')) {
       topics.add('reading');
+    }
     if (allText.contains('friend') || allText.contains('family') ||
-        allText.contains('love'))
+        allText.contains('love')) {
       topics.add('relationships');
+    }
     if (allText.contains('sad') || allText.contains('depressed') ||
-        allText.contains('anxiety'))
+        allText.contains('anxiety')) {
       topics.add('emotional support');
+    }
     if (allText.contains('happy') || allText.contains('excited') ||
-        allText.contains('great'))
+        allText.contains('great')) {
       topics.add('happiness');
+    }
 
     if (topics.isEmpty) return 'Casual conversation';
     return 'Discussed: ${topics.join(", ")}';

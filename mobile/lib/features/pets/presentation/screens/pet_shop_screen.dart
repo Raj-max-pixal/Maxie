@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/pets/presentation/providers/pet_provider.dart';
 import 'package:maxie_mobile/features/pets/data/models/pet_model.dart';
+import 'package:maxie_mobile/features/pets/presentation/providers/pet_provider.dart';
 import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 
 class PetShopScreen extends ConsumerWidget {

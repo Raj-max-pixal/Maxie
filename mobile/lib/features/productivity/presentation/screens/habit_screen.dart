@@ -246,7 +246,7 @@ class _HabitScreenState extends ConsumerState<HabitScreen> {
     final habits = ref.watch(habitProvider);
     final notifier = ref.read(habitProvider.notifier);
     final today = DateTime.now();
-    final dayOfYear = today.difference(DateTime(today.year, 1, 1)).inDays;
+    final dayOfYear = today.difference(DateTime(today.year, 1)).inDays;
 
     return Scaffold(
       appBar: AppBar(

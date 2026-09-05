@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/theme_provider.dart';
-import '../../../shared/widgets/glass_card.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:maxie_mobile/features/settings/presentation/providers/theme_provider.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:maxie_mobile/core/theme/app_theme.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -458,7 +458,7 @@ class _SettingsTile extends StatelessWidget {
                 ],
               ),
             ),
-            if (trailing != null) trailing!,
+            ?trailing,
             if (onTap != null && trailing == null)
               Icon(
                 Icons.chevron_right,

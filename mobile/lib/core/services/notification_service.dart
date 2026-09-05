@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
 
 /// Centralized notification service for MAXie Mobile.
 /// Handles local notifications, scheduling, reminders, pet alerts, habits, and goals.
@@ -54,7 +54,7 @@ class NotificationService {
     );
 
     await _plugin.initialize(
-      settings: initSettings,
+      initSettings,
       onDidReceiveNotificationResponse: _onNotificationTap,
     );
 
@@ -175,10 +175,10 @@ class NotificationService {
     );
 
     await _plugin.show(
-      id: id,
-      title: title,
-      body: body,
-      notificationDetails: NotificationDetails(
+      id,
+      title,
+      body,
+      NotificationDetails(
         android: androidDetails,
         iOS: iOSDetails,
       ),
@@ -207,19 +207,21 @@ class NotificationService {
     );
 
     await _plugin.zonedSchedule(
-      id: id,
-      title: title,
-      body: body,
-      scheduledDate: tz.TZDateTime.from(scheduledDate, tz.local),
-      notificationDetails: NotificationDetails(android: androidDetails),
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      NotificationDetails(android: androidDetails),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
     );
   }
 
   /// Cancel a scheduled reminder by ID.
   Future<void> cancelReminder(int id) async {
-    await _plugin.cancel(id: id);
+    await _plugin.cancel(id);
   }
 
   // ---------------------------------------------------------------------------
@@ -301,12 +303,14 @@ class NotificationService {
     );
 
     await _plugin.zonedSchedule(
-      id: id,
-      title: 'Habit Reminder: $habitName 📋',
-      body: 'Don\'t forget to complete your habit: $habitName',
-      scheduledDate: scheduledDate,
-      notificationDetails: NotificationDetails(android: androidDetails),
+      id,
+      'Habit Reminder: $habitName 📋',
+      'Don\'t forget to complete your habit: $habitName',
+      scheduledDate,
+      NotificationDetails(android: androidDetails),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       payload: 'habit',
       // No matchAndroidDateTime: true because we want it to repeat
     );
@@ -317,7 +321,7 @@ class NotificationService {
 
   /// Cancel a habit reminder.
   Future<void> cancelHabitReminder(int id) async {
-    await _plugin.cancel(id: id);
+    await _plugin.cancel(id);
   }
 
   // ---------------------------------------------------------------------------
@@ -342,19 +346,21 @@ class NotificationService {
     final tzDate = tz.TZDateTime.from(scheduledDate, tz.local);
 
     await _plugin.zonedSchedule(
-      id: id,
-      title: 'Goal Progress: $goalTitle 🎯',
-      body: 'Keep working on your $goalCategory goal: "$goalTitle"',
-      scheduledDate: tzDate,
-      notificationDetails: NotificationDetails(android: androidDetails),
+      id,
+      'Goal Progress: $goalTitle 🎯',
+      'Keep working on your $goalCategory goal: "$goalTitle"',
+      tzDate,
+      NotificationDetails(android: androidDetails),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       payload: 'goal',
     );
   }
 
   /// Cancel a goal reminder.
   Future<void> cancelGoalReminder(int id) async {
-    await _plugin.cancel(id: id);
+    await _plugin.cancel(id);
   }
 
   // ---------------------------------------------------------------------------

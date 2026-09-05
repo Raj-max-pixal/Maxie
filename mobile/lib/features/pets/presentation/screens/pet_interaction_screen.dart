@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/widgets/glass_card.dart';
-import '../widgets/pet_animation_widget.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
+import 'package:maxie_mobile/features/pets/presentation/widgets/pet_animation_widget.dart';
 
 class PetInteractionScreen extends ConsumerWidget {
   final String petId;

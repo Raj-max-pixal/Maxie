@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/notification_service.dart';
+import 'package:maxie_mobile/core/services/notification_service.dart';
 
 /// Singleton provider for the centralized notification service.
 final notificationServiceProvider = Provider<NotificationService>((ref) {

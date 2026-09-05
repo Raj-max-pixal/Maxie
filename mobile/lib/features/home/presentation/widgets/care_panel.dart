@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/maxie_state_provider.dart';
 
 class CarePanel extends ConsumerWidget {
   final VoidCallback onSpawnCookie;
@@ -32,7 +32,7 @@ class CarePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade900,
+              color: Colors.indigo.shade950,
             ),
           ),
           const SizedBox(height: 16),
@@ -108,7 +108,7 @@ class CarePanel extends ConsumerWidget {
                       '${maxieState.points} Pts',
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber.shade900,
+                        color: Colors.amber.shade950,
                       ),
                     ),
                   ],
@@ -132,7 +132,7 @@ class CarePanel extends ConsumerWidget {
         border: Border.all(color: Colors.indigo.shade50),
         boxShadow: [
           BoxShadow(
-            color: Colors.indigo.shade900.withOpacity(0.05),
+            color: Colors.indigo.shade950.withOpacity(0.05),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -256,7 +256,7 @@ class CarePanel extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey.shade100),
+            border: Border.all(color: Colors.grey.shade150),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.02),

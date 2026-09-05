@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../providers/apps_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/apps_provider.dart';
 
 class DraggableAppIcon extends ConsumerStatefulWidget {
   final AppItem app;

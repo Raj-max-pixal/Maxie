@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
-import '../../data/models/pet_model.dart';
+import 'package:maxie_mobile/features/pets/data/models/pet_model.dart';
 
 // ---- Pet State ----
 class PetsState {
@@ -340,7 +340,7 @@ class PetEngineNotifier extends StateNotifier<PetsState> {
       double newFrame = pet.animationFrame + animSpeed * 0.033;
 
       // Handle idle timer for random actions
-      double newIdleTimer = pet.idleTimer + 0.033;
+      final double newIdleTimer = pet.idleTimer + 0.033;
 
       PetActivity activity = pet.currentActivity;
       Offset? newTarget = pet.targetPosition;
@@ -569,7 +569,6 @@ class PetEngineNotifier extends StateNotifier<PetsState> {
         currentActivity: PetActivity.dragged,
         currentEmotion: PetEmotion.surprised,
         speechBubble: 'Wheee! Flying! 🚀',
-        targetPosition: null,
       );
     });
   }
@@ -658,7 +657,6 @@ class PetEngineNotifier extends StateNotifier<PetsState> {
       return pet.copyWith(
         currentActivity: PetActivity.idle,
         currentEmotion: PetEmotion.happy,
-        targetPosition: null,
       );
     });
   }
@@ -690,16 +688,17 @@ class PetEngineNotifier extends StateNotifier<PetsState> {
         final weights = _behaviorWeights[pet.primaryPersonality] ?? _behaviorWeights[PetPersonality.playful]!;
         final energyDecay = weights['energy_decay']!;
 
-        double newHunger = (pet.hunger - 0.02).clamp(0.0, 1.0);
-        double newEnergy = (pet.energy - energyDecay).clamp(0.0, 1.0);
-        double newMood = (pet.mood - 0.005).clamp(0.0, 1.0);
-        double newFun = (pet.fun - 0.008).clamp(0.0, 1.0);
-        double newSocial = (pet.social - 0.005).clamp(0.0, 1.0);
-        double newHygiene = (pet.hygiene - 0.003).clamp(0.0, 1.0);
+        final double newHunger = (pet.hunger - 0.02).clamp(0.0, 1.0);
+        final double newEnergy = (pet.energy - energyDecay).clamp(0.0, 1.0);
+        final double newMood = (pet.mood - 0.005).clamp(0.0, 1.0);
+        final double newFun = (pet.fun - 0.008).clamp(0.0, 1.0);
+        final double newSocial = (pet.social - 0.005).clamp(0.0, 1.0);
+        final double newHygiene = (pet.hygiene - 0.003).clamp(0.0, 1.0);
 
         PetEmotion newEmotion = pet.currentEmotion;
-        if (newHunger < 0.25) newEmotion = PetEmotion.hungry;
-        else if (newEnergy < 0.2) newEmotion = PetEmotion.sleepy;
+        if (newHunger < 0.25) {
+          newEmotion = PetEmotion.hungry;
+        } else if (newEnergy < 0.2) newEmotion = PetEmotion.sleepy;
         else if (newMood < 0.25) newEmotion = PetEmotion.sad;
 
         return pet.copyWith(
@@ -773,7 +772,7 @@ class PetEngineNotifier extends StateNotifier<PetsState> {
           friendshipLevel: newLevel,
           friendshipXP: remainingXP,
           speechBubble: leveledUp
-              ? 'Level ${newLevel}! We\'re closer than ever! 🎉✨'
+              ? 'Level $newLevel! We\'re closer than ever! 🎉✨'
               : (p.speechBubble),
           currentEmotion: leveledUp ? PetEmotion.celebrating : p.currentEmotion,
         );

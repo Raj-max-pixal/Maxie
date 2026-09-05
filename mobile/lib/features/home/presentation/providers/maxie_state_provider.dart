@@ -168,9 +168,9 @@ class MaxieStateNotifier extends StateNotifier<MaxieState> {
   void _tick() {
     // 1. Slow decay of stats over time
     if (_random.nextDouble() < 0.005) {
-      double newHunger = max(0.0, state.hunger - 0.02);
-      double newEnergy = max(0.0, state.energy - 0.01);
-      double newMood = max(0.0, state.mood - 0.015);
+      final double newHunger = max(0.0, state.hunger - 0.02);
+      final double newEnergy = max(0.0, state.energy - 0.01);
+      final double newMood = max(0.0, state.mood - 0.015);
       
       // If stats are low, pet changes emotion
       String emotion = state.currentEmotion;
@@ -209,7 +209,7 @@ class MaxieStateNotifier extends StateNotifier<MaxieState> {
         final bonusPoints = isFood ? 15 : 20;
         final xpGained = isFood ? 25 : 30;
 
-        String msg = isFood ? 'Yum! Thank you for the treat! 😋❤️' : 'Wheee! That was so much fun! ⚽🎉';
+        final String msg = isFood ? 'Yum! Thank you for the treat! 😋❤️' : 'Wheee! That was so much fun! ⚽🎉';
         
         state = state.copyWith(
           currentEmotion: 'happy',
@@ -219,8 +219,6 @@ class MaxieStateNotifier extends StateNotifier<MaxieState> {
           mood: !isFood ? min(1.0, state.mood + 0.40) : state.mood,
           energy: isFood ? min(1.0, state.energy + 0.15) : min(1.0, state.energy + 0.25),
           points: state.points + bonusPoints,
-          spawnedToyPosition: null,
-          spawnedToyType: null,
           isChasing: false,
         );
         addFriendshipXP(xpGained);
@@ -259,7 +257,6 @@ class MaxieStateNotifier extends StateNotifier<MaxieState> {
         } else {
           // Arrived at wander destination
           state = state.copyWith(
-            targetPosition: null,
             currentActivity: 'idle',
           );
 
@@ -290,7 +287,6 @@ class MaxieStateNotifier extends StateNotifier<MaxieState> {
       spawnedToyPosition: globalPosition,
       spawnedToyType: type,
       isChasing: true,
-      targetPosition: null, // override wandering
       currentActivity: 'walking',
       currentEmotion: 'excited',
     );
@@ -304,7 +300,6 @@ class MaxieStateNotifier extends StateNotifier<MaxieState> {
 
     state = state.copyWith(
       petPosition: Offset(boundedX, boundedY),
-      targetPosition: null, // cancel current wandering path
       currentActivity: 'dragged',
       currentEmotion: 'excited',
       currentMessage: 'Wheee! I\'m flying! 🚀☁️',

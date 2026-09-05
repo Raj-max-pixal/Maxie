@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/overlay_provider.dart';
-import '../../../study/domain/services/study_mode.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
+import 'package:maxie_mobile/features/study/domain/services/study_mode.dart';
 
 class FloatingPomodoroTimer extends ConsumerWidget {
   const FloatingPomodoroTimer({super.key});

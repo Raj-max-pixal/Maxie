@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/overlay_provider.dart';
-import '../../../music/domain/services/music_detector.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
+import 'package:maxie_mobile/features/music/domain/services/music_detector.dart';
 
 class FloatingMusicPlayer extends ConsumerWidget {
   const FloatingMusicPlayer({super.key});

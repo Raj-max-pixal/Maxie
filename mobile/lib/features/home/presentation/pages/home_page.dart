@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/games/presentation/pages/mini_games_page.dart';
 import 'package:maxie_mobile/features/settings/presentation/providers/settings_provider.dart';
-import '../widgets/maxie_character.dart';
-import '../widgets/maxie_overlay.dart';
-import '../widgets/maxie_dialogue.dart';
-import '../widgets/floating_quick_actions.dart';
-import '../widgets/floating_status_bar.dart';
-import '../widgets/floating_music_player.dart';
-import '../widgets/floating_pomodoro_timer.dart';
-import '../widgets/draggable_app_icon.dart';
-import '../widgets/toy_item.dart';
-import '../widgets/care_panel.dart';
-import '../widgets/profile_panel.dart';
-import '../providers/maxie_state_provider.dart';
-import '../providers/overlay_provider.dart';
-import '../providers/apps_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/maxie_character.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/maxie_overlay.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/maxie_dialogue.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_quick_actions.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_status_bar.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_music_player.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_pomodoro_timer.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/draggable_app_icon.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/toy_item.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/care_panel.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/profile_panel.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/apps_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -248,7 +248,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ],
       ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.indigo.shade900),
+        icon: Icon(icon, color: Colors.indigo.shade950),
         onPressed: onTap,
       ),
     );
@@ -277,7 +277,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             'Lvl $level',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade900,
+              color: Colors.indigo.shade950,
             ),
           ),
         ],

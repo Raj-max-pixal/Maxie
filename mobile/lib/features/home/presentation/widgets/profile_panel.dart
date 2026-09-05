@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/maxie_state_provider.dart';
 
 class ProfilePanel extends ConsumerWidget {
   const ProfilePanel({super.key});
@@ -23,7 +23,7 @@ class ProfilePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade900,
+              color: Colors.indigo.shade950,
             ),
           ),
           const SizedBox(height: 20),
@@ -136,7 +136,7 @@ class ProfilePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade900,
+              color: Colors.indigo.shade950,
             ),
           ),
           const SizedBox(height: 12),
@@ -162,7 +162,7 @@ class ProfilePanel extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.indigo.shade900,
+              color: Colors.indigo.shade950,
             ),
           ),
           const SizedBox(height: 12),
@@ -196,7 +196,7 @@ class ProfilePanel extends ConsumerWidget {
           ),
           Text(
             value,
-            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.indigo.shade900),
+            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.indigo.shade950),
           ),
         ],
       ),
@@ -252,7 +252,7 @@ class ProfilePanel extends ConsumerWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: isUnlocked ? Colors.amber.shade900 : Colors.grey.shade600,
+                    color: isUnlocked ? Colors.amber.shade950 : Colors.grey.shade600,
                   ),
                 ),
                 const SizedBox(height: 4),

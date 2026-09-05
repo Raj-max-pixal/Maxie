@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:maxie_mobile/features/cloud/data/services/device_sync_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
-import 'package:maxie_mobile/widgets/maxie_companion_view.dart';
-import 'package:maxie_mobile/widgets/premium_card.dart';
+import 'package:maxie_mobile/features/cloud/data/services/device_sync_service.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
+import 'package:maxie_mobile/widgets/maxie_companion_view.dart';
+import 'package:maxie_mobile/widgets/premium_card.dart';
 
 class PortalSummonWidget extends ConsumerWidget {
   const PortalSummonWidget({super.key});
