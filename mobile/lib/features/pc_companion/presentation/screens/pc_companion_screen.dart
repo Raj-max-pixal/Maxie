@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/pc_companion/data/services/pc_companion_service.dart';
-import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 
 class PCCompanionScreen extends ConsumerWidget {
   const PCCompanionScreen({super.key});
@@ -39,7 +38,7 @@ class PCCompanionScreen extends ConsumerWidget {
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.arrow_back, color: Colors.white),
@@ -72,7 +71,7 @@ class PCCompanionScreen extends ConsumerWidget {
                                 width: 64,
                                 height: 64,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     colors: [AppConstants.primaryPurple, AppConstants.primaryPink],
                                   ),
                                   borderRadius: BorderRadius.circular(20),
@@ -95,7 +94,7 @@ class PCCompanionScreen extends ConsumerWidget {
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                       decoration: BoxDecoration(
-                                        color: Colors.red.withOpacity(0.2),
+                                        color: Colors.red.withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Row(
@@ -123,7 +122,7 @@ class PCCompanionScreen extends ConsumerWidget {
                                   ],
                                 ),
                               ),
-                              Icon(Icons.wifi_find, color: Colors.white.withOpacity(0.4), size: 28),
+                              Icon(Icons.wifi_find, color: Colors.white.withValues(alpha: 0.4), size: 28),
                             ],
                           ),
                         ),
@@ -140,11 +139,11 @@ class PCCompanionScreen extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.monitor_heart, color: Colors.white.withOpacity(0.8), size: 20),
+                                  Icon(Icons.monitor_heart, color: Colors.white.withValues(alpha: 0.8), size: 20),
                                   const SizedBox(width: 8),
                                   Text('System Information',
                                     style: theme.textTheme.titleSmall?.copyWith(
-                                      color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),
+                                      color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),
@@ -172,11 +171,11 @@ class PCCompanionScreen extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.flash_on, color: Colors.white.withOpacity(0.8), size: 20),
+                                  Icon(Icons.flash_on, color: Colors.white.withValues(alpha: 0.8), size: 20),
                                   const SizedBox(width: 8),
                                   Text('Quick Actions',
                                     style: theme.textTheme.titleSmall?.copyWith(
-                                      color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),
+                                      color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),
@@ -205,13 +204,13 @@ class PCCompanionScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Icon(Icons.info_outline, color: Colors.white.withOpacity(0.6), size: 20),
+                              Icon(Icons.info_outline, color: Colors.white.withValues(alpha: 0.6), size: 20),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   'Install MAXie Desktop on your PC to enable remote control features.',
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    color: Colors.white.withOpacity(0.6),
+                                    color: Colors.white.withValues(alpha: 0.6),
                                   ),
                                 ),
                               ),
@@ -236,10 +235,10 @@ class PCCompanionScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     return Row(
       children: [
-        Icon(icon, color: AppConstants.primaryPurple.withOpacity(0.7), size: 18),
+        Icon(icon, color: AppConstants.primaryPurple.withValues(alpha: 0.7), size: 18),
         const SizedBox(width: 10),
         Text('$label:',
-          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(0.6)),
+          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: 0.6)),
         ),
         const Spacer(),
         Text(value,
@@ -261,7 +260,7 @@ class PCCompanionScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppConstants.primaryPurple.withOpacity(0.15),
+                color: AppConstants.primaryPurple.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: AppConstants.primaryPurple, size: 20),
@@ -275,12 +274,12 @@ class PCCompanionScreen extends ConsumerWidget {
                     style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
                   ),
                   Text(subtitle,
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.5)),
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.5)),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.4), size: 28),
+            Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.4), size: 28),
           ],
         ),
       ),
@@ -299,7 +298,7 @@ class PCCompanionScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.15),
+                color: Colors.red.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: Colors.redAccent, size: 20),
@@ -313,12 +312,12 @@ class PCCompanionScreen extends ConsumerWidget {
                     style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
                   ),
                   Text(subtitle,
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.5)),
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.5)),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.4), size: 28),
+            Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.4), size: 28),
           ],
         ),
       ),

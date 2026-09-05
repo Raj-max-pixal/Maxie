@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:maxie_mobile/core/constants/app_constants.dart';
 
 /// PC Companion State
 class PCCompanionState {

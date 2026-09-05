@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
 import 'package:maxie_mobile/features/gamification/data/services/gamification_service.dart';
 import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
-import 'package:maxie_mobile/core/constants/app_constants.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -47,7 +47,7 @@ class ProfileScreen extends ConsumerWidget {
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.arrow_back, color: Colors.white),
@@ -86,7 +86,7 @@ class ProfileScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(50),
                             boxShadow: [
                               BoxShadow(
-                                color: AppConstants.primaryPurple.withOpacity(0.4),
+                                color: AppConstants.primaryPurple.withValues(alpha: 0.4),
                                 blurRadius: 20,
                                 spreadRadius: 2,
                               ),
@@ -106,7 +106,7 @@ class ProfileScreen extends ConsumerWidget {
                               Text(
                                 'LEVEL',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: Colors.white.withValues(alpha: 0.8),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -127,14 +127,14 @@ class ProfileScreen extends ConsumerWidget {
                                 Text(
                                   'XP Progress',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontSize: 14,
                                   ),
                                 ),
                                 Text(
                                   '${gamification.xp.toInt()} / ${gamification.xpToNextLevel.toInt()} XP',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontSize: 14,
                                   ),
                                 ),
@@ -145,7 +145,7 @@ class ProfileScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(10),
                               child: LinearProgressIndicator(
                                 value: gamification.levelProgress.clamp(0.0, 1.0),
-                                backgroundColor: Colors.white.withOpacity(0.1),
+                                backgroundColor: Colors.white.withValues(alpha: 0.1),
                                 valueColor: const AlwaysStoppedAnimation<Color>(
                                   AppConstants.primaryPurple,
                                 ),
@@ -213,7 +213,7 @@ class ProfileScreen extends ConsumerWidget {
                             Text(
                               '${gamification.unlockedAchievementCount} / ${gamification.totalAchievements}',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.7),
+                                color: Colors.white.withValues(alpha: 0.7),
                                 fontSize: 14,
                               ),
                             ),
@@ -224,7 +224,7 @@ class ProfileScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(10),
                           child: LinearProgressIndicator(
                             value: gamification.achievementProgress.clamp(0.0, 1.0),
-                            backgroundColor: Colors.white.withOpacity(0.1),
+                            backgroundColor: Colors.white.withValues(alpha: 0.1),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               AppConstants.primaryYellow,
                             ),
@@ -249,7 +249,7 @@ class ProfileScreen extends ConsumerWidget {
                                         child: Text(
                                           entry.value,
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.8),
+                                            color: Colors.white.withValues(alpha: 0.8),
                                             fontSize: 13,
                                           ),
                                         ),
@@ -309,7 +309,7 @@ class ProfileScreen extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(icon, color: color, size: 28),
@@ -317,7 +317,7 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: 8),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -326,7 +326,7 @@ class ProfileScreen extends ConsumerWidget {
         Text(
           label,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
             fontSize: 12,
           ),
         ),
@@ -343,7 +343,7 @@ class ProfileScreen extends ConsumerWidget {
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),

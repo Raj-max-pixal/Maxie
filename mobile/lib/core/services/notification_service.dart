@@ -72,8 +72,6 @@ class NotificationService {
       'Reminders',
       description: 'General reminder notifications',
       importance: Importance.high,
-      playSound: true,
-      enableVibration: true,
     );
     await _plugin
         .resolvePlatformSpecificImplementation<
@@ -85,9 +83,6 @@ class NotificationService {
       channelPet,
       'Pet Notifications',
       description: 'Notifications about your MAXie pet',
-      importance: Importance.defaultImportance,
-      playSound: true,
-      enableVibration: true,
     );
     await _plugin
         .resolvePlatformSpecificImplementation<
@@ -100,8 +95,6 @@ class NotificationService {
       'Habit Reminders',
       description: 'Daily habit tracking reminders',
       importance: Importance.high,
-      playSound: true,
-      enableVibration: true,
     );
     await _plugin
         .resolvePlatformSpecificImplementation<
@@ -114,8 +107,6 @@ class NotificationService {
       'Goal Reminders',
       description: 'Progress reminders for your goals',
       importance: Importance.high,
-      playSound: true,
-      enableVibration: true,
     );
     await _plugin
         .resolvePlatformSpecificImplementation<
@@ -128,7 +119,6 @@ class NotificationService {
       channelMotivation,
       'Daily Motivation',
       description: 'Motivational messages from MAXie',
-      importance: Importance.defaultImportance,
       playSound: false,
       enableVibration: false,
     );
@@ -162,10 +152,7 @@ class NotificationService {
       channelDescription: 'Notifications for $channelId',
       importance: Importance.high,
       priority: Priority.high,
-      showWhen: true,
       enableLights: true,
-      enableVibration: true,
-      playSound: true,
     );
 
     const iOSDetails = DarwinNotificationDetails(
@@ -198,12 +185,11 @@ class NotificationService {
     required DateTime scheduledDate,
     String? payload,
   }) async {
-    final androidDetails = AndroidNotificationDetails(
+    final androidDetails = const AndroidNotificationDetails(
       channelReminder,
       'Reminders',
       channelDescription: 'General reminder notifications',
       importance: Importance.high,
-      priority: Priority.defaultPriority,
     );
 
     await _plugin.zonedSchedule(
@@ -294,12 +280,11 @@ class NotificationService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    final androidDetails = AndroidNotificationDetails(
+    final androidDetails = const AndroidNotificationDetails(
       channelHabit,
       'Habit Reminders',
       channelDescription: 'Daily habit tracking reminders',
       importance: Importance.high,
-      priority: Priority.defaultPriority,
     );
 
     await _plugin.zonedSchedule(
@@ -335,12 +320,11 @@ class NotificationService {
     required String goalCategory,
     required DateTime scheduledDate,
   }) async {
-    final androidDetails = AndroidNotificationDetails(
+    final androidDetails = const AndroidNotificationDetails(
       channelGoal,
       'Goal Reminders',
       channelDescription: 'Progress reminders for your goals',
       importance: Importance.high,
-      priority: Priority.defaultPriority,
     );
 
     final tzDate = tz.TZDateTime.from(scheduledDate, tz.local);

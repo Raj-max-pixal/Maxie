@@ -3,16 +3,12 @@ import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart
 
 class MemoryBrainServiceImpl implements MemoryService {
   const MemoryBrainServiceImpl({
-    required MemoryRepository repository,
-    required MemoryExtractor extractor,
-    required MemorySearch search,
-    required MemoryRanker ranker,
-    required MemorySummarizer summarizer,
-  }) : _repository = repository,
-       _extractor = extractor,
-       _search = search,
-       _ranker = ranker,
-       _summarizer = summarizer;
+    required this._repository,
+    required this._extractor,
+    required this._search,
+    required this._ranker,
+    required this._summarizer,
+  });
 
   final MemoryRepository _repository;
   final MemoryExtractor _extractor;

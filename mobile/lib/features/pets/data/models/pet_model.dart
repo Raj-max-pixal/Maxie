@@ -137,7 +137,7 @@ class PetCustomization {
         'wings': wings,
         'aura': aura,
         'trail': trail,
-        'color': color.value,
+        'color': color.toARGB32(),
         'size': size,
         'animationSpeed': animationSpeed,
         'name': name,

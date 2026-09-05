@@ -27,7 +27,7 @@ class GlassCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final effectiveTint = tintColor ??
-        (isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.7));
+        (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.7));
 
     return Container(
       margin: margin ?? EdgeInsets.zero,
@@ -36,13 +36,13 @@ class GlassCard extends StatelessWidget {
         color: effectiveTint,
         border: Border.all(
           color: isDark
-              ? Colors.white.withOpacity(0.08)
-              : Colors.white.withOpacity(0.5),
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.white.withValues(alpha: 0.5),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: blurIntensity,
             offset: const Offset(0, 4),
           ),

@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 
 class VoiceSettingsScreen extends ConsumerWidget {
   const VoiceSettingsScreen({super.key});
@@ -39,7 +39,7 @@ class VoiceSettingsScreen extends ConsumerWidget {
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.arrow_back, color: Colors.white),
@@ -115,11 +115,11 @@ class VoiceSettingsScreen extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.record_voice_over, color: Colors.white.withOpacity(0.8), size: 20),
+                                  Icon(Icons.record_voice_over, color: Colors.white.withValues(alpha: 0.8), size: 20),
                                   const SizedBox(width: 8),
                                   Text('Voice Assistant',
                                     style: theme.textTheme.titleSmall?.copyWith(
-                                      color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),
+                                      color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),
@@ -168,7 +168,7 @@ class VoiceSettingsScreen extends ConsumerWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.play_circle_fill, color: AppConstants.primaryPurple, size: 32),
+                                const Icon(Icons.play_circle_fill, color: AppConstants.primaryPurple, size: 32),
                                 const SizedBox(width: 12),
                                 Text('Test Voice',
                                   style: theme.textTheme.titleMedium?.copyWith(
@@ -207,7 +207,7 @@ class VoiceSettingsScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppConstants.primaryPurple.withOpacity(0.15),
+              color: AppConstants.primaryPurple.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: AppConstants.primaryPurple, size: 20),
@@ -223,7 +223,7 @@ class VoiceSettingsScreen extends ConsumerWidget {
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
                   Text(subtitle,
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.5)),
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.5)),
                   ),
                 ],
               ],

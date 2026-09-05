@@ -47,14 +47,14 @@ class _VoiceChatScreenState extends ConsumerState<VoiceChatScreen>
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      theme.colorScheme.primary.withOpacity(0.3),
-                      theme.colorScheme.tertiary.withOpacity(0.3),
+                      theme.colorScheme.primary.withValues(alpha: 0.3),
+                      theme.colorScheme.tertiary.withValues(alpha: 0.3),
                     ],
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: _isListening
-                          ? theme.colorScheme.primary.withOpacity(0.3)
+                          ? theme.colorScheme.primary.withValues(alpha: 0.3)
                           : Colors.transparent,
                       blurRadius: 40,
                       spreadRadius: 10,

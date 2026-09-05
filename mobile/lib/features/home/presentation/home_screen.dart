@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
-import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
+import 'package:maxie_mobile/features/memory/application/memory_manager.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/navigation/app_routes.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
@@ -245,7 +245,7 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  MemoryRecord? _latestMemory(List<MemoryRecord> memories) {
+  MemoryModel? _latestMemory(List<MemoryModel> memories) {
     if (memories.isEmpty) {
       return null;
     }
@@ -266,7 +266,7 @@ class HomeScreen extends ConsumerWidget {
   String _smartGreetingDetail(
     DateTime date,
     MemorySummary summary,
-    MemoryRecord? latestMemory,
+    MemoryModel? latestMemory,
   ) {
     final base = '${_weekday(date)}, ${date.day} ${_month(date)}';
     if (latestMemory == null) {
@@ -320,7 +320,7 @@ class _TodaysCompanionCard extends StatelessWidget {
   const _TodaysCompanionCard({required this.now, required this.memories});
 
   final DateTime now;
-  final List<MemoryRecord> memories;
+  final List<MemoryModel> memories;
 
   @override
   Widget build(BuildContext context) {
@@ -427,7 +427,7 @@ class _QuickAction extends StatelessWidget {
   }
 }
 
-_CompanionGreeting _timeGreeting(DateTime now, List<MemoryRecord> memories) {
+_CompanionGreeting _timeGreeting(DateTime now, List<MemoryModel> memories) {
   final hour = now.hour;
   
   // Find interesting memories to include in the greeting
@@ -481,7 +481,7 @@ _CompanionGreeting _timeGreeting(DateTime now, List<MemoryRecord> memories) {
   );
 }
 
-String _rotatingCompanionMessage(DateTime now, List<MemoryRecord> memories) {
+String _rotatingCompanionMessage(DateTime now, List<MemoryModel> memories) {
   final messages = [
     "You've got this 💜",
     "I'm always here.",

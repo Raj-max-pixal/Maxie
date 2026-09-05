@@ -31,11 +31,11 @@ class FloatingMusicPlayer extends ConsumerWidget {
           width: 200,
           height: 60,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(overlayState.transparency),
+            color: Colors.white.withValues(alpha: overlayState.transparency),
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -47,7 +47,7 @@ class FloatingMusicPlayer extends ConsumerWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.2),
+                  color: Colors.purple.withValues(alpha: 0.2),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16),
                     bottomLeft: Radius.circular(16),

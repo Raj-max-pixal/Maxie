@@ -127,7 +127,7 @@ class CarePanel extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.indigo.shade50),
         boxShadow: [
@@ -173,7 +173,7 @@ class CarePanel extends ConsumerWidget {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [color, color.withOpacity(0.7)],
+                    colors: [color, color.withValues(alpha: 0.7)],
                   ),
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -203,9 +203,9 @@ class CarePanel extends ConsumerWidget {
         width: 70,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
+          color: color.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
@@ -216,7 +216,7 @@ class CarePanel extends ConsumerWidget {
               style: GoogleFonts.poppins(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: color.withOpacity(0.9),
+                color: color.withValues(alpha: 0.9),
               ),
             ),
           ],
@@ -259,7 +259,7 @@ class CarePanel extends ConsumerWidget {
             border: Border.all(color: Colors.grey.shade150),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: 0.02),
                 blurRadius: 10,
               ),
             ],

@@ -1,22 +1,22 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/games/presentation/pages/mini_games_page.dart';
-import 'package:maxie_mobile/features/settings/presentation/providers/settings_provider.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/maxie_character.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/maxie_overlay.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/maxie_dialogue.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/floating_quick_actions.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/floating_status_bar.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/floating_music_player.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/floating_pomodoro_timer.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/draggable_app_icon.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/toy_item.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/care_panel.dart';
-import 'package:maxie_mobile/features/home/presentation/widgets/profile_panel.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/apps_provider.dart';
 import 'package:maxie_mobile/features/home/presentation/providers/maxie_state_provider.dart';
 import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
-import 'package:maxie_mobile/features/home/presentation/providers/apps_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/care_panel.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/draggable_app_icon.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_music_player.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_pomodoro_timer.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_quick_actions.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/floating_status_bar.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/maxie_character.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/maxie_dialogue.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/profile_panel.dart';
+import 'package:maxie_mobile/features/home/presentation/widgets/toy_item.dart';
+import 'package:maxie_mobile/features/settings/presentation/providers/settings_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -57,7 +57,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     colors: [
                       Theme.of(context).colorScheme.primaryContainer,
                       Theme.of(context).colorScheme.surface,
-                      Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.4),
+                      Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.4),
                     ],
                   ),
                 ),
@@ -236,12 +236,12 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget _buildActionButton({required IconData icon, required VoidCallback onTap}) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: Colors.white.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -258,12 +258,12 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: Colors.white.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -289,12 +289,12 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: Colors.white.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.4), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),

@@ -66,13 +66,11 @@ class VoiceService {
       },
       listenFor: const Duration(seconds: 30),
       pauseFor: const Duration(seconds: 3),
-      partialResults: true,
       localeId: 'en_US',
       onSoundLevelChange: (level) {
         // Handle sound level changes
       },
       cancelOnError: true,
-      listenMode: ListenMode.confirmation,
     );
     
     return _isListening;

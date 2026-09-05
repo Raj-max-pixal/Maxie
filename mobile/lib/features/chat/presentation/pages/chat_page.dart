@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:maxie_mobile/features/chat/presentation/providers/chat_provider.dart';
 import 'package:maxie_mobile/features/chat/presentation/widgets/chat_bubble.dart';
 import 'package:maxie_mobile/features/chat/presentation/widgets/chat_input.dart';
-import 'package:maxie_mobile/features/chat/presentation/providers/chat_provider.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   const ChatPage({super.key});

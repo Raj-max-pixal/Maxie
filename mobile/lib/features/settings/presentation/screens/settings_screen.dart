@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
 import 'package:maxie_mobile/features/settings/presentation/providers/theme_provider.dart';
 import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
-import 'package:maxie_mobile/core/constants/app_constants.dart';
-import 'package:maxie_mobile/core/theme/app_theme.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -48,7 +47,7 @@ class SettingsScreen extends ConsumerWidget {
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.arrow_back, color: Colors.white),
@@ -274,7 +273,7 @@ class SettingsScreen extends ConsumerWidget {
                         title: 'About',
                         icon: Icons.info,
                         children: [
-                          _SettingsTile(
+                          const _SettingsTile(
                             icon: Icons.info_outline,
                             title: 'Version',
                             subtitle: AppConstants.appVersion,
@@ -310,7 +309,7 @@ class SettingsScreen extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     colors: [
                                       AppConstants.primaryPurple,
                                       AppConstants.primaryPink,
@@ -340,7 +339,7 @@ class SettingsScreen extends ConsumerWidget {
                                     Text(
                                       'No subscriptions. No locked features.\n100% free for everyone.',
                                       style: theme.textTheme.bodySmall?.copyWith(
-                                        color: Colors.white.withOpacity(0.7),
+                                        color: Colors.white.withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ],
@@ -376,12 +375,12 @@ class SettingsScreen extends ConsumerWidget {
           padding: const EdgeInsets.only(left: 4, bottom: 12),
           child: Row(
             children: [
-              Icon(icon, color: Colors.white.withOpacity(0.8), size: 20),
+              Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: 20),
               const SizedBox(width: 8),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -425,7 +424,7 @@ class _SettingsTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppConstants.primaryPurple.withOpacity(0.15),
+                color: AppConstants.primaryPurple.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -451,7 +450,7 @@ class _SettingsTile extends StatelessWidget {
                     Text(
                       subtitle!,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                           ),
                     ),
                   ],
@@ -462,7 +461,7 @@ class _SettingsTile extends StatelessWidget {
             if (onTap != null && trailing == null)
               Icon(
                 Icons.chevron_right,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
               ),
           ],
         ),

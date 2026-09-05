@@ -1,9 +1,7 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'dart:math';
-import 'package:intl/intl.dart';
 
 class Habit {
   final String id;
@@ -84,7 +82,7 @@ class HabitNotifier extends StateNotifier<List<Habit>> {
     Habit(id: '1', name: 'Drink Water', icon: '💧', color: Colors.blue, createdAt: DateTime.now().subtract(const Duration(days: 5))),
     Habit(id: '2', name: 'Read Daily', icon: '📚', color: Colors.orange, createdAt: DateTime.now().subtract(const Duration(days: 3))),
     Habit(id: '3', name: 'Exercise', icon: '🏃', color: Colors.green, createdAt: DateTime.now().subtract(const Duration(days: 2))),
-    Habit(id: '4', name: 'Meditate', icon: '🧘', color: Colors.purple, createdAt: DateTime.now().subtract(const Duration(days: 1))),
+    Habit(id: '4', name: 'Meditate', icon: '🧘', createdAt: DateTime.now().subtract(const Duration(days: 1))),
   ];
 
   void addHabit(Habit habit) {
@@ -246,7 +244,7 @@ class _HabitScreenState extends ConsumerState<HabitScreen> {
     final habits = ref.watch(habitProvider);
     final notifier = ref.read(habitProvider.notifier);
     final today = DateTime.now();
-    final dayOfYear = today.difference(DateTime(today.year, 1)).inDays;
+    final dayOfYear = today.difference(DateTime(today.year)).inDays;
 
     return Scaffold(
       appBar: AppBar(
@@ -283,9 +281,8 @@ class _HabitScreenState extends ConsumerState<HabitScreen> {
                       BarChartData(
                         alignment: BarChartAlignment.spaceAround,
                         maxY: habits.length.toDouble().clamp(1, double.infinity),
-                        barTouchData: BarTouchData(enabled: false),
+                        barTouchData: const BarTouchData(enabled: false),
                         titlesData: FlTitlesData(
-                          show: true,
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
@@ -295,11 +292,11 @@ class _HabitScreenState extends ConsumerState<HabitScreen> {
                               },
                             ),
                           ),
-                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          leftTitles: const AxisTitles(),
+                          topTitles: const AxisTitles(),
+                          rightTitles: const AxisTitles(),
                         ),
-                        gridData: FlGridData(show: false),
+                        gridData: const FlGridData(show: false),
                         borderData: FlBorderData(show: false),
                         barGroups: List.generate(7, (i) {
                           final date = today.subtract(Duration(days: 6 - i));
@@ -333,7 +330,7 @@ class _HabitScreenState extends ConsumerState<HabitScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.auto_awesome, size: 80, color: theme.colorScheme.primary.withOpacity(0.3)),
+                        Icon(Icons.auto_awesome, size: 80, color: theme.colorScheme.primary.withValues(alpha: 0.3)),
                         const SizedBox(height: 16),
                         Text('No habits yet', style: theme.textTheme.titleLarge),
                         const SizedBox(height: 8),
@@ -360,7 +357,7 @@ class _HabitScreenState extends ConsumerState<HabitScreen> {
                                   width: 48,
                                   height: 48,
                                   decoration: BoxDecoration(
-                                    color: habit.color.withOpacity(0.15),
+                                    color: habit.color.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(14),
                                   ),
                                   child: Center(

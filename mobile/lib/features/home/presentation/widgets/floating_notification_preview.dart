@@ -37,11 +37,11 @@ class FloatingNotificationPreview extends ConsumerWidget {
         child: Container(
           width: 300,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(overlayState.transparency),
+            color: Colors.white.withValues(alpha: overlayState.transparency),
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -53,7 +53,7 @@ class FloatingNotificationPreview extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: Colors.purple.withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
@@ -64,7 +64,7 @@ class FloatingNotificationPreview extends ConsumerWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.notifications, size: 16, color: Colors.purple),
+                        const Icon(Icons.notifications, size: 16, color: Colors.purple),
                         const SizedBox(width: 8),
                         Text(
                           appName,

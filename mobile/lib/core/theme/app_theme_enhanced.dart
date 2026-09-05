@@ -17,7 +17,6 @@ class AppThemeEnhanced {
   static ThemeData get lightTheme {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: primaryPurple,
-      brightness: Brightness.light,
       secondary: primaryPink,
       tertiary: primaryBlue,
     );
@@ -68,21 +67,21 @@ class AppThemeEnhanced {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surfaceVariant.withOpacity(0.5),
+        fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+          borderSide: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(color: colorScheme.primary, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.6)),
+        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 0,
@@ -97,14 +96,14 @@ class AppThemeEnhanced {
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) return colorScheme.primaryContainer;
-          return colorScheme.surfaceVariant;
+          return colorScheme.surfaceContainerHighest;
         }),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         elevation: 0,
         backgroundColor: Colors.transparent,
         selectedItemColor: colorScheme.primary,
-        unselectedItemColor: colorScheme.onSurfaceVariant.withOpacity(0.6),
+        unselectedItemColor: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
         type: BottomNavigationBarType.fixed,
       ),
       snackBarTheme: SnackBarThemeData(
@@ -181,21 +180,21 @@ class AppThemeEnhanced {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+        fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+          borderSide: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(color: colorScheme.primary, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.6)),
+        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 0,
@@ -210,14 +209,14 @@ class AppThemeEnhanced {
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) return colorScheme.primaryContainer;
-          return colorScheme.surfaceVariant;
+          return colorScheme.surfaceContainerHighest;
         }),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         elevation: 0,
         backgroundColor: Colors.transparent,
         selectedItemColor: colorScheme.primary,
-        unselectedItemColor: colorScheme.onSurfaceVariant.withOpacity(0.6),
+        unselectedItemColor: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
         type: BottomNavigationBarType.fixed,
       ),
       snackBarTheme: SnackBarThemeData(
@@ -298,15 +297,15 @@ class GlassDecoration {
     Color? borderColor,
   }) {
     return BoxDecoration(
-      color: Colors.white.withOpacity(opacity),
+      color: Colors.white.withValues(alpha: opacity),
       borderRadius: BorderRadius.circular(radius),
       border: Border.all(
-        color: borderColor ?? Colors.white.withOpacity(0.3),
+        color: borderColor ?? Colors.white.withValues(alpha: 0.3),
         width: 1.5,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.06),
+          color: Colors.black.withValues(alpha: 0.06),
           blurRadius: blur,
           offset: const Offset(0, 8),
         ),
@@ -321,15 +320,15 @@ class GlassDecoration {
     Color? borderColor,
   }) {
     return BoxDecoration(
-      color: const Color(0xFF1E1E2E).withOpacity(opacity),
+      color: const Color(0xFF1E1E2E).withValues(alpha: opacity),
       borderRadius: BorderRadius.circular(radius),
       border: Border.all(
-        color: borderColor ?? Colors.white.withOpacity(0.1),
+        color: borderColor ?? Colors.white.withValues(alpha: 0.1),
         width: 1.5,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withValues(alpha: 0.3),
           blurRadius: blur,
           offset: const Offset(0, 8),
         ),

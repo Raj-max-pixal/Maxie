@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:maxie_mobile/core/constants/app_constants.dart';
 import 'package:maxie_mobile/features/chat/data/models/chat_message_model.dart';
 

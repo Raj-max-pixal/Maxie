@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 
 class DailyRewardsScreen extends ConsumerWidget {
   const DailyRewardsScreen({super.key});
@@ -41,7 +41,7 @@ class DailyRewardsScreen extends ConsumerWidget {
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.arrow_back, color: Colors.white),
@@ -74,8 +74,8 @@ class DailyRewardsScreen extends ConsumerWidget {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [const Color(0xFFFFD700), const Color(0xFFFFA500)],
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                                   ),
                                   borderRadius: BorderRadius.circular(24),
                                 ),
@@ -94,7 +94,7 @@ class DailyRewardsScreen extends ConsumerWidget {
                                 'Come back tomorrow for more rewards!\nKeep your streak going!',
                                 textAlign: TextAlign.center,
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                 ),
                               ),
                               const SizedBox(height: 24),
@@ -112,7 +112,7 @@ class DailyRewardsScreen extends ConsumerWidget {
                                       gradient: isActive
                                           ? const LinearGradient(colors: [Color(0xFFFFD700), Color(0xFFFFA500)])
                                           : null,
-                                      color: isActive ? null : Colors.white.withOpacity(0.15),
+                                      color: isActive ? null : Colors.white.withValues(alpha: 0.15),
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   );
@@ -182,7 +182,7 @@ class DailyRewardsScreen extends ConsumerWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent,
-                              disabledBackgroundColor: Colors.white.withOpacity(0.1),
+                              disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
@@ -225,7 +225,7 @@ class DailyRewardsScreen extends ConsumerWidget {
             Text(
               'Day $day',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.white.withOpacity(isLocked ? 0.3 : 0.8),
+                color: Colors.white.withValues(alpha: isLocked ? 0.3 : 0.8),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -238,15 +238,15 @@ class DailyRewardsScreen extends ConsumerWidget {
                 gradient: isClaimed
                     ? const LinearGradient(colors: [Color(0xFFFFD700), Color(0xFFFFA500)])
                     : isAvailable
-                        ? LinearGradient(colors: [AppConstants.primaryPurple, AppConstants.primaryPink])
+                        ? const LinearGradient(colors: [AppConstants.primaryPurple, AppConstants.primaryPink])
                         : null,
-                color: isLocked ? Colors.white.withOpacity(0.05) : null,
+                color: isLocked ? Colors.white.withValues(alpha: 0.05) : null,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
                 isClaimed ? Icons.check_circle : icon,
                 color: isLocked
-                    ? Colors.white.withOpacity(0.2)
+                    ? Colors.white.withValues(alpha: 0.2)
                     : Colors.white,
                 size: 22,
               ),
@@ -260,7 +260,7 @@ class DailyRewardsScreen extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: isLocked
-                    ? Colors.white.withOpacity(0.2)
+                    ? Colors.white.withValues(alpha: 0.2)
                     : isClaimed
                         ? const Color(0xFFFFD700)
                         : Colors.white,

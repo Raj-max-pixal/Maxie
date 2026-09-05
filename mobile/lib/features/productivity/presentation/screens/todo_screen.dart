@@ -136,7 +136,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                   children: [
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: _selectedCategory,
+                        initialValue: _selectedCategory,
                         decoration: const InputDecoration(
                           labelText: 'Category',
                           border: OutlineInputBorder(),
@@ -246,7 +246,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.task_alt, size: 80, color: theme.colorScheme.primary.withOpacity(0.3)),
+                  Icon(Icons.task_alt, size: 80, color: theme.colorScheme.primary.withValues(alpha: 0.3)),
                   const SizedBox(height: 16),
                   Text('No tasks yet', style: theme.textTheme.titleLarge),
                   const SizedBox(height: 8),
@@ -261,7 +261,6 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                 final todo = todos[index];
                 return Dismissible(
                   key: Key(todo.id),
-                  direction: DismissDirection.horizontal,
                   background: Container(
                     margin: const EdgeInsets.only(bottom: 8),
                     decoration: BoxDecoration(

@@ -31,11 +31,11 @@ class FloatingPomodoroTimer extends ConsumerWidget {
           width: 120,
           height: 120,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(overlayState.transparency),
+            color: Colors.white.withValues(alpha: overlayState.transparency),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -44,7 +44,7 @@ class FloatingPomodoroTimer extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.timer,
                 size: 32,
                 color: Colors.purple,

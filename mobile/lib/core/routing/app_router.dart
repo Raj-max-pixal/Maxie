@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:maxie_mobile/features/dashboard/presentation/screens/calendar_screen.dart';
-import 'package:maxie_mobile/features/pets/presentation/screens/pet_shop_screen.dart';
-import 'package:maxie_mobile/features/pets/presentation/screens/pet_customize_screen.dart';
-import 'package:maxie_mobile/features/pets/presentation/screens/pet_interaction_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/features/chat/presentation/screens/chat_screen.dart';
 import 'package:maxie_mobile/features/chat/presentation/screens/voice_chat_screen.dart';
-import 'package:maxie_mobile/features/productivity/presentation/screens/todo_screen.dart';
-import 'package:maxie_mobile/features/productivity/presentation/screens/notes_screen.dart';
-import 'package:maxie_mobile/features/productivity/presentation/screens/habit_screen.dart';
-import 'package:maxie_mobile/features/productivity/presentation/screens/pomodoro_screen.dart';
-import 'package:maxie_mobile/features/productivity/presentation/screens/goals_screen.dart';
-import 'package:maxie_mobile/features/gamification/presentation/screens/profile_screen.dart';
+import 'package:maxie_mobile/features/cloud/presentation/screens/cloud_sync_screen.dart';
+import 'package:maxie_mobile/features/dashboard/presentation/screens/calendar_screen.dart';
+import 'package:maxie_mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:maxie_mobile/features/gamification/presentation/screens/achievements_screen.dart';
 import 'package:maxie_mobile/features/gamification/presentation/screens/daily_rewards_screen.dart';
-import 'package:maxie_mobile/features/settings/presentation/screens/settings_screen.dart';
-import 'package:maxie_mobile/features/settings/presentation/screens/appearance_screen.dart';
-import 'package:maxie_mobile/features/settings/presentation/screens/voice_settings_screen.dart';
-import 'package:maxie_mobile/features/settings/presentation/screens/accessibility_screen.dart';
-import 'package:maxie_mobile/features/cloud/presentation/screens/cloud_sync_screen.dart';
+import 'package:maxie_mobile/features/gamification/presentation/screens/profile_screen.dart';
 import 'package:maxie_mobile/features/pc_companion/presentation/screens/pc_companion_screen.dart';
+import 'package:maxie_mobile/features/pets/presentation/screens/pet_customize_screen.dart';
+import 'package:maxie_mobile/features/pets/presentation/screens/pet_interaction_screen.dart';
+import 'package:maxie_mobile/features/pets/presentation/screens/pet_shop_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/goals_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/habit_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/notes_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/pomodoro_screen.dart';
+import 'package:maxie_mobile/features/productivity/presentation/screens/todo_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/accessibility_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/appearance_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/settings_screen.dart';
+import 'package:maxie_mobile/features/settings/presentation/screens/voice_settings_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -180,7 +180,7 @@ class AppShell extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: theme.shadowColor.withOpacity(0.1),
+              color: theme.shadowColor.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, -4),
             ),

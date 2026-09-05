@@ -5,6 +5,13 @@ import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.d
 import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart';
 import 'package:maxie_mobile/services/storage/storage_providers.dart';
 
+class MemoryManagerState {
+  const MemoryManagerState({required this.memories, required this.summary});
+
+  final List<MemoryModel> memories;
+  final MemorySummary summary;
+}
+
 final memoryBrainRepositoryProvider = Provider<MemoryRepository>(
   (ref) => HiveMemoryBrainRepository(ref.watch(storageServiceProvider)),
 );
@@ -46,6 +53,18 @@ final memoryBrainSummaryProvider = FutureProvider<MemorySummary>(
 final memoryBrainTimelineProvider = FutureProvider<MemoryTimeline>(
   (ref) => ref.watch(memoryBrainServiceProvider).timeline(),
 );
+
+final memoryManagerProvider = Provider<MemoryManagerState>((ref) {
+  final memories =
+      ref.watch(memoryBrainListProvider).valueOrNull ?? const <MemoryModel>[];
+  final summary = ref.watch(memoryBrainSummaryProvider).valueOrNull ??
+      MemorySummary(
+        totalMemories: memories.length,
+        pinnedMemories: memories.where((memory) => memory.isPinned).length,
+        relationshipLevel: 12,
+      );
+  return MemoryManagerState(memories: memories, summary: summary);
+});
 
 final relationshipStatsProvider = Provider<RelationshipStats>(
   (ref) => const RelationshipStats(

@@ -230,7 +230,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.note_add, size: 80, color: theme.colorScheme.primary.withOpacity(0.3)),
+                        Icon(Icons.note_add, size: 80, color: theme.colorScheme.primary.withValues(alpha: 0.3)),
                         const SizedBox(height: 16),
                         Text('No notes yet', style: theme.textTheme.titleLarge),
                         const SizedBox(height: 8),

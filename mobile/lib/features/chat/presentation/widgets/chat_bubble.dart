@@ -26,7 +26,7 @@ class ChatBubble extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: Colors.purple.withOpacity(0.2),
+                color: Colors.purple.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(18),
               ),
               child: const Icon(Icons.pets, color: Colors.purple, size: 20),

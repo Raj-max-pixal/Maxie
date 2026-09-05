@@ -1,17 +1,20 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:convert';
 import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Cloud backup & sync service
 /// Uses Google Drive / Firebase for cloud storage
 /// All data is encrypted before upload
 class CloudService extends ChangeNotifier {
   final SharedPreferences _prefs;
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  bool _googleSignInInitialized = false;
 
   CloudService(this._prefs);
 
@@ -27,17 +30,19 @@ class CloudService extends ChangeNotifier {
   String? get userEmail => _prefs.getString(AppConstants.userEmailKey);
   String? get userId => _prefs.getString(AppConstants.userIdKey);
 
+  Future<void> _initializeGoogleSignIn() async {
+    if (_googleSignInInitialized) return;
+    await _googleSignIn.initialize();
+    _googleSignInInitialized = true;
+  }
+
   /// Login with Google
   Future<bool> loginWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) {
-        debugPrint('Cloud: Google Sign-in cancelled by user');
-        return false;
-      }
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      await _initializeGoogleSignIn();
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
       final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
@@ -67,7 +72,8 @@ class CloudService extends ChangeNotifier {
   /// Logout
   Future<void> logout() async {
     try {
-      await GoogleSignIn().signOut();
+      await _initializeGoogleSignIn();
+      await _googleSignIn.signOut();
       await FirebaseAuth.instance.signOut();
     } catch (_) {}
     await _prefs.setBool(AppConstants.cloudLoginKey, false);

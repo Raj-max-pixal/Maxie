@@ -44,10 +44,7 @@ class WakeWordDetector {
       },
       listenFor: const Duration(seconds: 300), // 5 minutes
       pauseFor: const Duration(seconds: 2),
-      partialResults: true,
       localeId: 'en_US',
-      cancelOnError: false,
-      listenMode: ListenMode.confirmation,
     );
   }
 

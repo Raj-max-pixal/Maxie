@@ -300,7 +300,6 @@ class _PositionedPet extends StatelessWidget {
       duration: settings.reducedMotion
           ? Duration.zero
           : const Duration(milliseconds: 80),
-      curve: Curves.linear,
       left: pet.x,
       top: pet.y,
       child: Opacity(
@@ -672,7 +671,7 @@ class _DebugPanel extends StatelessWidget {
           ),
           _DebugLine('Friendship', '${pet?.friendship ?? 0}'),
           _DebugLine('XP', '${pet?.xp ?? 0}'),
-          _DebugLine('Memory', 'local Hive state'),
+          const _DebugLine('Memory', 'local Hive state'),
         ],
       ),
     );

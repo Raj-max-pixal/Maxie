@@ -57,7 +57,7 @@ class ToyItem extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: shadowColor.withOpacity(0.35),
+            color: shadowColor.withValues(alpha: 0.35),
             blurRadius: 16,
             spreadRadius: 2,
           ),

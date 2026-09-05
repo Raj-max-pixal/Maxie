@@ -26,11 +26,9 @@ final shimejiControllerProvider =
 
 class ShimejiController extends StateNotifier<ShimejiState> {
   ShimejiController({
-    required ShimejiRepository repository,
-    required PetRepository petRepository,
-  }) : _repository = repository,
-       _petRepository = petRepository,
-       super(ShimejiState.initial());
+    required this._repository,
+    required this._petRepository,
+  }) : super(ShimejiState.initial());
 
   final ShimejiRepository _repository;
   final PetRepository _petRepository;

@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:uuid/uuid.dart';
 import 'package:maxie_mobile/features/pets/data/models/pet_model.dart';
+import 'package:uuid/uuid.dart';
 
 // ---- Pet State ----
 class PetsState {

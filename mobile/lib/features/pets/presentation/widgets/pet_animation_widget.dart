@@ -1,8 +1,9 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/pets/presentation/providers/pet_provider.dart';
 import 'package:maxie_mobile/features/pets/data/models/pet_model.dart';
+import 'package:maxie_mobile/features/pets/presentation/providers/pet_provider.dart';
 
 /// The main Shimeji-style pet animation widget that renders the pet
 /// with smooth 60fps animations, emotions, and interactions.
@@ -125,7 +126,7 @@ class _PetAnimationWidgetState extends ConsumerState<PetAnimationWidget>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: _auraColor.withOpacity(0.3 + 0.1 * sin(_breatheController.value * pi)),
+                                color: _auraColor.withValues(alpha: 0.3 + 0.1 * sin(_breatheController.value * pi)),
                                 blurRadius: 20 + _breatheController.value * 10,
                                 spreadRadius: 5 + _breatheController.value * 5,
                               ),
@@ -163,7 +164,7 @@ class _PetAnimationWidgetState extends ConsumerState<PetAnimationWidget>
                             child: Icon(
                               Icons.star,
                               size: 8 + _sparkleOpacities[i] * 6,
-                              color: pet.customization.color.withOpacity(0.8),
+                              color: pet.customization.color.withValues(alpha: 0.8),
                             ),
                           ),
                         ),
@@ -224,12 +225,12 @@ class _PetAnimationWidgetState extends ConsumerState<PetAnimationWidget>
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: pet.customization.color.withOpacity(0.3),
+                                color: pet.customization.color.withValues(alpha: 0.3),
                                 width: 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
+                                  color: Colors.black.withValues(alpha: 0.1),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -272,7 +273,7 @@ class _PetAnimationWidgetState extends ConsumerState<PetAnimationWidget>
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: pet.customization.color.withOpacity(0.9),
+                          color: pet.customization.color.withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -305,10 +306,10 @@ class _PetAnimationWidgetState extends ConsumerState<PetAnimationWidget>
   Widget _buildPetBody(PetModel pet, bool isDark, ColorScheme colorScheme) {
     final size = widget.size * pet.customization.size;
     final mainColor = pet.customization.color;
-    final secondaryColor = mainColor.withOpacity(0.7);
+    final secondaryColor = mainColor.withValues(alpha: 0.7);
     final accentColor = mainColor.computeLuminance() > 0.5
         ? Colors.black26
-        : Colors.white.withOpacity(0.3);
+        : Colors.white.withValues(alpha: 0.3);
     final bounceOffset = _bounceController.value * -20;
     final breatheScale = 1.0 + 0.02 * sin(_breatheController.value * pi);
 
@@ -564,7 +565,7 @@ class _PetBodyPainter extends CustomPainter {
       canvas.drawCircle(Offset(cx - r * 0.15, cy - r * 0.35), r * 0.08, paint);
       canvas.drawCircle(Offset(cx + r * 0.15, cy - r * 0.35), r * 0.08, paint);
       // Highlights
-      paint.color = Colors.white.withOpacity(0.6);
+      paint.color = Colors.white.withValues(alpha: 0.6);
       canvas.drawCircle(Offset(cx - r * 0.12, cy - r * 0.38), r * 0.03, paint);
       canvas.drawCircle(Offset(cx + r * 0.18, cy - r * 0.38), r * 0.03, paint);
     }
@@ -580,7 +581,7 @@ class _PetBodyPainter extends CustomPainter {
     paint.style = PaintingStyle.fill;
 
     // Screen/face display
-    paint.color = Colors.white.withOpacity(0.2);
+    paint.color = Colors.white.withValues(alpha: 0.2);
     paint.style = PaintingStyle.fill;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -591,7 +592,7 @@ class _PetBodyPainter extends CustomPainter {
     );
 
     // Blush
-    paint.color = Colors.pink.withOpacity(0.3);
+    paint.color = Colors.pink.withValues(alpha: 0.3);
     canvas.drawCircle(Offset(cx - r * 0.4, cy - r * 0.15), r * 0.1, paint);
     canvas.drawCircle(Offset(cx + r * 0.4, cy - r * 0.15), r * 0.1, paint);
   }
@@ -620,7 +621,7 @@ class _PetBodyPainter extends CustomPainter {
     canvas.drawPath(earPath2, paint);
 
     // Inner ears
-    paint.color = Colors.pink.withOpacity(0.4);
+    paint.color = Colors.pink.withValues(alpha: 0.4);
     final innerEar1 = Path()
       ..moveTo(cx - r * 0.48, cy - r * 0.52)
       ..lineTo(cx - r * 0.62, cy - r * 0.85)
@@ -654,7 +655,7 @@ class _PetBodyPainter extends CustomPainter {
       paint.style = PaintingStyle.fill;
       canvas.drawOval(Rect.fromCenter(center: Offset(cx - r * 0.15, cy - r * 0.35), width: r * 0.12, height: r * 0.16), paint);
       canvas.drawOval(Rect.fromCenter(center: Offset(cx + r * 0.15, cy - r * 0.35), width: r * 0.12, height: r * 0.16), paint);
-      paint.color = Colors.white.withOpacity(0.6);
+      paint.color = Colors.white.withValues(alpha: 0.6);
       canvas.drawCircle(Offset(cx - r * 0.12, cy - r * 0.38), r * 0.03, paint);
       canvas.drawCircle(Offset(cx + r * 0.18, cy - r * 0.38), r * 0.03, paint);
     }
@@ -665,7 +666,7 @@ class _PetBodyPainter extends CustomPainter {
     canvas.drawCircle(Offset(cx, cy - r * 0.22), r * 0.04, paint);
 
     // Whiskers
-    paint.color = accentColor.withOpacity(0.5);
+    paint.color = accentColor.withValues(alpha: 0.5);
     paint.strokeWidth = 1;
     paint.style = PaintingStyle.stroke;
     canvas.drawLine(Offset(cx - r * 0.1, cy - r * 0.2), Offset(cx - r * 0.5, cy - r * 0.3), paint);
@@ -687,7 +688,7 @@ class _PetBodyPainter extends CustomPainter {
     paint.style = PaintingStyle.fill;
 
     // Blush
-    paint.color = Colors.pink.withOpacity(0.25);
+    paint.color = Colors.pink.withValues(alpha: 0.25);
     paint.style = PaintingStyle.fill;
     canvas.drawCircle(Offset(cx - r * 0.35, cy - r * 0.15), r * 0.08, paint);
     canvas.drawCircle(Offset(cx + r * 0.35, cy - r * 0.15), r * 0.08, paint);
@@ -727,7 +728,7 @@ class _PetBodyPainter extends CustomPainter {
       paint.style = PaintingStyle.fill;
       canvas.drawCircle(Offset(cx - r * 0.15, cy - r * 0.3), r * 0.08, paint);
       canvas.drawCircle(Offset(cx + r * 0.15, cy - r * 0.3), r * 0.08, paint);
-      paint.color = Colors.white.withOpacity(0.6);
+      paint.color = Colors.white.withValues(alpha: 0.6);
       canvas.drawCircle(Offset(cx - r * 0.12, cy - r * 0.33), r * 0.03, paint);
       canvas.drawCircle(Offset(cx + r * 0.18, cy - r * 0.33), r * 0.03, paint);
     }
@@ -753,7 +754,7 @@ class _PetBodyPainter extends CustomPainter {
     paint.style = PaintingStyle.fill;
 
     // Blush
-    paint.color = Colors.pink.withOpacity(0.2);
+    paint.color = Colors.pink.withValues(alpha: 0.2);
     canvas.drawCircle(Offset(cx - r * 0.35, cy - r * 0.1), r * 0.08, paint);
     canvas.drawCircle(Offset(cx + r * 0.35, cy - r * 0.1), r * 0.08, paint);
   }
@@ -814,7 +815,7 @@ class _PetBodyPainter extends CustomPainter {
     canvas.drawOval(Rect.fromCenter(center: Offset(cx + r * 0.35, cy + r * 0.55), width: r * 0.25, height: r * 0.15), paint);
 
     // Blush
-    paint.color = Colors.pink.withOpacity(0.2);
+    paint.color = Colors.pink.withValues(alpha: 0.2);
     canvas.drawCircle(Offset(cx - r * 0.35, cy - r * 0.1), r * 0.08, paint);
     canvas.drawCircle(Offset(cx + r * 0.35, cy - r * 0.1), r * 0.08, paint);
   }
@@ -930,7 +931,7 @@ class _PetBodyPainter extends CustomPainter {
       paint.style = PaintingStyle.fill;
       canvas.drawCircle(Offset(cx - r * 0.12, cy - r * 0.3), r * 0.06, paint);
       canvas.drawCircle(Offset(cx + r * 0.12, cy - r * 0.3), r * 0.06, paint);
-      paint.color = Colors.white.withOpacity(0.7);
+      paint.color = Colors.white.withValues(alpha: 0.7);
       canvas.drawCircle(Offset(cx - r * 0.1, cy - r * 0.33), r * 0.025, paint);
       canvas.drawCircle(Offset(cx + r * 0.14, cy - r * 0.33), r * 0.025, paint);
     }
@@ -939,7 +940,7 @@ class _PetBodyPainter extends CustomPainter {
     paint.style = PaintingStyle.fill;
     canvas.drawCircle(Offset(cx, cy - r * 0.15), r * 0.03, paint);
     // Blush
-    paint.color = Colors.pink.withOpacity(0.3);
+    paint.color = Colors.pink.withValues(alpha: 0.3);
     canvas.drawCircle(Offset(cx - r * 0.3, cy - r * 0.1), r * 0.07, paint);
     canvas.drawCircle(Offset(cx + r * 0.3, cy - r * 0.1), r * 0.07, paint);
     // Tail
@@ -1072,7 +1073,7 @@ class _PetBodyPainter extends CustomPainter {
       canvas.drawPath(firePath2, paint);
     }
     // Wings
-    paint.color = Colors.green.shade400.withOpacity(0.7);
+    paint.color = Colors.green.shade400.withValues(alpha: 0.7);
     paint.style = PaintingStyle.fill;
     paint.strokeWidth = 0;
     final wing1 = Path()
@@ -1106,7 +1107,7 @@ class _PetBodyPainter extends CustomPainter {
     paint.style = PaintingStyle.fill;
     canvas.drawOval(Rect.fromCenter(center: Offset(cx, cy + r * 0.1 + squish * r), width: r * 1.4, height: r * 1.1 + squish * r * 0.3), paint);
     // Highlight
-    paint.color = mainColor.withOpacity(0.4);
+    paint.color = mainColor.withValues(alpha: 0.4);
     canvas.drawOval(Rect.fromCenter(center: Offset(cx - r * 0.15, cy - r * 0.15), width: r * 0.4, height: r * 0.25), paint);
     // Eyes
     if (isSleeping) {
@@ -1133,7 +1134,7 @@ class _PetBodyPainter extends CustomPainter {
       canvas.drawCircle(Offset(cx + r * 0.12, cy - r * 0.1), r * 0.04, paint);
     }
     // Smile
-    paint.color = Colors.white.withOpacity(0.7);
+    paint.color = Colors.white.withValues(alpha: 0.7);
     paint.strokeWidth = 1.5;
     paint.style = PaintingStyle.stroke;
     final smilePath = Path()
@@ -1179,16 +1180,16 @@ class _PetBodyPainter extends CustomPainter {
       paint.style = PaintingStyle.fill;
       canvas.drawCircle(Offset(cx - r * 0.12, cy - r * 0.35), r * 0.06, paint);
       canvas.drawCircle(Offset(cx + r * 0.12, cy - r * 0.35), r * 0.06, paint);
-      paint.color = Colors.white.withOpacity(0.7);
+      paint.color = Colors.white.withValues(alpha: 0.7);
       canvas.drawCircle(Offset(cx - r * 0.1, cy - r * 0.37), r * 0.025, paint);
       canvas.drawCircle(Offset(cx + r * 0.14, cy - r * 0.37), r * 0.025, paint);
     }
     // Mouth (LED display)
-    paint.color = Colors.cyan.withOpacity(0.6);
+    paint.color = Colors.cyan.withValues(alpha: 0.6);
     paint.style = PaintingStyle.fill;
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(cx, cy - r * 0.2), width: r * 0.3, height: r * 0.05), Radius.circular(r * 0.025)), paint);
     // Chest display
-    paint.color = Colors.cyan.withOpacity(0.3);
+    paint.color = Colors.cyan.withValues(alpha: 0.3);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(cx, cy + r * 0.1), width: r * 0.4, height: r * 0.15), Radius.circular(r * 0.03)), paint);
     // Bolts
     paint.color = Colors.grey.shade500;
@@ -1292,7 +1293,7 @@ class _PetBodyPainter extends CustomPainter {
     canvas.drawPath(smilePath, paint);
     paint.style = PaintingStyle.fill;
     // Blush
-    paint.color = Colors.pink.withOpacity(0.3);
+    paint.color = Colors.pink.withValues(alpha: 0.3);
     paint.style = PaintingStyle.fill;
     canvas.drawCircle(Offset(cx - r * 0.25, cy - r * 0.18), r * 0.07, paint);
     canvas.drawCircle(Offset(cx + r * 0.25, cy - r * 0.18), r * 0.07, paint);
@@ -1331,7 +1332,7 @@ class _TrailPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.3 * (1 - progress))
+      ..color = color.withValues(alpha: 0.3 * (1 - progress))
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 

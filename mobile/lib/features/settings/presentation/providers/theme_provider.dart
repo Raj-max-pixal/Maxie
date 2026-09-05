@@ -89,7 +89,7 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
     state = state.copyWith(seedColor: color);
     try {
       final box = await Hive.openBox('maxie_settings');
-      await box.put('seedColor', color.value);
+      await box.put('seedColor', color.toARGB32());
     } catch (_) {}
   }
 }
@@ -115,7 +115,6 @@ final darkThemeProvider = Provider<ThemeData>((ref) {
 ThemeData _buildTheme(ThemeState state) {
   final colorScheme = ColorScheme.fromSeed(
     seedColor: state.seedColor,
-    brightness: Brightness.light,
   );
 
   return ThemeData(
@@ -124,7 +123,7 @@ ThemeData _buildTheme(ThemeState state) {
     brightness: Brightness.light,
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+      fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide.none,
@@ -151,7 +150,7 @@ ThemeData _buildTheme(ThemeState state) {
       elevation: 0,
       selectedItemColor: colorScheme.primary,
       unselectedItemColor: colorScheme.onSurfaceVariant,
-      backgroundColor: colorScheme.surface.withOpacity(0.8),
+      backgroundColor: colorScheme.surface.withValues(alpha: 0.8),
     ),
   );
 }
@@ -168,7 +167,7 @@ ThemeData _buildDarkTheme(ThemeState state) {
     brightness: Brightness.dark,
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+      fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide.none,
@@ -195,7 +194,7 @@ ThemeData _buildDarkTheme(ThemeState state) {
       elevation: 0,
       selectedItemColor: colorScheme.primary,
       unselectedItemColor: colorScheme.onSurfaceVariant,
-      backgroundColor: colorScheme.surface.withOpacity(0.8),
+      backgroundColor: colorScheme.surface.withValues(alpha: 0.8),
     ),
   );
 }

@@ -1,8 +1,9 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:maxie_mobile/features/home/presentation/providers/apps_provider.dart';
 
 class DraggableAppIcon extends ConsumerStatefulWidget {
@@ -66,17 +67,17 @@ class _DraggableAppIconState extends ConsumerState<DraggableAppIcon> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.white.withOpacity(_isDragging ? 0.35 : 0.25),
-                      Colors.white.withOpacity(_isDragging ? 0.15 : 0.05),
+                      Colors.white.withValues(alpha: _isDragging ? 0.35 : 0.25),
+                      Colors.white.withValues(alpha: _isDragging ? 0.15 : 0.05),
                     ],
                   ),
                   border: Border.all(
-                    color: Colors.white.withOpacity(_isDragging ? 0.5 : 0.3),
+                    color: Colors.white.withValues(alpha: _isDragging ? 0.5 : 0.3),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(_isDragging ? 0.25 : 0.1),
+                      color: Colors.black.withValues(alpha: _isDragging ? 0.25 : 0.1),
                       blurRadius: _isDragging ? 16 : 8,
                       spreadRadius: _isDragging ? 2 : 0,
                       offset: Offset(0, _isDragging ? 8 : 4),
@@ -91,7 +92,7 @@ class _DraggableAppIconState extends ConsumerState<DraggableAppIcon> {
                       decoration: BoxDecoration(
                         gradient: RadialGradient(
                           colors: [
-                            Colors.purple.shade400.withOpacity(0.15),
+                            Colors.purple.shade400.withValues(alpha: 0.15),
                             Colors.transparent,
                           ],
                           radius: 1.0,
@@ -100,7 +101,7 @@ class _DraggableAppIconState extends ConsumerState<DraggableAppIcon> {
                       child: Icon(
                         app.icon,
                         size: 32,
-                        color: Colors.white.withOpacity(0.95),
+                        color: Colors.white.withValues(alpha: 0.95),
                       ),
                     ),
                   ),
