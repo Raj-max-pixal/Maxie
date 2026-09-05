@@ -23,15 +23,9 @@ class GeminiProvider implements AiProvider {
   bool get isConfigured => _apiKey.isNotEmpty;
 
   @override
-  Future<AiResponse> complete(
-    List<ChatMessage> messages, {
-    String? systemPrompt,
-  }) async {
+  Future<AiResponse> complete(List<ChatMessage> messages) async {
     if (!isConfigured) {
-      return LocalCompanionProvider().complete(
-        messages,
-        systemPrompt: systemPrompt,
-      );
+      return LocalCompanionProvider().complete(messages);
     }
 
     final uri = Uri.https(
@@ -45,12 +39,6 @@ class GeminiProvider implements AiProvider {
           uri,
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            if (systemPrompt != null && systemPrompt.trim().isNotEmpty)
-              'systemInstruction': {
-                'parts': [
-                  {'text': systemPrompt},
-                ],
-              },
             'contents': messages
                 .where((message) => message.role != ChatRole.system)
                 .map(
@@ -109,14 +97,8 @@ class LocalCompanionProvider implements AiProvider {
   bool get isConfigured => true;
 
   @override
-  Future<AiResponse> complete(
-    List<ChatMessage> messages, {
-    String? systemPrompt,
-  }) async {
+  Future<AiResponse> complete(List<ChatMessage> messages) async {
     final prompt = messages.lastWhere((message) => message.isUser).content;
-    final memoryContext = systemPrompt == null || systemPrompt.isEmpty
-        ? ''
-        : '\n\nMemory context:\n$systemPrompt';
     final text = '''
 I am running in local companion mode because no Gemini API key is configured.
 
@@ -125,7 +107,6 @@ Here is how I can help with this:
 - I understood: "$prompt"
 - I can turn this into a plan, checklist, explanation, or study note.
 - When you run with `--dart-define=GEMINI_API_KEY=your_key`, I will use Gemini for real responses.
-$memoryContext
 
 ```dart
 final maxie = Companion.ready(mode: CompanionMode.supportive);

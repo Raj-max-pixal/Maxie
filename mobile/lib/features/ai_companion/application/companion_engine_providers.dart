@@ -3,7 +3,7 @@ import 'package:maxie_mobile/features/ai_companion/domain/models/companion_model
 import 'package:maxie_mobile/features/ai_companion/domain/services/companion_engines.dart';
 
 final companionMoodEngineProvider = Provider<MoodEngine>(
-  (ref) => const PlaceholderMoodEngine(),
+  (ref) => const DemoMoodEngine(),
 );
 
 final companionModelProvider = Provider<CompanionModel>((ref) {
@@ -11,12 +11,12 @@ final companionModelProvider = Provider<CompanionModel>((ref) {
   return CompanionModel(
     name: 'MAXie',
     mood: mood,
-    message: const PlaceholderEmotionManager().messageFor(mood),
+    message: const DemoEmotionManager().messageFor(mood),
   );
 });
 
-class PlaceholderMoodEngine implements MoodEngine {
-  const PlaceholderMoodEngine();
+class DemoMoodEngine implements MoodEngine {
+  const DemoMoodEngine();
 
   @override
   CompanionMood moodFor(DateTime moment) {
@@ -25,13 +25,13 @@ class PlaceholderMoodEngine implements MoodEngine {
   }
 }
 
-class PlaceholderEmotionManager implements EmotionManager {
-  const PlaceholderEmotionManager();
+class DemoEmotionManager implements EmotionManager {
+  const DemoEmotionManager();
 
   @override
   String messageFor(CompanionMood mood) {
     return switch (mood) {
-      CompanionMood.motivating => "Let's win Shipaton.",
+      CompanionMood.motivating => "Let's win Shipathon.",
       CompanionMood.studyMode => "Today's a good day to learn.",
       CompanionMood.sleeping => "Don't forget to recharge yourself too.",
       CompanionMood.celebrating => "You're building something special.",

@@ -24,6 +24,11 @@ const appNavigationItems = <NavigationItem>[
     icon: Icons.smart_toy_outlined,
   ),
   NavigationItem(
+    label: 'Shimeji',
+    location: AppRoutes.shimeji,
+    icon: Icons.auto_awesome_motion_rounded,
+  ),
+  NavigationItem(
     label: 'Profile',
     location: AppRoutes.profile,
     icon: Icons.person_rounded,

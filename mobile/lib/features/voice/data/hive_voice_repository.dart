@@ -17,7 +17,7 @@ class HiveVoiceRepository implements VoiceRepository {
     }
 
     final current = await readState();
-    final next = current.copyWith(
+    final next = VoiceState(
       isListening: normalized.contains('listen') || current.isListening,
       isSpeaking: normalized.contains('speak') || current.isSpeaking,
       wakeWordEnabled:

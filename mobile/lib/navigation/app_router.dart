@@ -8,6 +8,7 @@ import 'package:maxie_mobile/features/onboarding/presentation/onboarding_screen.
 import 'package:maxie_mobile/features/pet/presentation/pet_screen.dart';
 import 'package:maxie_mobile/features/profile/presentation/profile_screen.dart';
 import 'package:maxie_mobile/features/settings/presentation/settings_screen.dart';
+import 'package:maxie_mobile/features/shimeji/presentation/shimeji_screen.dart';
 import 'package:maxie_mobile/features/splash/presentation/splash_screen.dart';
 import 'package:maxie_mobile/features/subscription/presentation/subscription_screen.dart';
 import 'package:maxie_mobile/features/tasks/presentation/tasks_screen.dart';
@@ -66,6 +67,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.pet,
         name: 'pet',
         builder: (context, state) => const PetScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.shimeji,
+        name: 'shimeji',
+        builder: (context, state) => const ShimejiScreen(),
       ),
       GoRoute(
         path: AppRoutes.tasks,

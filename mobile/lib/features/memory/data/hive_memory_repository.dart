@@ -1,59 +1,70 @@
 import 'package:maxie_mobile/config/app_constants.dart';
-import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
+import 'package:maxie_mobile/config/storage_keys.dart';
+import 'package:maxie_mobile/features/memory/domain/models/memory_entry.dart';
 import 'package:maxie_mobile/features/memory/domain/repositories/memory_repository.dart';
 import 'package:maxie_mobile/services/storage/storage_service.dart';
 
 class HiveMemoryRepository implements MemoryRepository {
   const HiveMemoryRepository(this._storage);
 
-  static const String _memoryRecordsKey = 'memory_records';
-
   final StorageService _storage;
-
-  @override
-  Future<void> clearMemories() {
-    return _storage.clear(AppConstants.hiveMemoryBox);
-  }
 
   @override
   Future<void> deleteMemory(String id) async {
     final memories = await readMemories();
-    final remaining = memories.where((memory) => memory.id != id).toList();
-    await _storage.write<List<Map<String, Object?>>>(
-      AppConstants.hiveMemoryBox,
-      _memoryRecordsKey,
-      remaining.map((memory) => memory.toJson()).toList(),
-    );
+    await _write(memories.where((memory) => memory.id != id).toList());
   }
 
   @override
-  Future<List<MemoryRecord>> readMemories() async {
+  Future<List<MemoryEntry>> readMemories() async {
     final data = await _storage.read<List<dynamic>>(
       AppConstants.hiveMemoryBox,
-      _memoryRecordsKey,
+      StorageKeys.memoryIndex,
     );
-    if (data == null || data.isEmpty) {
-      return const [];
+    if (data == null) {
+      return _seedMemories();
     }
     return [
       for (final item in data)
-        MemoryRecord.fromJson(item as Map<dynamic, dynamic>),
+        MemoryEntry.fromJson(item as Map<dynamic, dynamic>),
     ];
   }
 
   @override
-  Future<void> saveMemory(MemoryRecord entry) async {
+  Future<void> saveMemory(MemoryEntry entry) async {
     final memories = await readMemories();
-    final next = [
-      for (final memory in memories)
-        if (memory.id != entry.id) memory,
-      entry,
-    ]..sort((left, right) => right.updatedAt.compareTo(left.updatedAt));
+    final existingIndex = memories.indexWhere((item) => item.id == entry.id);
+    if (existingIndex >= 0) {
+      memories[existingIndex] = entry;
+    } else {
+      memories.insert(0, entry);
+    }
+    await _write(memories);
+  }
 
-    await _storage.write<List<Map<String, Object?>>>(
+  Future<void> _write(List<MemoryEntry> memories) {
+    return _storage.write<List<Map<String, Object?>>>(
       AppConstants.hiveMemoryBox,
-      _memoryRecordsKey,
-      next.map((memory) => memory.toJson()).toList(),
+      StorageKeys.memoryIndex,
+      memories.map((memory) => memory.toJson()).toList(),
     );
+  }
+
+  List<MemoryEntry> _seedMemories() {
+    final now = DateTime.now();
+    return [
+      MemoryEntry(
+        id: 'memory-preference-planning',
+        title: 'You prefer morning planning',
+        createdAt: now,
+        tags: const ['preference', 'planning'],
+      ),
+      MemoryEntry(
+        id: 'memory-project-maxie',
+        title: 'MAXie Mobile is the current priority',
+        createdAt: now,
+        tags: const ['project', 'maxie'],
+      ),
+    ];
   }
 }

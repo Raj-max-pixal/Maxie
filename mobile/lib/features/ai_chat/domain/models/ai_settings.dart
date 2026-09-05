@@ -16,24 +16,4 @@ class AiSettings {
   final bool streamingEnabled;
   final bool memoryEnabled;
   final bool futureLocalAiEnabled;
-
-  AiSettings copyWith({
-    String? provider,
-    String? model,
-    double? temperature,
-    int? maxTokens,
-    bool? streamingEnabled,
-    bool? memoryEnabled,
-    bool? futureLocalAiEnabled,
-  }) {
-    return AiSettings(
-      provider: provider ?? this.provider,
-      model: model ?? this.model,
-      temperature: temperature ?? this.temperature,
-      maxTokens: maxTokens ?? this.maxTokens,
-      streamingEnabled: streamingEnabled ?? this.streamingEnabled,
-      memoryEnabled: memoryEnabled ?? this.memoryEnabled,
-      futureLocalAiEnabled: futureLocalAiEnabled ?? this.futureLocalAiEnabled,
-    );
-  }
 }

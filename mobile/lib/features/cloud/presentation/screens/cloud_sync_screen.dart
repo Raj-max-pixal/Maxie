@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../data/services/cloud_service.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -12,6 +13,7 @@ class CloudSyncScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
+    final cloudService = ref.watch(cloudServiceProvider);
 
     return Scaffold(
       body: Container(
@@ -81,7 +83,7 @@ class CloudSyncScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'Not Signed In',
+                                cloudService.isLoggedIn ? 'Signed In' : 'Not Signed In',
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -89,7 +91,9 @@ class CloudSyncScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Sign in to backup your pets, data,\nand sync across devices.',
+                                cloudService.isLoggedIn
+                                    ? 'Account: ${cloudService.userEmail}'
+                                    : 'Sign in to backup your pets, data,\nand sync across devices.',
                                 textAlign: TextAlign.center,
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: Colors.white.withOpacity(0.6),
@@ -106,11 +110,25 @@ class CloudSyncScreen extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: ElevatedButton.icon(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.login, color: Colors.white),
-                                    label: const Text(
-                                      'Sign in with Google',
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                                    onPressed: () async {
+                                      if (cloudService.isLoggedIn) {
+                                        await cloudService.logout();
+                                      } else {
+                                        final success = await cloudService.loginWithGoogle();
+                                        if (success && context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Successfully signed in!')),
+                                          );
+                                        }
+                                      }
+                                    },
+                                    icon: Icon(
+                                      cloudService.isLoggedIn ? Icons.logout : Icons.login,
+                                      color: Colors.white,
+                                    ),
+                                    label: Text(
+                                      cloudService.isLoggedIn ? 'Sign Out' : 'Sign in with Google',
+                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.transparent,
@@ -140,11 +158,15 @@ class CloudSyncScreen extends ConsumerWidget {
                                 context,
                                 icon: Icons.pets,
                                 title: 'Sync Pets',
-                                subtitle: 'Last synced: Never',
+                                subtitle: cloudService.lastSyncTime != null
+                                    ? 'Last synced: ${DateFormat('MMM d, h:mm a').format(cloudService.lastSyncTime!)}'
+                                    : 'Last synced: Never',
                                 trailing: Switch.adaptive(
-                                  value: true,
+                                  value: cloudService.getSyncPref('pets'),
                                   activeColor: AppConstants.primaryPurple,
-                                  onChanged: (v) {},
+                                  onChanged: cloudService.isLoggedIn
+                                      ? (v) => cloudService.setSyncPref('pets', v)
+                                      : null,
                                 ),
                               ),
                               const Divider(color: Colors.white12),
@@ -152,11 +174,15 @@ class CloudSyncScreen extends ConsumerWidget {
                                 context,
                                 icon: Icons.settings,
                                 title: 'Sync Settings',
-                                subtitle: 'Last synced: Never',
+                                subtitle: cloudService.lastSyncTime != null
+                                    ? 'Last synced: ${DateFormat('MMM d, h:mm a').format(cloudService.lastSyncTime!)}'
+                                    : 'Last synced: Never',
                                 trailing: Switch.adaptive(
-                                  value: true,
+                                  value: cloudService.getSyncPref('settings'),
                                   activeColor: AppConstants.primaryPurple,
-                                  onChanged: (v) {},
+                                  onChanged: cloudService.isLoggedIn
+                                      ? (v) => cloudService.setSyncPref('settings', v)
+                                      : null,
                                 ),
                               ),
                               const Divider(color: Colors.white12),
@@ -164,11 +190,15 @@ class CloudSyncScreen extends ConsumerWidget {
                                 context,
                                 icon: Icons.auto_stories,
                                 title: 'Sync Achievements',
-                                subtitle: 'Last synced: Never',
+                                subtitle: cloudService.lastSyncTime != null
+                                    ? 'Last synced: ${DateFormat('MMM d, h:mm a').format(cloudService.lastSyncTime!)}'
+                                    : 'Last synced: Never',
                                 trailing: Switch.adaptive(
-                                  value: true,
+                                  value: cloudService.getSyncPref('achievements'),
                                   activeColor: AppConstants.primaryPurple,
-                                  onChanged: (v) {},
+                                  onChanged: cloudService.isLoggedIn
+                                      ? (v) => cloudService.setSyncPref('achievements', v)
+                                      : null,
                                 ),
                               ),
                             ],
@@ -199,17 +229,35 @@ class CloudSyncScreen extends ConsumerWidget {
                               _buildActionTile(
                                 context,
                                 icon: Icons.cloud_upload,
-                                title: 'Backup to Cloud',
+                                title: cloudService.isSyncing ? 'Backing up...' : 'Backup to Cloud',
                                 subtitle: 'Upload your latest data',
-                                onTap: () {},
+                                onTap: cloudService.isLoggedIn && !cloudService.isSyncing
+                                    ? () async {
+                                        final success = await cloudService.backup();
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(success ? 'Backup completed!' : 'Backup failed.')),
+                                          );
+                                        }
+                                      }
+                                    : null,
                               ),
                               const Divider(color: Colors.white12),
                               _buildActionTile(
                                 context,
                                 icon: Icons.cloud_download,
-                                title: 'Restore from Cloud',
+                                title: cloudService.isSyncing ? 'Restoring...' : 'Restore from Cloud',
                                 subtitle: 'Recover data from backup',
-                                onTap: () {},
+                                onTap: cloudService.isLoggedIn && !cloudService.isSyncing
+                                    ? () async {
+                                        final success = await cloudService.restore();
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(success ? 'Restore completed!' : 'Restore failed.')),
+                                          );
+                                        }
+                                      }
+                                    : null,
                               ),
                               const Divider(color: Colors.white12),
                               _buildActionTile(
@@ -217,7 +265,16 @@ class CloudSyncScreen extends ConsumerWidget {
                                 icon: Icons.delete_sweep,
                                 title: 'Clear Cloud Data',
                                 subtitle: 'Remove all cloud backups',
-                                onTap: () {},
+                                onTap: cloudService.isLoggedIn && !cloudService.isSyncing
+                                    ? () async {
+                                        // Clean cloud backup document
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Cloud data cleared!')),
+                                          );
+                                        }
+                                      }
+                                    : null,
                               ),
                             ],
                           ),

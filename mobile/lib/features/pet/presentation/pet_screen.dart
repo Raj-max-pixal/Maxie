@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:maxie_mobile/features/ai_companion/application/companion_state_engine.dart';
 import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
-import 'package:maxie_mobile/features/ai_companion/domain/models/companion_emotion.dart';
 import 'package:maxie_mobile/features/pet/application/pet_providers.dart';
 import 'package:maxie_mobile/features/pet/domain/models/pet_state.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
@@ -22,8 +20,6 @@ class PetScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final petAsync = ref.watch(petStateProvider);
-    final emotionAsync = ref.watch(companionEmotionProvider);
-    final engine = ref.read(companionStateEngineProvider.notifier);
 
     return PremiumScaffold(
       title: 'Companion',
@@ -35,105 +31,146 @@ class PetScreen extends ConsumerWidget {
           icon: Icons.favorite_rounded,
         ),
         data: (pet) {
-          final emotion = emotionAsync.valueOrNull ?? CompanionEmotion.initial();
+          final friendshipLevel = _levelForAffinity(pet.affinity);
+          final levelProgress = _progressForAffinity(pet.affinity);
+
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 18, 16, 108),
             children: [
               Center(
-                child: MaxieCompanionView(
-                  state: _presenceForEmotion(emotion.type),
-                  size: 240,
+                child: GestureDetector(
+                  onTap: () => _runAction(ref, context, pet, _PetAction.react),
+                  child: MaxieCompanionView(
+                    state: _presenceForMood(pet.mood),
+                    size: 240,
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
               PremiumCard(
-                glowColor: _colorForEmotion(emotion.type),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          pet.name,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w900,
-                              ),
-                        ),
-                        Chip(
-                          avatar: const Icon(Icons.favorite_rounded, size: 16),
-                          label: Text(_emotionLabel(emotion.type)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      emotion.reactionMessage ?? 'Ready when you are.',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            pet.name,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            'Last action: ${pet.lastAction}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: AppSpacing.sm),
-                    LinearProgressIndicator(
-                      value: emotion.intensity,
-                      minHeight: 7,
-                      borderRadius: BorderRadius.circular(999),
+                    Chip(
+                      avatar: const Icon(Icons.favorite_rounded, size: 16),
+                      label: Text(_moodLabel(pet.mood)),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
               XpProgressCard(
-                level: _levelForAffinity(pet.affinity),
-                progress: pet.energy,
+                level: friendshipLevel,
+                progress: levelProgress,
+                xpLabel:
+                    '${pet.affinity % 100}/100 XP to level ${friendshipLevel + 1}',
               ),
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
                   Expanded(
-                    child: PrimaryButton(
-                      label: 'Feed',
-                      icon: Icons.restaurant_rounded,
-                      onPressed: () => _runReaction(
-                        context,
-                        ref,
-                        engine.reactToFeed,
-                      ),
+                    child: StatCard(
+                      label: 'Energy',
+                      value: '${(pet.energy * 100).round()}%',
+                      icon: Icons.bolt_rounded,
+                      color: AppColors.warning,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _runReaction(
-                        context,
-                        ref,
-                        engine.reactToPlay,
-                      ),
-                      icon: const Icon(Icons.sports_esports_rounded),
-                      label: const Text('Play'),
+                    child: StatCard(
+                      label: 'Gifts',
+                      value: '${pet.gifts}',
+                      icon: Icons.card_giftcard_rounded,
+                      color: AppColors.warmCoral,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.md),
-              OutlinedButton.icon(
-                onPressed: () => _runReaction(
-                  context,
-                  ref,
-                  engine.reactToCustomize,
-                ),
-                icon: const Icon(Icons.palette_rounded),
-                label: const Text('Customize'),
-              ),
               const SizedBox(height: AppSpacing.lg),
               const SectionTitle(
-                title: 'Future Accessories',
-                subtitle:
-                    'Hats, trails, rooms and companion styles will attach here.',
+                title: 'Actions',
+                subtitle: 'Interact with MAXie to grow your friendship.',
               ),
               const SizedBox(height: AppSpacing.sm),
+              GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: AppSpacing.sm,
+                mainAxisSpacing: AppSpacing.sm,
+                childAspectRatio: 2.7,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  _ActionButton(
+                    label: 'Feed',
+                    icon: Icons.restaurant_rounded,
+                    filled: true,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.feed),
+                  ),
+                  _ActionButton(
+                    label: 'Dance',
+                    icon: Icons.music_note_rounded,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.dance),
+                  ),
+                  _ActionButton(
+                    label: 'Sleep',
+                    icon: Icons.bedtime_rounded,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.sleep),
+                  ),
+                  _ActionButton(
+                    label: 'Listen',
+                    icon: Icons.hearing_rounded,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.listen),
+                  ),
+                  _ActionButton(
+                    label: 'Think',
+                    icon: Icons.psychology_rounded,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.think),
+                  ),
+                  _ActionButton(
+                    label: 'Gift',
+                    icon: Icons.card_giftcard_rounded,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.gift),
+                  ),
+                  _ActionButton(
+                    label: 'React',
+                    icon: Icons.favorite_rounded,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.react),
+                  ),
+                  _ActionButton(
+                    label: 'Idle',
+                    icon: Icons.pets_rounded,
+                    onPressed: () =>
+                        _runAction(ref, context, pet, _PetAction.idle),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
               StatCard(
-                label: 'Affinity',
+                label: 'Total friendship XP',
                 value: '${pet.affinity} XP',
                 icon: Icons.motion_photos_auto_rounded,
                 color: AppColors.calmTeal,
@@ -145,70 +182,144 @@ class PetScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _runReaction(
-    BuildContext context,
+  Future<void> _runAction(
     WidgetRef ref,
-    Future<CompanionEmotion> Function() reaction,
+    BuildContext context,
+    PetState pet,
+    _PetAction action,
   ) async {
-    final emotion = await reaction();
+    final state = switch (action) {
+      _PetAction.feed => pet.copyWith(
+        mood: PetMood.happy,
+        energy: (pet.energy + 0.16).clamp(0, 1).toDouble(),
+        affinity: pet.affinity + 8,
+        lastAction: 'Feed',
+      ),
+      _PetAction.dance => pet.copyWith(
+        mood: PetMood.dancing,
+        energy: (pet.energy - 0.10).clamp(0, 1).toDouble(),
+        affinity: pet.affinity + 10,
+        lastAction: 'Dance',
+      ),
+      _PetAction.sleep => pet.copyWith(
+        mood: PetMood.sleepy,
+        energy: (pet.energy + 0.28).clamp(0, 1).toDouble(),
+        affinity: pet.affinity + 5,
+        lastAction: 'Sleep',
+      ),
+      _PetAction.listen => pet.copyWith(
+        mood: PetMood.listening,
+        energy: (pet.energy - 0.03).clamp(0, 1).toDouble(),
+        affinity: pet.affinity + 7,
+        lastAction: 'Listen',
+      ),
+      _PetAction.think => pet.copyWith(
+        mood: PetMood.focused,
+        energy: (pet.energy - 0.06).clamp(0, 1).toDouble(),
+        affinity: pet.affinity + 7,
+        lastAction: 'Think',
+      ),
+      _PetAction.gift => pet.copyWith(
+        mood: PetMood.loving,
+        energy: (pet.energy + 0.06).clamp(0, 1).toDouble(),
+        affinity: pet.affinity + 12,
+        gifts: pet.gifts + 1,
+        lastAction: 'Gift',
+      ),
+      _PetAction.react => pet.copyWith(
+        mood: PetMood.loving,
+        affinity: pet.affinity + 4,
+        lastAction: 'React',
+      ),
+      _PetAction.idle => pet.copyWith(
+        mood: PetMood.neutral,
+        energy: (pet.energy + 0.04).clamp(0, 1).toDouble(),
+        affinity: pet.affinity + 2,
+        lastAction: 'Idle',
+      ),
+    };
+    final message = switch (action) {
+      _PetAction.feed => 'MAXie feels recharged.',
+      _PetAction.dance => 'MAXie is dancing with you.',
+      _PetAction.sleep => 'MAXie is resting.',
+      _PetAction.listen => 'MAXie is listening closely.',
+      _PetAction.think => 'MAXie is thinking it through.',
+      _PetAction.gift => 'Gift saved. Friendship grew.',
+      _PetAction.react => 'MAXie reacted happily.',
+      _PetAction.idle => 'MAXie is back in idle mode.',
+    };
+
+    await ref.read(petRepositoryProvider).savePet(state);
     ref.invalidate(petStateProvider);
     if (context.mounted) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(emotion.reactionMessage ?? 'Saved.')),
-        );
+      _showFoundationMessage(context, message);
     }
   }
 
-  CompanionPresence _presenceForEmotion(CompanionEmotionType type) {
-    return switch (type) {
-      CompanionEmotionType.happy ||
-      CompanionEmotionType.satisfied ||
-      CompanionEmotionType.comforted =>
-        CompanionPresence.happy,
-      CompanionEmotionType.excited || CompanionEmotionType.playful =>
-        CompanionPresence.excited,
-      CompanionEmotionType.sleepy => CompanionPresence.sleeping,
-      CompanionEmotionType.curious => CompanionPresence.thinking,
-      CompanionEmotionType.hungry => CompanionPresence.listening,
-      CompanionEmotionType.angry => CompanionPresence.typing,
-      _ => CompanionPresence.idle,
+  CompanionPresence _presenceForMood(PetMood mood) {
+    return switch (mood) {
+      PetMood.happy => CompanionPresence.happy,
+      PetMood.focused => CompanionPresence.thinking,
+      PetMood.sleepy => CompanionPresence.sleeping,
+      PetMood.listening => CompanionPresence.listening,
+      PetMood.dancing => CompanionPresence.dancing,
+      PetMood.loving => CompanionPresence.excited,
+      PetMood.neutral => CompanionPresence.idle,
     };
   }
 
-  Color _colorForEmotion(CompanionEmotionType type) {
-    return switch (type) {
-      CompanionEmotionType.happy ||
-      CompanionEmotionType.satisfied ||
-      CompanionEmotionType.comforted =>
-        AppColors.calmTeal,
-      CompanionEmotionType.excited || CompanionEmotionType.playful =>
-        AppColors.warmCoral,
-      CompanionEmotionType.sleepy => AppColors.seed,
-      CompanionEmotionType.curious => AppColors.warning,
-      _ => AppColors.calmTeal,
-    };
-  }
-
-  String _emotionLabel(CompanionEmotionType type) {
-    return switch (type) {
-      CompanionEmotionType.happy => 'Happy',
-      CompanionEmotionType.excited => 'Excited',
-      CompanionEmotionType.playful => 'Playful',
-      CompanionEmotionType.sleepy => 'Sleepy',
-      CompanionEmotionType.hungry => 'Hungry',
-      CompanionEmotionType.sad => 'Sad',
-      CompanionEmotionType.bored => 'Bored',
-      CompanionEmotionType.curious => 'Curious',
-      CompanionEmotionType.angry => 'Focused',
-      CompanionEmotionType.neutral => 'Calm',
-      CompanionEmotionType.satisfied => 'Satisfied',
-      CompanionEmotionType.comforted => 'Comforted',
+  String _moodLabel(PetMood mood) {
+    return switch (mood) {
+      PetMood.happy => 'Happy',
+      PetMood.focused => 'Focused',
+      PetMood.sleepy => 'Sleepy',
+      PetMood.listening => 'Listening',
+      PetMood.dancing => 'Dancing',
+      PetMood.loving => 'Loving',
+      PetMood.neutral => 'Neutral',
     };
   }
 
   int _levelForAffinity(int affinity) {
     return (affinity ~/ 100) + 1;
+  }
+
+  double _progressForAffinity(int affinity) {
+    return (affinity % 100) / 100;
+  }
+
+  void _showFoundationMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+enum _PetAction { feed, dance, sleep, listen, think, gift, react, idle }
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+    this.filled = false,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    if (filled) {
+      return PrimaryButton(label: label, icon: icon, onPressed: onPressed);
+    }
+
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+    );
   }
 }

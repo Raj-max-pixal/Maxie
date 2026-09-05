@@ -18,26 +18,31 @@ class TasksScreen extends StatelessWidget {
         children: const [
           SectionTitle(
             title: "Today's Tasks",
-            subtitle: 'A focused task foundation for future productivity flows.',
+            subtitle: 'Demo missions that keep the Shipathon story focused.',
           ),
           SizedBox(height: AppSpacing.lg),
           TaskCard(
             title: 'Prepare afternoon meeting notes',
-            subtitle: 'Connected from Home quick actions.',
+            subtitle: 'Ask MAXie to summarize or plan the next step.',
           ),
           SizedBox(height: AppSpacing.sm),
           TaskCard(
             title: 'Review Project Nebula draft',
-            subtitle: 'Ready for the productivity workflow.',
+            subtitle: 'Save project facts into Memory Brain from chat.',
           ),
           SizedBox(height: AppSpacing.lg),
           PremiumCard(
             glowColor: AppColors.warning,
             child: ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.calendar_month_rounded, color: AppColors.warning),
-              title: Text('Calendar and tasks foundation ready'),
-              subtitle: Text('Real task data can plug into this flow cleanly.'),
+              leading: Icon(
+                Icons.calendar_month_rounded,
+                color: AppColors.warning,
+              ),
+              title: Text('Hackathon demo checklist'),
+              subtitle: Text(
+                'Chat, save a memory, and show the companion mood change.',
+              ),
             ),
           ),
         ],
