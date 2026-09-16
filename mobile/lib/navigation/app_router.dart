@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
 import 'package:maxie_mobile/features/memory/presentation/memory_screen.dart';
+import 'package:maxie_mobile/features/mission_control/presentation/mission_control_screen.dart';
 import 'package:maxie_mobile/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:maxie_mobile/features/pet/presentation/pet_screen.dart';
 import 'package:maxie_mobile/features/profile/presentation/profile_screen.dart';
@@ -77,6 +78,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.tasks,
         name: 'tasks',
         builder: (context, state) => const TasksScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.missionControl,
+        name: 'missionControl',
+        builder: (context, state) => const MissionControlScreen(),
       ),
     ],
   );

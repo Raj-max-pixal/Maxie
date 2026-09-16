@@ -12,4 +12,5 @@ class AppRoutes {
   static const String pet = '/pet';
   static const String shimeji = '/shimeji';
   static const String tasks = '/tasks';
+  static const String missionControl = '/mission-control';
 }

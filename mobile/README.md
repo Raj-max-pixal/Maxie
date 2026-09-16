@@ -2,6 +2,8 @@
 
 MAXie is an AI companion demo built for Shipathon: chat with MAXie, save meaningful facts into Memory Brain, and watch the companion grow through mood and XP changes.
 
+Full product vision and phase roadmap: [../docs/MAXIE_PRODUCT_BLUEPRINT.md](../docs/MAXIE_PRODUCT_BLUEPRINT.md). In-app **Mission Control** (Home → Mission Control) mirrors the 18-phase plan.
+
 Shipathon fit:
 
 - RevenueCat requirement: `purchases_flutter` is integrated for MAXie Plus.

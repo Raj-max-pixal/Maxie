@@ -70,6 +70,40 @@ class HomeScreen extends ConsumerWidget {
             ],
           ).animate().fadeIn(duration: 260.ms).slideY(begin: -0.1, end: 0),
           const SizedBox(height: AppSpacing.xl),
+          PremiumCard(
+            glowColor: AppColors.seed,
+            onTap: () => context.push(AppRoutes.missionControl),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.seed.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Icon(Icons.rocket_launch_rounded, color: Color(0xFF93C5FD)),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Mission Control',
+                        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w900),
+                      ),
+                      Text(
+                        '18-phase roadmap · current build mission',
+                        style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, color: Colors.white38),
+              ],
+            ),
+          ).animate().fadeIn(duration: 300.ms),
+          const SizedBox(height: AppSpacing.lg),
           _TodaysCompanionCard(now: date, memories: memoryState.memories),
           const SizedBox(height: AppSpacing.lg),
           if (latestMemory != null)
