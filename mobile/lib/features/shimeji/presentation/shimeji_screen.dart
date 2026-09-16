@@ -236,9 +236,16 @@ class _ShimejiStage extends StatelessWidget {
                     painter: _StagePainter(
                       paused: state.settings.paused,
                       overlayEnabled: state.settings.overlayEnabled,
+                        tick: state.tick,
                     ),
                   ),
                 ),
+                  Positioned(
+                    top: 14,
+                    left: 16,
+                    right: 16,
+                    child: _StageHud(state: state),
+                  ),
                 if (state.settings.hidden)
                   const Center(child: Text('Screen pets are hidden')),
                 for (final pet in state.pets)
@@ -323,6 +330,105 @@ class _PositionedPet extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StageHud extends StatelessWidget {
+  const _StageHud({required this.state});
+
+  final ShimejiState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final pet = state.selectedPet;
+    final accent = pet == null ? AppColors.calmTeal : Color(pet.accentColor);
+    final activity = pet?.currentAnimation.name ?? 'idle';
+    final mood = pet?.mood.name ?? 'neutral';
+
+    return Row(
+      children: [
+        Expanded(
+          child: _StagePill(
+            icon: Icons.auto_awesome_rounded,
+            label: pet?.displayName ?? 'MAXie lounge',
+            value: '$mood / $activity',
+            color: accent,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        _StagePill(
+          icon: state.settings.paused
+              ? Icons.pause_circle_filled_rounded
+              : Icons.circle,
+          label: state.settings.paused ? 'Paused' : 'Live',
+          value: '${state.visiblePetCount} active',
+          color: state.settings.paused ? AppColors.warning : AppColors.success,
+        ),
+      ],
+    );
+  }
+}
+
+class _StagePill extends StatelessWidget {
+  const _StagePill({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.24),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.16),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 15, color: color),
+            const SizedBox(width: 7),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.white60,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -805,10 +911,15 @@ class _OverlayBanner extends StatelessWidget {
 }
 
 class _StagePainter extends CustomPainter {
-  const _StagePainter({required this.paused, required this.overlayEnabled});
+  const _StagePainter({
+    required this.paused,
+    required this.overlayEnabled,
+    required this.tick,
+  });
 
   final bool paused;
   final bool overlayEnabled;
+  final int tick;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -816,15 +927,27 @@ class _StagePainter extends CustomPainter {
       ..shader = const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [Color(0xFF111827), Color(0xFF0F172A), Color(0xFF182136)],
+        colors: [Color(0xFF101A2D), Color(0xFF101326), Color(0xFF211A3B)],
       ).createShader(Offset.zero & size);
     canvas.drawRRect(
       RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(18)),
       paint,
     );
 
+    final glow = Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.62, -0.58),
+        radius: 0.85,
+        colors: [
+          (overlayEnabled ? AppColors.calmTeal : AppColors.softLilac)
+              .withValues(alpha: 0.20),
+          Colors.transparent,
+        ],
+      ).createShader(Offset.zero & size);
+    canvas.drawRect(Offset.zero & size, glow);
+
     final gridPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.035)
+      ..color = Colors.white.withValues(alpha: 0.028)
       ..strokeWidth = 1;
     for (var x = 0.0; x < size.width; x += 36) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), gridPaint);
@@ -832,6 +955,29 @@ class _StagePainter extends CustomPainter {
     for (var y = 0.0; y < size.height; y += 36) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
+
+    final shimmer = (sin(tick / 34) + 1) / 2;
+    final lightPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.04 + shimmer * 0.035);
+    canvas.drawCircle(
+      Offset(size.width * 0.78, size.height * 0.25),
+      52 + shimmer * 8,
+      lightPaint,
+    );
+
+    final floorPaint = Paint()
+      ..shader = LinearGradient(
+        colors: [
+          AppColors.seed.withValues(alpha: 0.05),
+          (overlayEnabled ? AppColors.calmTeal : AppColors.softLilac)
+              .withValues(alpha: 0.16),
+          AppColors.seed.withValues(alpha: 0.05),
+        ],
+      ).createShader(Rect.fromLTWH(0, size.height - 82, size.width, 60));
+    canvas.drawOval(
+      Rect.fromLTWH(-size.width * 0.12, size.height - 92, size.width * 1.24, 106),
+      floorPaint,
+    );
 
     final groundPaint = Paint()
       ..color = (overlayEnabled ? AppColors.calmTeal : AppColors.seed)
@@ -861,7 +1007,8 @@ class _StagePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _StagePainter oldDelegate) {
     return paused != oldDelegate.paused ||
-        overlayEnabled != oldDelegate.overlayEnabled;
+        overlayEnabled != oldDelegate.overlayEnabled ||
+        tick != oldDelegate.tick;
   }
 }
 

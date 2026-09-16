@@ -395,7 +395,11 @@ class ShimejiController extends StateNotifier<ShimejiState> {
                   friendship: max(pet.friendship, maxie.affinity),
                   xp: max(pet.xp, maxie.affinity),
                   mood: switch (maxie.mood) {
+                    PetMood.excited => ShimejiMood.excited,
                     PetMood.happy => ShimejiMood.happy,
+                    PetMood.hungry => ShimejiMood.neutral,
+                    PetMood.tired => ShimejiMood.sleepy,
+                    PetMood.sad => ShimejiMood.neutral,
                     PetMood.focused => ShimejiMood.neutral,
                     PetMood.sleepy => ShimejiMood.sleepy,
                     PetMood.listening => ShimejiMood.happy,

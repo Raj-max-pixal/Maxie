@@ -50,10 +50,10 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Wrap(
+          const Wrap(
             spacing: AppSpacing.md,
             runSpacing: AppSpacing.md,
-            children: const [
+            children: [
               _HomeMetric(label: 'Mood', value: 'Calm'),
               _HomeMetric(label: 'Focus', value: 'Ready'),
               _HomeMetric(label: 'Plan', value: 'Open'),

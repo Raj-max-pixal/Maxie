@@ -18,6 +18,7 @@
         "flutter",
         "flutter_animate",
         "flutter_local_notifications",
+        "flutter_overlay_window",
         "flutter_riverpod",
         "flutter_tts",
         "geolocator",
@@ -349,6 +350,13 @@
       "dependencies": [
         "flutter",
         "flutter_shaders"
+      ]
+    },
+    {
+      "name": "flutter_overlay_window",
+      "version": "0.4.5",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

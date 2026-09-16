@@ -236,6 +236,12 @@
       "languageVersion": "3.10"
     },
     {
+      "name": "flutter_overlay_window",
+      "rootUri": "file:///C:/Users/SARANYA/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_overlay_window-0.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "flutter_riverpod",
       "rootUri": "file:///C:/Users/SARANYA/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_riverpod-2.6.1",
       "packageUri": "lib/",
