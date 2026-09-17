@@ -43,25 +43,29 @@ class DeviceSyncService extends StateNotifier<DeviceSyncState> {
   void _listenToSyncDoc() {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      final uid = user?.uid ?? 'offline_dev_user_123';
+      final uid = user?.uid;
+      if (uid == null) return;
 
       _subscription = FirebaseFirestore.instance
           .collection('device_sync')
           .doc(uid)
           .snapshots()
-          .listen((doc) {
-        if (doc.exists && doc.data() != null) {
-          final data = doc.data()!;
-          state = DeviceSyncState(
-            activeDevice: data['activeDevice'] ?? 'desktop',
-            status: data['status'] ?? 'idle',
-            petType: data['petType'] ?? 'maxie',
-            petName: data['petName'] ?? 'MAXie',
+          .listen(
+            (doc) {
+              if (doc.exists && doc.data() != null) {
+                final data = doc.data()!;
+                state = DeviceSyncState(
+                  activeDevice: data['activeDevice'] ?? 'desktop',
+                  status: data['status'] ?? 'idle',
+                  petType: data['petType'] ?? 'maxie',
+                  petName: data['petName'] ?? 'MAXie',
+                );
+              }
+            },
+            onError: (e) {
+              debugPrint('DeviceSync: Listen error: $e');
+            },
           );
-        }
-      }, onError: (e) {
-        debugPrint('DeviceSync: Listen error: $e');
-      });
     } catch (e) {
       debugPrint('DeviceSync: Listen initialization error: $e');
     }
@@ -69,8 +73,9 @@ class DeviceSyncService extends StateNotifier<DeviceSyncState> {
 
   Future<void> summonPetFromPC() async {
     final user = FirebaseAuth.instance.currentUser;
-    final uid = user?.uid ?? 'offline_dev_user_123';
-    
+    final uid = user?.uid;
+    if (uid == null) return;
+
     try {
       await FirebaseFirestore.instance.collection('device_sync').doc(uid).set({
         'activeDevice': 'mobile',
@@ -82,16 +87,14 @@ class DeviceSyncService extends StateNotifier<DeviceSyncState> {
     } catch (e) {
       debugPrint('DeviceSync: Failed to summon: $e');
       // Offline fallback: simulate traveling state locally
-      state = state.copyWith(
-        activeDevice: 'mobile',
-        status: 'traveling',
-      );
+      state = state.copyWith(activeDevice: 'mobile', status: 'traveling');
     }
   }
 
   Future<void> sendPetToPC() async {
     final user = FirebaseAuth.instance.currentUser;
-    final uid = user?.uid ?? 'offline_dev_user_123';
+    final uid = user?.uid;
+    if (uid == null) return;
 
     try {
       await FirebaseFirestore.instance.collection('device_sync').doc(uid).set({
@@ -104,22 +107,23 @@ class DeviceSyncService extends StateNotifier<DeviceSyncState> {
     } catch (e) {
       debugPrint('DeviceSync: Failed to send to PC: $e');
       // Offline fallback: simulate traveling to desktop locally
-      state = state.copyWith(
-        activeDevice: 'desktop',
-        status: 'traveling',
-      );
+      state = state.copyWith(activeDevice: 'desktop', status: 'traveling');
     }
   }
 
   Future<void> markArrived() async {
     final user = FirebaseAuth.instance.currentUser;
-    final uid = user?.uid ?? 'offline_dev_user_123';
+    final uid = user?.uid;
+    if (uid == null) return;
 
     try {
-      await FirebaseFirestore.instance.collection('device_sync').doc(uid).update({
-        'status': 'arrived',
-        'timestamp': DateTime.now().toIso8601String(),
-      });
+      await FirebaseFirestore.instance
+          .collection('device_sync')
+          .doc(uid)
+          .update({
+            'status': 'arrived',
+            'timestamp': DateTime.now().toIso8601String(),
+          });
     } catch (e) {
       debugPrint('DeviceSync: Failed to mark arrived: $e');
       state = state.copyWith(status: 'arrived');
@@ -135,5 +139,5 @@ class DeviceSyncService extends StateNotifier<DeviceSyncState> {
 
 final deviceSyncServiceProvider =
     StateNotifierProvider<DeviceSyncService, DeviceSyncState>((ref) {
-  return DeviceSyncService();
-});
+      return DeviceSyncService();
+    });

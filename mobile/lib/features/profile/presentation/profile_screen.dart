@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maxie_mobile/features/auth/application/auth_providers.dart';
 import 'package:maxie_mobile/navigation/app_routes.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
-import 'package:maxie_mobile/widgets/content_cards.dart';
-import 'package:maxie_mobile/widgets/metric_widgets.dart';
 import 'package:maxie_mobile/widgets/premium_card.dart';
 import 'package:maxie_mobile/widgets/premium_scaffold.dart';
-import 'package:maxie_mobile/widgets/section_title.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final authUser = ref.watch(authServiceProvider).user;
+    final profile = ref.watch(currentUserProfileProvider);
 
     return PremiumScaffold(
       title: 'Profile',
@@ -25,81 +26,69 @@ class ProfileScreen extends StatelessWidget {
           icon: const Icon(Icons.settings_rounded),
         ),
       ],
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 18, 16, 108),
-        children: [
-          PremiumCard(
-            glowColor: AppColors.seed,
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 34,
-                  backgroundColor: AppColors.seed.withValues(alpha: 0.22),
-                  child: const Icon(Icons.person_rounded, size: 34),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Alex',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      Text(
-                        'Joined Aug 2026',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
+      child: profile.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) =>
+            Center(child: Text('Could not load your profile: $error')),
+        data: (userProfile) => ListView(
+          padding: const EdgeInsets.fromLTRB(16, 18, 16, 108),
+          children: [
+            PremiumCard(
+              glowColor: AppColors.seed,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 34,
+                    backgroundColor: AppColors.seed.withValues(alpha: 0.22),
+                    child: const Icon(Icons.person_rounded, size: 34),
                   ),
-                ),
-                const Chip(label: Text('Lv. 7')),
-              ],
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          userProfile?.displayName?.isNotEmpty == true
+                              ? userProfile!.displayName!
+                              : (authUser?.email ?? 'Your profile'),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Text(
+                          userProfile == null
+                              ? (authUser?.email ?? '')
+                              : 'Joined ${_joinedDate(userProfile.createdAt)}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Chip(label: Text('MAXie account')),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const XpProgressCard(level: 7, progress: 0.68),
-          const SizedBox(height: AppSpacing.lg),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: AppSpacing.md,
-            mainAxisSpacing: AppSpacing.md,
-            childAspectRatio: 1.25,
-            children: const [
-              StatCard(
-                label: 'Current Streak',
-                value: '12',
-                icon: Icons.local_fire_department_rounded,
-                color: AppColors.warning,
-              ),
-              StatCard(
-                label: 'Memories',
-                value: '24',
-                icon: Icons.auto_stories_rounded,
-                color: AppColors.calmTeal,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const SectionTitle(title: 'Achievements'),
-          const SizedBox(height: AppSpacing.sm),
-          const AchievementCard(
-            title: 'First companion check-in',
-            icon: Icons.emoji_events_rounded,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          const AchievementCard(
-            title: 'Seven-day reflection streak',
-            icon: Icons.bolt_rounded,
-          ),
-        ],
+            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
+            FilledButton.icon(
+              onPressed: () async {
+                await ref.read(authServiceProvider).signOut();
+                if (context.mounted) context.go(AppRoutes.login);
+              },
+              icon: const Icon(Icons.logout_rounded),
+              label: const Text('Log out'),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  String _joinedDate(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
   }
 }

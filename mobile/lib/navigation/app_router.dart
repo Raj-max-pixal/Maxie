@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maxie_mobile/features/auth/application/auth_providers.dart';
+import 'package:maxie_mobile/features/auth/presentation/forgot_password_screen.dart';
+import 'package:maxie_mobile/features/auth/presentation/login_screen.dart';
+import 'package:maxie_mobile/features/auth/presentation/signup_screen.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
 import 'package:maxie_mobile/features/memory/presentation/memory_screen.dart';
@@ -20,14 +24,48 @@ final rootNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>(
 );
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final auth = ref.watch(authServiceProvider);
   return GoRouter(
     navigatorKey: ref.watch(rootNavigatorKeyProvider),
     initialLocation: AppRoutes.splash,
+    refreshListenable: auth,
+    redirect: (context, state) async {
+      if (!auth.isReady) return state.matchedLocation == AppRoutes.splash ? null : AppRoutes.splash;
+
+      final publicRoutes = {
+        AppRoutes.splash,
+        AppRoutes.login,
+        AppRoutes.signup,
+        AppRoutes.forgotPassword,
+      };
+      final isPublic = publicRoutes.contains(state.matchedLocation);
+      if (auth.user == null) return isPublic ? null : AppRoutes.login;
+
+      final user = auth.user!;
+      await ref.read(userProfileRepositoryProvider).ensureProfile(user);
+      if (isPublic) return AppRoutes.home;
+      return null;
+    },
     routes: [
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.login,
+        name: 'login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.signup,
+        name: 'signup',
+        builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: 'forgotPassword',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       GoRoute(
         path: AppRoutes.onboarding,

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:maxie_mobile/core/app_bootstrap.dart';
 import 'package:maxie_mobile/core/constants/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,9 +27,11 @@ class CloudService extends ChangeNotifier {
     return ts != null ? DateTime.tryParse(ts) : null;
   }
 
-  bool get isLoggedIn => _prefs.getBool(AppConstants.cloudLoginKey) ?? false;
-  String? get userEmail => _prefs.getString(AppConstants.userEmailKey);
-  String? get userId => _prefs.getString(AppConstants.userIdKey);
+  User? get _firebaseUser =>
+      AppBootstrap.firebaseReady ? FirebaseAuth.instance.currentUser : null;
+  bool get isLoggedIn => _firebaseUser != null;
+  String? get userEmail => _firebaseUser?.email;
+  String? get userId => _firebaseUser?.uid;
 
   Future<void> _initializeGoogleSignIn() async {
     if (_googleSignInInitialized) return;
@@ -45,11 +48,15 @@ class CloudService extends ChangeNotifier {
       final OAuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
       final User? firebaseUser = userCredential.user;
       if (firebaseUser != null) {
         await _prefs.setBool(AppConstants.cloudLoginKey, true);
-        await _prefs.setString(AppConstants.userEmailKey, firebaseUser.email ?? '');
+        await _prefs.setString(
+          AppConstants.userEmailKey,
+          firebaseUser.email ?? '',
+        );
         await _prefs.setString(AppConstants.userIdKey, firebaseUser.uid);
         debugPrint('Cloud: Google login successful: ${firebaseUser.uid}');
         notifyListeners();
@@ -57,15 +64,8 @@ class CloudService extends ChangeNotifier {
       }
       return false;
     } catch (e) {
-      debugPrint('Cloud: Google login failed, falling back to simulated session: $e');
-      // If Firebase is not fully configured (missing google-services.json),
-      // we fall back to a local offline session so it works cleanly for testing
-      await Future.delayed(const Duration(seconds: 1));
-      await _prefs.setBool(AppConstants.cloudLoginKey, true);
-      await _prefs.setString(AppConstants.userEmailKey, 'developer@maxie.com');
-      await _prefs.setString(AppConstants.userIdKey, 'offline_dev_user_123');
-      notifyListeners();
-      return true;
+      debugPrint('Cloud: Google login failed: $e');
+      rethrow;
     }
   }
 
@@ -106,7 +106,7 @@ class CloudService extends ChangeNotifier {
       }
 
       final uid = userId;
-      if (uid != null && uid != 'offline_dev_user_123') {
+      if (uid != null) {
         // Upload to Firestore
         await FirebaseFirestore.instance
             .collection('users')
@@ -117,9 +117,10 @@ class CloudService extends ChangeNotifier {
       }
 
       await _prefs.setString(
-          AppConstants.lastSyncTimeKey, DateTime.now().toIso8601String());
-      await _prefs.setString(
-          AppConstants.lastBackupKey, jsonEncode(backup));
+        AppConstants.lastSyncTimeKey,
+        DateTime.now().toIso8601String(),
+      );
+      await _prefs.setString(AppConstants.lastBackupKey, jsonEncode(backup));
 
       debugPrint('Cloud: Backup completed');
       _isSyncing = false;
@@ -133,7 +134,6 @@ class CloudService extends ChangeNotifier {
     }
   }
 
-
   /// Restore data from cloud
   Future<bool> restore() async {
     if (!isLoggedIn) return false;
@@ -144,7 +144,7 @@ class CloudService extends ChangeNotifier {
       final uid = userId;
       Map<String, dynamic>? backup;
 
-      if (uid != null && uid != 'offline_dev_user_123') {
+      if (uid != null) {
         // Download from Firestore
         final doc = await FirebaseFirestore.instance
             .collection('users')
@@ -186,8 +186,7 @@ class CloudService extends ChangeNotifier {
         } else if (value is double) {
           await _prefs.setDouble(entry.key, value);
         } else if (value is List) {
-          await _prefs.setStringList(
-              entry.key, value.cast<String>());
+          await _prefs.setStringList(entry.key, value.cast<String>());
         }
       }
 
@@ -252,7 +251,6 @@ class CloudService extends ChangeNotifier {
     notifyListeners();
   }
 }
-
 
 /// Cloud service provider
 final cloudServiceProvider = ChangeNotifierProvider<CloudService>((ref) {
