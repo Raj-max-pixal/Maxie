@@ -25,7 +25,9 @@ class GeminiProvider implements AiProvider {
   @override
   Future<AiResponse> complete(List<ChatMessage> messages) async {
     if (!isConfigured) {
-      return LocalCompanionProvider().complete(messages);
+      throw const AiProviderException(
+        'Gemini is not configured. Run with --dart-define=GEMINI_API_KEY=your_key.',
+      );
     }
 
     final uri = Uri.https(
@@ -39,6 +41,7 @@ class GeminiProvider implements AiProvider {
           uri,
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
+            'systemInstruction': _systemInstruction(messages),
             'contents': messages
                 .where((message) => message.role != ChatRole.system)
                 .map(
@@ -50,10 +53,7 @@ class GeminiProvider implements AiProvider {
                   },
                 )
                 .toList(),
-            'generationConfig': {
-              'temperature': 0.8,
-              'maxOutputTokens': 2048,
-            },
+            'generationConfig': {'temperature': 0.8, 'maxOutputTokens': 2048},
           }),
         )
         .timeout(const Duration(seconds: 45));
@@ -62,10 +62,14 @@ class GeminiProvider implements AiProvider {
       throw const AiProviderException('Invalid Gemini API key.');
     }
     if (response.statusCode == 429) {
-      throw const AiProviderException('Gemini rate limit reached. Try again soon.');
+      throw const AiProviderException(
+        'Gemini rate limit reached. Try again soon.',
+      );
     }
     if (response.statusCode >= 400) {
-      throw AiProviderException('Gemini request failed: ${response.statusCode}');
+      throw AiProviderException(
+        'Gemini request failed: ${response.statusCode}',
+      );
     }
 
     final payload = jsonDecode(response.body) as Map<String, dynamic>;
@@ -73,7 +77,8 @@ class GeminiProvider implements AiProvider {
     final content = candidates.isEmpty
         ? null
         : candidates.first as Map<String, dynamic>;
-    final parts = (content?['content'] as Map<String, dynamic>?)?['parts']
+    final parts =
+        (content?['content'] as Map<String, dynamic>?)?['parts']
             as List<dynamic>? ??
         [];
     final text = parts
@@ -87,32 +92,19 @@ class GeminiProvider implements AiProvider {
       finishReason: content?['finishReason'] as String?,
     );
   }
-}
 
-class LocalCompanionProvider implements AiProvider {
-  @override
-  String get id => 'local-companion';
-
-  @override
-  bool get isConfigured => true;
-
-  @override
-  Future<AiResponse> complete(List<ChatMessage> messages) async {
-    final prompt = messages.lastWhere((message) => message.isUser).content;
-    final text = '''
-I am running in local companion mode because no Gemini API key is configured.
-
-Here is how I can help with this:
-
-- I understood: "$prompt"
-- I can turn this into a plan, checklist, explanation, or study note.
-- When you run with `--dart-define=GEMINI_API_KEY=your_key`, I will use Gemini for real responses.
-
-```dart
-final maxie = Companion.ready(mode: CompanionMode.supportive);
-```
-''';
-    return AiResponse(text: text);
+  Map<String, dynamic>? _systemInstruction(List<ChatMessage> messages) {
+    final instructions = messages
+        .where((message) => message.role == ChatRole.system)
+        .map((message) => message.content.trim())
+        .where((content) => content.isNotEmpty)
+        .join('\n\n');
+    if (instructions.isEmpty) return null;
+    return {
+      'parts': [
+        {'text': instructions},
+      ],
+    };
   }
 }
 

@@ -2,6 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/ai_chat/application/context_builder.dart';
+import 'package:maxie_mobile/features/ai_chat/application/conversation_service.dart';
+import 'package:maxie_mobile/features/ai_chat/application/memory_extractor.dart';
+import 'package:maxie_mobile/features/ai_chat/application/memory_retriever.dart';
+import 'package:maxie_mobile/features/ai_chat/application/personality_engine.dart';
 import 'package:maxie_mobile/features/ai_chat/data/ai_repository_impl.dart';
 import 'package:maxie_mobile/features/ai_chat/data/hive_conversation_repository.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/models/chat_message.dart';
@@ -9,6 +14,8 @@ import 'package:maxie_mobile/features/ai_chat/domain/models/chat_state.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/models/conversation.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/repositories/ai_repository.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/repositories/conversation_repository.dart';
+import 'package:maxie_mobile/features/auth/application/auth_providers.dart';
+import 'package:maxie_mobile/features/auth/domain/models/user_profile.dart';
 import 'package:maxie_mobile/features/memory/application/memory_manager.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart';
@@ -25,15 +32,43 @@ final conversationRepositoryProvider = Provider<ConversationRepository>(
   (ref) => HiveConversationRepository(ref.watch(storageServiceProvider)),
 );
 
+final conversationServiceProvider = Provider<ConversationService>(
+  (ref) => ConversationService(ref.watch(conversationRepositoryProvider)),
+);
+
+final memoryRetrieverProvider = Provider<MemoryRetriever>(
+  (ref) => MemoryRetriever(ref.watch(memoryBrainServiceProvider)),
+);
+
+final conversationMemoryExtractorProvider =
+    Provider<ConversationMemoryExtractor>(
+      (ref) =>
+          ConversationMemoryExtractor(ref.watch(memoryBrainServiceProvider)),
+    );
+
+final contextBuilderProvider = Provider<ContextBuilder>(
+  (ref) => ContextBuilder(
+    memoryRetriever: ref.watch(memoryRetrieverProvider),
+    personalityEngine: const PersonalityEngine(),
+  ),
+);
+
 final chatControllerProvider = StateNotifierProvider<ChatController, ChatState>(
   (ref) {
     final controller = ChatController(
       aiRepository: ref.watch(aiRepositoryProvider),
       conversationRepository: ref.watch(conversationRepositoryProvider),
+      conversationService: ref.watch(conversationServiceProvider),
+      contextBuilder: ref.watch(contextBuilderProvider),
+      memoryExtractor: ref.watch(conversationMemoryExtractorProvider),
       memoryService: ref.watch(memoryBrainServiceProvider),
       petRepository: ref.watch(petRepositoryProvider),
+      userProfile: ref.watch(currentUserProfileProvider).valueOrNull,
       onPetChanged: () => ref.invalidate(petStateProvider),
     );
+    ref.listen(currentUserProfileProvider, (_, next) {
+      controller.updateUserProfile(next.valueOrNull);
+    });
     unawaited(controller.load());
     return controller;
   },
@@ -43,22 +78,33 @@ class ChatController extends StateNotifier<ChatState> {
   ChatController({
     required this.aiRepository,
     required this.conversationRepository,
+    required this.conversationService,
+    required this.contextBuilder,
+    required this.memoryExtractor,
     required this.memoryService,
     required this.petRepository,
+    required this.userProfile,
     required this.onPetChanged,
   }) : super(ChatState.initial());
 
   final AiRepository aiRepository;
   final ConversationRepository conversationRepository;
+  final ConversationService conversationService;
+  final ContextBuilder contextBuilder;
+  final ConversationMemoryExtractor memoryExtractor;
   final MemoryService memoryService;
   final PetRepository petRepository;
+  UserProfile? userProfile;
   final VoidCallback onPetChanged;
   StreamSubscription<String>? _streamSubscription;
 
+  void updateUserProfile(UserProfile? profile) {
+    userProfile = profile;
+  }
+
   Future<void> load() async {
-    final conversations = await conversationRepository.readConversations();
-    final lastOpened = await conversationRepository
-        .readLastOpenedConversationId();
+    final conversations = await conversationService.load();
+    final lastOpened = await conversationService.lastOpenedId();
     state = state.copyWith(
       conversations: conversations,
       activeConversationId: lastOpened ?? conversations.first.id,
@@ -101,7 +147,7 @@ class ChatController extends StateNotifier<ChatState> {
     );
 
     await _persist();
-    final candidates = await memoryService.extractMemoryCandidates(
+    final candidates = await memoryExtractor.extract(
       text: prompt,
       conversationId: conversation.id,
     );
@@ -109,10 +155,18 @@ class ChatController extends StateNotifier<ChatState> {
       state = state.copyWith(pendingMemoryCandidates: candidates);
     }
 
+    final pet = await petRepository.readPet();
+    final contextMessages = await contextBuilder.build(
+      conversation: state.activeConversation,
+      prompt: prompt,
+      profile: userProfile,
+      pet: pet,
+    );
+
     var accumulated = '';
     await _streamSubscription?.cancel();
     _streamSubscription = aiRepository
-        .streamResponse(state.activeConversation.messages)
+        .streamResponse(contextMessages)
         .listen(
           (chunk) {
             accumulated += chunk;
@@ -341,8 +395,8 @@ class ChatController extends StateNotifier<ChatState> {
   }
 
   Future<void> _persist() async {
-    await conversationRepository.saveConversations(state.conversations);
-    await conversationRepository.saveLastOpenedConversationId(
+    await conversationService.persist(
+      state.conversations,
       state.activeConversationId,
     );
   }
