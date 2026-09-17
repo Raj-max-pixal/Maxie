@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/config/app_state.dart';
+import 'package:maxie_mobile/features/floating_companion/presentation/floating_companion_anchor.dart';
 import 'package:maxie_mobile/navigation/navigation_items.dart';
 import 'package:maxie_mobile/shared/responsive_layout.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
@@ -35,6 +36,11 @@ class PremiumScaffold extends ConsumerWidget {
       fit: StackFit.expand,
       children: [
         const MaxieAtmosphere(),
+        const Positioned(
+          right: 12,
+          bottom: 92,
+          child: FloatingCompanionAnchor(),
+        ),
         Column(
           children: [
             if (isOffline) const OfflineBanner(),
@@ -193,7 +199,11 @@ class _PremiumBottomNavigation extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  for (var index = 0; index < appNavigationItems.length; index++)
+                  for (
+                    var index = 0;
+                    index < appNavigationItems.length;
+                    index++
+                  )
                     Expanded(
                       child: _NavItem(
                         isSelected: selectedIndex == index,
@@ -228,7 +238,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? const Color(0xFFF5E9FF) : const Color(0xFF8B97AD);
+    final color = isSelected
+        ? const Color(0xFFF5E9FF)
+        : const Color(0xFF8B97AD);
 
     return Semantics(
       button: true,
