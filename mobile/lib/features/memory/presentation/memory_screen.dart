@@ -1,14 +1,11 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_categories.dart';
-import 'package:maxie_mobile/features/memory/domain/models/memory_tags.dart';
-import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
 import 'package:maxie_mobile/widgets/maxie_companion_view.dart';
@@ -394,7 +391,7 @@ class _MemoryDashboard extends StatelessWidget {
         _DashboardTile(icon: Icons.workspaces_rounded, label: 'Projects', value: '$projects', color: AppColors.warning),
         _DashboardTile(icon: Icons.code_rounded, label: 'Skills', value: '$skills', color: AppColors.calmTeal),
         _DashboardTile(icon: Icons.emoji_events_rounded, label: 'Achievements', value: '$achievements', color: AppColors.warning),
-        _DashboardTile(icon: Icons.group_rounded, label: 'Friends', value: '$friends', color: AppColors.seed),
+        _DashboardTile(icon: Icons.group_rounded, label: 'Friends', value: '$friends'),
         _DashboardTile(icon: Icons.calendar_month_rounded, label: 'Key Dates', value: '$dates', color: AppColors.warmCoral),
         _DashboardTile(icon: Icons.favorite_border_rounded, label: 'Relationship', value: 'Lv ${relationship.friendshipLevel}', color: AppColors.warmCoral),
         _DashboardTile(icon: Icons.star_rounded, label: 'Important', value: '$important', color: AppColors.warning),
@@ -464,7 +461,7 @@ class _MemoryInsights extends StatelessWidget {
     
     final interests = memories.where((m) => m.category == MemoryCategory.interests).toList();
     if (interests.isNotEmpty) {
-      insights.add("You seem most interested in .");
+      insights.add('You seem most interested in .');
     }
 
     if (insights.isEmpty) {
@@ -662,11 +659,11 @@ class _MemoryMetaGrid extends StatelessWidget {
       spacing: AppSpacing.sm,
       runSpacing: AppSpacing.sm,
       children: [
-        _MemoryMetaPill(label: 'Confidence', value: '%', color: AppColors.success),
+        const _MemoryMetaPill(label: 'Confidence', value: '%', color: AppColors.success),
         _MemoryMetaPill(label: 'Importance', value: _stars(memory.importance.weight), color: AppColors.warning),
         _MemoryMetaPill(label: 'Source', value: memory.source.name.toUpperCase()),
         _MemoryMetaPill(label: 'Created', value: created),
-        _MemoryMetaPill(label: 'Used', value: ' (x)'),
+        const _MemoryMetaPill(label: 'Used', value: ' (x)'),
       ],
     );
   }

@@ -10,6 +10,7 @@
         "cupertino_icons",
         "flutter",
         "flutter_animate",
+        "flutter_overlay_window",
         "flutter_riverpod",
         "go_router",
         "google_fonts",
@@ -446,6 +447,13 @@
       "dependencies": [
         "meta",
         "path"
+      ]
+    },
+    {
+      "name": "flutter_overlay_window",
+      "version": "0.4.5",
+      "dependencies": [
+        "flutter"
       ]
     }
   ],

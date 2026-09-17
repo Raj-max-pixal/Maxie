@@ -31,7 +31,7 @@ class MemoryScreen extends ConsumerStatefulWidget {
                 Navigator.of(dialogContext).pop();
                 _showMessage(context, 'Memory updated.');
               },
-              child: const Text('Save'),
+              child: Text('Save'),
             ),
           ],
         );

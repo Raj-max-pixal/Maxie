@@ -4,7 +4,6 @@ import 'package:maxie_mobile/features/ai_companion/application/companion_state_e
 import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/features/ai_companion/domain/models/companion_emotion.dart';
 import 'package:maxie_mobile/features/pet/application/pet_providers.dart';
-import 'package:maxie_mobile/features/pet/domain/models/pet_state.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
 import 'package:maxie_mobile/widgets/app_empty_state.dart';

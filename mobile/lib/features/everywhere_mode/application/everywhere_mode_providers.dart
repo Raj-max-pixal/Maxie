@@ -1,5 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/everywhere_mode/domain/services/everywhere_mode_services.dart';
 
 final everywhereModeFoundationProvider = Provider<EverywhereModeFoundation>(

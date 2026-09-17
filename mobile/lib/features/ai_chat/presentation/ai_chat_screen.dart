@@ -4,9 +4,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/ai_chat/application/chat_controller.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/models/chat_message.dart';
+import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/features/memory/application/memory_providers.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
-import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/theme/app_spacing.dart';
 import 'package:maxie_mobile/widgets/maxie_companion_view.dart';
@@ -249,12 +249,12 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Row(
                         children: [
                           MaxieCompanionView(size: 24, state: CompanionPresence.happy),
-                          const SizedBox(width: AppSpacing.sm),
-                          const Text('Got it! Updated.'),
+                          SizedBox(width: AppSpacing.sm),
+                          Text('Got it! Updated.'),
                         ],
                       ),
                     ),
@@ -670,12 +670,12 @@ class _MemorySuggestionCard extends StatelessWidget {
                 onPressed: () {
                   onSave();
                   ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Row(
                         children: [
                           MaxieCompanionView(size: 24, state: CompanionPresence.happy),
-                          const SizedBox(width: AppSpacing.sm),
-                          const Text('I\'ll remember that.'),
+                          SizedBox(width: AppSpacing.sm),
+                          Text('I\'ll remember that.'),
                         ],
                       ),
                     ),

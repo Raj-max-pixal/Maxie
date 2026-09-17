@@ -256,7 +256,6 @@ class CompanionStateEngine extends StateNotifier<AsyncValue<CompanionEmotion>> {
       intensity: intensity,
       reason: reason,
       changedAt: now,
-      expiresAt: null,
       reactionMessage: _reactionMessage(type, reason, previous.reactionMessage),
     );
   }

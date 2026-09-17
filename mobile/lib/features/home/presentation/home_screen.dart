@@ -456,7 +456,7 @@ _CompanionGreeting _timeGreeting(DateTime now, List<MemoryRecord> memories) {
     detailIcon = '✅';
     detail = "Let's finish today's goals.";
     if (dreams.isNotEmpty) {
-      detail = "Every step brings you closer to ${dreams.first.value}.";
+      detail = 'Every step brings you closer to ${dreams.first.value}.';
     }
   } else if (hour >= 17 && hour < 22) {
     title = 'Good Evening Raj';

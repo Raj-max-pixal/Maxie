@@ -57,7 +57,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///C:/flutter/packages/flutter",
+      "rootUri": "file:///D:/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.10"
     },
@@ -74,6 +74,12 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "flutter_overlay_window",
+      "rootUri": "file:///C:/Users/SARANYA/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_overlay_window-0.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "flutter_riverpod",
       "rootUri": "file:///C:/Users/SARANYA/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_riverpod-2.6.1",
       "packageUri": "lib/",
@@ -87,13 +93,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///C:/flutter/packages/flutter_test",
+      "rootUri": "file:///D:/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.10"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///C:/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///D:/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.10"
     },
@@ -243,7 +249,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///C:/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///D:/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.10"
     },
@@ -328,7 +334,7 @@
   ],
   "generator": "pub",
   "generatorVersion": "3.12.2",
-  "flutterRoot": "file:///C:/flutter",
+  "flutterRoot": "file:///D:/flutter",
   "flutterVersion": "3.44.6",
   "pubCache": "file:///C:/Users/SARANYA/AppData/Local/Pub/Cache"
 }
