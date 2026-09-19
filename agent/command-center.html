@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MAXie Command Center</title>
+    <link rel="stylesheet" href="command-center.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <div><p class="eyebrow">AUTONOMOUS DESKTOP COMPANION</p><h1>MAXie Command Center</h1><p class="subtitle">Observe. Plan. Verify. You stay in control.</p></div>
+        <div class="status"><span></span> Local tools protected</div>
+      </header>
+      <section class="command-bar"><input id="projectPath" readonly placeholder="Choose a project to start an agent run"><button id="chooseProject">Choose project</button><button id="analyze" class="primary" disabled>Analyze project</button></section>
+      <section id="empty" class="empty"><div class="orb">M</div><h2>Your AI teammate is ready.</h2><p>Select a local project. MAXie will inspect it using read-only tools, create a plan, scan for potential secrets, and offer only approved verification commands.</p></section>
+      <section id="workspace" hidden>
+        <div class="grid metrics"><article><small>PROJECT</small><strong id="projectName">—</strong><span id="framework">—</span></article><article><small>GIT</small><strong id="gitState">—</strong><span>read-only inspection</span></article><article><small>SECURITY</small><strong id="securityState">—</strong><span>potential secrets</span></article><article><small>AGENT STATE</small><strong id="agentState">Ready</strong><span>human approved</span></article></div>
+        <div class="grid main-grid"><article class="card"><h2>Execution plan</h2><ol id="plan"></ol><div class="approval"><strong>Safe tool boundary</strong><p>MAXie can inspect locally. It runs a command only after you click a listed verification action.</p><div id="commands"></div></div></article><article class="card"><h2>Agent activity</h2><ul id="timeline" class="timeline"></ul></article></div>
+        <div class="grid main-grid"><article class="card"><h2>Security Guardian</h2><div id="secrets"></div></article><article class="card"><h2>Verification output</h2><pre id="output">No command has been run.</pre></article></div>
+      </section>
+    </main>
+    <script src="command-center.js"></script>
+  </body>
+</html>

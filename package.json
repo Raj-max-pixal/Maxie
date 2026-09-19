@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "check": "node --check app.js && node --check main.js && node --check preload.js && node --check renderer/petBrain.js && node --check renderer/petPhysics.js && node --check renderer/pet.js && node --check settings/settings.js && node --check storage/store.js && node --check ai/aiClient.js && node --check ai/ollamaClient.js && node --check ai/openAiCompatibleClient.js && node --check ai/geminiClient.js && node --check ai/personality.js && node --check utils/activeApp.js && node --check utils/systemInfo.js && node --check utils/startup.js && node --check tray/trayController.js && node --check scripts/mobile-build.js && node --check scripts/preview-server.js",
+    "check": "node --check app.js && node --check main.js && node --check preload.js && node --check agent/projectAgent.js && node --check agent/command-center.js && node --check renderer/petBrain.js && node --check renderer/petPhysics.js && node --check renderer/pet.js && node --check settings/settings.js && node --check storage/store.js && node --check ai/aiClient.js && node --check ai/ollamaClient.js && node --check ai/openAiCompatibleClient.js && node --check ai/geminiClient.js && node --check ai/personality.js && node --check utils/activeApp.js && node --check utils/systemInfo.js && node --check utils/startup.js && node --check tray/trayController.js && node --check scripts/mobile-build.js && node --check scripts/preview-server.js",
     "preview": "node scripts/preview-server.js",
     "mobile:prepare": "node scripts/mobile-build.js",
     "mobile:sync": "npm run mobile:prepare && npx cap sync android",
@@ -38,6 +38,7 @@
       "assets/**/*",
       "animations/**/*",
       "ai/**/*",
+      "agent/**/*",
       "utils/**/*",
       "storage/**/*",
       "tray/**/*",

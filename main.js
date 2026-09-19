@@ -7,15 +7,18 @@ const { getActiveApp, getMediaApp } = require("./utils/activeApp");
 const { getSystemSnapshot } = require("./utils/systemInfo");
 const { ensureStartup, ensureStartupEnabled, isStartupEnabled } = require("./utils/startup");
 const { createAiClient } = require("./ai/aiClient");
+const { analyzeProject, runSafeCommand } = require("./agent/projectAgent");
 
 const store = createStore("maxie-state.json");
 let petWindow;
 let settingsWindow;
+let commandCenterWindow;
 let tray;
 const appIconPath = path.join(__dirname, "assets", "icon.ico");
 const trayIconPath = path.join(__dirname, "assets", "tray.png");
 
-const singleInstanceLock = app.requestSingleInstanceLock();
+const previewMode = process.argv.includes("--preview");
+const singleInstanceLock = previewMode || app.requestSingleInstanceLock();
 if (!singleInstanceLock) {
   app.exit(0);
 }
@@ -186,6 +189,26 @@ function openSettings() {
   });
 }
 
+function openCommandCenter() {
+  if (commandCenterWindow && !commandCenterWindow.isDestroyed()) {
+    commandCenterWindow.focus();
+    return;
+  }
+  commandCenterWindow = new BrowserWindow({
+    width: 1120,
+    height: 780,
+    minWidth: 860,
+    minHeight: 600,
+    title: "MAXie Command Center",
+    backgroundColor: "#08111f",
+    icon: appIconPath,
+    autoHideMenuBar: true,
+    webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false }
+  });
+  commandCenterWindow.loadFile(path.join(__dirname, "agent", "command-center.html"));
+  commandCenterWindow.on("closed", () => { commandCenterWindow = null; });
+}
+
 function sendToPet(channel, payload) {
   if (petWindow && !petWindow.isDestroyed()) petWindow.webContents.send(channel, payload);
 }
@@ -266,7 +289,14 @@ function setupIpc() {
   });
 
   ipcMain.handle("settings:open", () => openSettings());
+  ipcMain.handle("command-center:open", () => openCommandCenter());
   ipcMain.handle("project:open-folder", () => shell.openPath(__dirname));
+  ipcMain.handle("project:choose-folder", async () => {
+    const result = await require("electron").dialog.showOpenDialog({ properties: ["openDirectory"] });
+    return result.canceled ? null : result.filePaths[0];
+  });
+  ipcMain.handle("project:analyze", (_event, root) => analyzeProject(root));
+  ipcMain.handle("project:run-safe-check", (_event, root, commandId) => runSafeCommand(root, commandId));
 
   ipcMain.handle("system:get-snapshot", async () => getSystemSnapshot());
   ipcMain.handle("system:get-active-app", async () => getActiveApp());
@@ -364,6 +394,7 @@ if (singleInstanceLock) app.whenReady().then(() => {
   ensureStartupEnabled();
   setupIpc();
   createPetWindow();
+  if (previewMode) openCommandCenter();
   tray = createTray({
     Tray,
     Menu,
@@ -371,6 +402,7 @@ if (singleInstanceLock) app.whenReady().then(() => {
     app,
     iconPath: trayIconPath,
     onOpenSettings: openSettings,
+    onOpenCommandCenter: openCommandCenter,
     onWakePet: showPet,
     onDance: () => sendToPet("pet:command", { type: "dance" })
   });

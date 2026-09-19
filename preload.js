@@ -32,6 +32,12 @@ contextBridge.exposeInMainWorld("maxie", {
   },
   notify: (payload) => ipcRenderer.invoke("notify", payload),
   project: {
-    openFolder: () => ipcRenderer.invoke("project:open-folder")
+    openFolder: () => ipcRenderer.invoke("project:open-folder"),
+    chooseFolder: () => ipcRenderer.invoke("project:choose-folder"),
+    analyze: (root) => ipcRenderer.invoke("project:analyze", root),
+    runSafeCheck: (root, commandId) => ipcRenderer.invoke("project:run-safe-check", root, commandId)
+  },
+  commandCenter: {
+    open: () => ipcRenderer.invoke("command-center:open")
   }
 });
