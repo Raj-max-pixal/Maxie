@@ -38,12 +38,84 @@ class MemoryBrainServiceImpl implements MemoryService {
 
   @override
   Future<List<MemoryModel>> recallMemory(String query) async {
-    final memories = await _repository.readMemories();
-    return _ranker.rank(_search.search(memories, query: query));
+    try {
+      final memories = await _repository.readMemories();
+      return _ranker.rank(_search.search(memories, query: query));
+    } catch (_) {
+      return const [];
+    }
   }
 
   @override
-  Future<void> saveMemory(MemoryModel memory) => _repository.saveMemory(memory);
+  Future<void> saveMemory(MemoryModel memory) async {
+    final existing = await _repository.readMemories();
+    final normalized = _normalize(memory.value);
+    final duplicate = existing.where((item) {
+      if (!item.isActive || item.category != memory.category) return false;
+      final other = _normalize(item.value);
+      return other == normalized ||
+          other.contains(normalized) ||
+          normalized.contains(other);
+    }).firstOrNull;
+
+    if (duplicate == null) {
+      await _repository.saveMemory(memory);
+      return;
+    }
+
+    await _repository.saveMemory(
+      duplicate.copyWith(
+        title: memory.title,
+        value: memory.value,
+        updatedAt: DateTime.now(),
+        confidence: memory.confidence > duplicate.confidence
+            ? memory.confidence
+            : duplicate.confidence,
+        importance: memory.importance > duplicate.importance
+            ? memory.importance
+            : duplicate.importance,
+        priority: memory.priority.weight > duplicate.priority.weight
+            ? memory.priority
+            : duplicate.priority,
+        lastUsedAt: DateTime.now(),
+        usageCount: duplicate.usageCount + 1,
+      ),
+    );
+  }
+
+  String _normalize(String value) => value
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9 ]'), '')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+
+  @override
+  Future<void> updateMemory(MemoryModel memory) =>
+      _repository.saveMemory(memory.copyWith(updatedAt: DateTime.now()));
+
+  @override
+  Future<void> pinMemory(String id, {required bool pinned}) async {
+    final memory = await _repository.getMemory(id);
+    if (memory != null) {
+      await _repository.saveMemory(
+        memory.copyWith(isPinned: pinned, updatedAt: DateTime.now()),
+      );
+    }
+  }
+
+  @override
+  Future<void> forgetMemory(String id) async {
+    final memory = await _repository.getMemory(id);
+    if (memory != null) {
+      await _repository.saveMemory(
+        memory.copyWith(
+          isActive: false,
+          isArchived: true,
+          updatedAt: DateTime.now(),
+        ),
+      );
+    }
+  }
 
   @override
   Future<MemorySummary> summarize() async {
@@ -81,6 +153,12 @@ class PatternMemoryExtractor implements MemoryExtractor {
     if (normalized.length < 6) {
       return const [];
     }
+    if (RegExp(
+      r'^(hi|hello|hey|thanks|thank you|okay|cool|i understand)[.! ]*$',
+      caseSensitive: false,
+    ).hasMatch(normalized)) {
+      return const [];
+    }
 
     final candidates = <MemoryCandidate>[];
     void add(
@@ -88,6 +166,8 @@ class PatternMemoryExtractor implements MemoryExtractor {
       String title,
       String value,
       double confidence,
+      MemoryPriority priority,
+      double importance,
     ) {
       candidates.add(
         MemoryCandidate(
@@ -96,9 +176,56 @@ class PatternMemoryExtractor implements MemoryExtractor {
           title: title,
           value: value,
           confidence: confidence,
+          priority: priority,
+          importance: importance,
           tags: [category.name],
           sourceConversationId: conversationId,
         ),
+      );
+    }
+
+    final name = RegExp(
+      r'\bmy name is\s+([A-Za-z][A-Za-z -]+)',
+      caseSensitive: false,
+    ).firstMatch(normalized);
+    if (name != null) {
+      add(
+        MemoryCategory.userProfile,
+        'Name',
+        name.group(1)!.trim(),
+        1,
+        MemoryPriority.critical,
+        1,
+      );
+    }
+
+    final event = RegExp(
+      r'\b(?:i have|my)\s+(a\s+)?(hackathon|exam|interview|deadline)\s+([^.!?]+)',
+      caseSensitive: false,
+    ).firstMatch(normalized);
+    if (event != null) {
+      add(
+        MemoryCategory.importantDates,
+        'Important event',
+        'Upcoming ${event.group(2)} ${event.group(3)!.trim()}',
+        0.94,
+        MemoryPriority.high,
+        0.9,
+      );
+    }
+
+    final dislike = RegExp(
+      r"\b(?:i don't like|i do not like|i dislike)\s+([^.!?]+)",
+      caseSensitive: false,
+    ).firstMatch(normalized);
+    if (dislike != null) {
+      add(
+        MemoryCategory.preferences,
+        'Preference',
+        'Does not like ${dislike.group(1)!.trim()}',
+        0.92,
+        MemoryPriority.normal,
+        0.6,
       );
     }
 
@@ -112,6 +239,8 @@ class PatternMemoryExtractor implements MemoryExtractor {
         'Birthday',
         birthday.group(1)!.trim(),
         0.94,
+        MemoryPriority.critical,
+        1,
       );
     }
 
@@ -120,7 +249,14 @@ class PatternMemoryExtractor implements MemoryExtractor {
       caseSensitive: false,
     ).firstMatch(normalized);
     if (love != null) {
-      add(MemoryCategory.interests, 'Interest', love.group(1)!.trim(), 0.82);
+      add(
+        MemoryCategory.interests,
+        'Interest',
+        love.group(1)!.trim(),
+        0.82,
+        MemoryPriority.normal,
+        0.55,
+      );
     }
 
     final dreamCompany = RegExp(
@@ -132,6 +268,8 @@ class PatternMemoryExtractor implements MemoryExtractor {
         'Dream Company',
         dreamCompany.group(1)!.trim(),
         0.88,
+        MemoryPriority.high,
+        0.85,
       );
     }
 
@@ -140,7 +278,14 @@ class PatternMemoryExtractor implements MemoryExtractor {
       caseSensitive: false,
     ).firstMatch(normalized);
     if (project != null) {
-      add(MemoryCategory.projects, 'Project', project.group(1)!.trim(), 0.86);
+      add(
+        MemoryCategory.projects,
+        'Project',
+        project.group(1)!.trim(),
+        0.86,
+        MemoryPriority.high,
+        0.85,
+      );
     }
 
     return candidates;

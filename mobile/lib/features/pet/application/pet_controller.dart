@@ -26,6 +26,8 @@ class PetEngine {
           hunger: (pet.hunger + 22).clamp(0, 100).toDouble(),
           happiness: (pet.happiness + 5).clamp(0, 100).toDouble(),
           currentActivity: PetActivity.eating,
+          lastFedAt: timestamp,
+          lastInteractionAt: timestamp,
           lastAction: 'Fed MAXie',
           recentInteraction: 'That hit the spot. Thank you!',
         );
@@ -37,24 +39,32 @@ class PetEngine {
           happiness: (pet.happiness + 14).clamp(0, 100).toDouble(),
           energy: (pet.energy - 12).clamp(0, 100).toDouble(),
           currentActivity: PetActivity.playing,
+          lastPlayedAt: timestamp,
+          lastInteractionAt: timestamp,
           lastAction: 'Played together',
           recentInteraction: 'That was fun! Again soon?',
         );
       case PetAction.sleep:
         next = pet.copyWith(
-          energy: (pet.energy + 28).clamp(0, 100).toDouble(),
           currentActivity: PetActivity.sleeping,
+          mood: PetMood.sleepy,
+          lastSleptAt: timestamp,
+          lastInteractionAt: timestamp,
           lastAction: 'Took a nap',
           recentInteraction: 'A quiet recharge sounds perfect.',
         );
       case PetAction.dance:
         if (pet.energy < 18) {
-          return pet.copyWith(recentInteraction: 'MAXie is too tired to dance.');
+          return pet.copyWith(
+            recentInteraction: 'MAXie is too tired to dance.',
+          );
         }
         next = pet.copyWith(
           happiness: (pet.happiness + 10).clamp(0, 100).toDouble(),
           energy: (pet.energy - 18).clamp(0, 100).toDouble(),
           currentActivity: PetActivity.dancing,
+          lastPlayedAt: timestamp,
+          lastInteractionAt: timestamp,
           lastAction: 'Danced together',
           recentInteraction: 'MAXie is showing off a new move!',
         );
@@ -62,6 +72,7 @@ class PetEngine {
         next = pet.copyWith(
           happiness: (pet.happiness + 3).clamp(0, 100).toDouble(),
           currentActivity: PetActivity.listening,
+          lastInteractionAt: timestamp,
           lastAction: 'Listened to you',
           recentInteraction: 'MAXie is listening closely.',
         );
@@ -76,13 +87,19 @@ class PetEngine {
       xp: xp,
       level: (xp ~/ 100) + 1,
       friendship: pet.friendship + (action == PetAction.play ? 2 : 1),
-      mood: _moodFor(next.hunger, next.energy, next.happiness),
+      mood: _moodFor(next.hunger, next.energy, next.happiness, next.sleepiness),
       updatedAt: timestamp,
       missions: missions,
     );
   }
 
-  static PetMood _moodFor(double hunger, double energy, double happiness) {
+  static PetMood _moodFor(
+    double hunger,
+    double energy,
+    double happiness,
+    double sleepiness,
+  ) {
+    if (sleepiness >= 80) return PetMood.sleepy;
     if (energy < 20) return PetMood.tired;
     if (hunger < 20) return PetMood.hungry;
     if (happiness >= 85) return PetMood.excited;
@@ -95,12 +112,19 @@ class PetEngine {
     final updatedAt = pet.updatedAt;
     if (updatedAt == null || !now.isAfter(updatedAt)) return pet;
     final hours = now.difference(updatedAt).inMinutes / 60;
-    final energy = (pet.energy - hours * 2).clamp(0, 100).toDouble();
+    final sleeping = pet.currentActivity == PetActivity.sleeping;
+    final energy = sleeping
+        ? (pet.energy + hours * 12).clamp(0, 100).toDouble()
+        : (pet.energy - hours * 2).clamp(0, 100).toDouble();
     final hunger = (pet.hunger - hours * 1.5).clamp(0, 100).toDouble();
+    final sleepiness = sleeping
+        ? (pet.sleepiness - hours * 15).clamp(0, 100).toDouble()
+        : (pet.sleepiness + hours * 2).clamp(0, 100).toDouble();
     return pet.copyWith(
       energy: energy,
       hunger: hunger,
-      mood: _moodFor(hunger, energy, pet.happiness),
+      sleepiness: sleepiness,
+      mood: _moodFor(hunger, energy, pet.happiness, sleepiness),
       currentActivity: PetActivity.idle,
       updatedAt: now,
     );
@@ -139,25 +163,25 @@ class PetController extends AsyncNotifier<PetState> {
   }
 
   List<DailyMission> _todayMissions(DateTime now) => [
-        DailyMission(
-          id: 'feed',
-          title: 'Feed MAXie once',
-          description: 'Give MAXie a little care today.',
-          target: 1,
-          progress: 0,
-          xpReward: 25,
-          date: now,
-        ),
-        DailyMission(
-          id: 'play',
-          title: 'Play together',
-          description: 'Make time for one playful moment.',
-          target: 1,
-          progress: 0,
-          xpReward: 25,
-          date: now,
-        ),
-      ];
+    DailyMission(
+      id: 'feed',
+      title: 'Feed MAXie once',
+      description: 'Give MAXie a little care today.',
+      target: 1,
+      progress: 0,
+      xpReward: 25,
+      date: now,
+    ),
+    DailyMission(
+      id: 'play',
+      title: 'Play together',
+      description: 'Make time for one playful moment.',
+      target: 1,
+      progress: 0,
+      xpReward: 25,
+      date: now,
+    ),
+  ];
 }
 
 final petControllerProvider = AsyncNotifierProvider<PetController, PetState>(

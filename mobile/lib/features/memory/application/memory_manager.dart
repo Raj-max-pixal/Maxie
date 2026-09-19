@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/auth/application/auth_providers.dart';
 import 'package:maxie_mobile/features/memory/data/hive_memory_brain_repository.dart';
 import 'package:maxie_mobile/features/memory/data/memory_brain_service_impl.dart';
+import 'package:maxie_mobile/features/memory/data/scoped_memory_repository.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart';
 import 'package:maxie_mobile/services/storage/storage_providers.dart';
@@ -12,9 +14,16 @@ class MemoryManagerState {
   final MemorySummary summary;
 }
 
-final memoryBrainRepositoryProvider = Provider<MemoryRepository>(
-  (ref) => HiveMemoryBrainRepository(ref.watch(storageServiceProvider)),
-);
+final memoryBrainRepositoryProvider = Provider<MemoryRepository>((ref) {
+  final uid = ref.watch(authServiceProvider).user?.uid;
+  return ScopedMemoryRepository(
+    HiveMemoryBrainRepository(
+      ref.watch(storageServiceProvider),
+      scope: uid ?? 'anonymous',
+    ),
+    requireAuthentication: uid != null,
+  );
+});
 
 final memoryExtractorProvider = Provider<MemoryExtractor>(
   (ref) => const PatternMemoryExtractor(),
@@ -57,23 +66,12 @@ final memoryBrainTimelineProvider = FutureProvider<MemoryTimeline>(
 final memoryManagerProvider = Provider<MemoryManagerState>((ref) {
   final memories =
       ref.watch(memoryBrainListProvider).valueOrNull ?? const <MemoryModel>[];
-  final summary = ref.watch(memoryBrainSummaryProvider).valueOrNull ??
+  final summary =
+      ref.watch(memoryBrainSummaryProvider).valueOrNull ??
       MemorySummary(
         totalMemories: memories.length,
         pinnedMemories: memories.where((memory) => memory.isPinned).length,
-        relationshipLevel: 12,
+        relationshipLevel: 0,
       );
   return MemoryManagerState(memories: memories, summary: summary);
 });
-
-final relationshipStatsProvider = Provider<RelationshipStats>(
-  (ref) => const RelationshipStats(
-    friendshipLevel: 12,
-    trustLevel: 84,
-    conversationCount: 42,
-    daysTogether: 18,
-    messagesExchanged: 318,
-    xpEarnedTogether: 2840,
-    milestones: ['First Project', 'AI Chat Built', 'Memory Brain Started'],
-  ),
-);

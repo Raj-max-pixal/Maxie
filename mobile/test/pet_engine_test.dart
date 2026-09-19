@@ -60,11 +60,7 @@ void main() {
 
   test('time decay updates energy and hunger on resume', () {
     final savedAt = DateTime(2026, 9, 16, 8);
-    final pet = PetState(
-      energy: 80,
-      hunger: 70,
-      updatedAt: savedAt,
-    );
+    final pet = PetState(energy: 80, hunger: 70, updatedAt: savedAt);
 
     final updated = PetEngine.applyTime(pet, DateTime(2026, 9, 16, 12));
 
@@ -89,5 +85,37 @@ void main() {
     expect(restored.friendship, pet.friendship);
     expect(restored.hunger, pet.hunger);
     expect(restored.updatedAt, pet.updatedAt);
+  });
+
+  test('sleep recovers energy and reduces sleepiness after elapsed time', () {
+    final started = DateTime(2026, 9, 16, 8);
+    final sleeping = PetEngine.apply(
+      PetState(energy: 30, sleepiness: 80),
+      PetAction.sleep,
+      now: started,
+    );
+
+    final resumed = PetEngine.applyTime(
+      sleeping,
+      started.add(const Duration(hours: 4)),
+    );
+
+    expect(resumed.energy, greaterThan(30));
+    expect(resumed.sleepiness, lessThan(80));
+    expect(resumed.currentActivity, PetActivity.idle);
+  });
+
+  test('actions persist interaction timestamps', () {
+    final now = DateTime(2026, 9, 17);
+    final fed = PetEngine.apply(PetState(), PetAction.feed, now: now);
+    final danced = PetEngine.apply(
+      PetState(energy: 80),
+      PetAction.dance,
+      now: now,
+    );
+
+    expect(fed.lastFedAt, now);
+    expect(fed.lastInteractionAt, now);
+    expect(danced.lastPlayedAt, now);
   });
 }

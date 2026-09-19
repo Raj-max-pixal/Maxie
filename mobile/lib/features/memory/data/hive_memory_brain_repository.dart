@@ -4,15 +4,18 @@ import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart
 import 'package:maxie_mobile/services/storage/storage_service.dart';
 
 class HiveMemoryBrainRepository implements MemoryRepository {
-  const HiveMemoryBrainRepository(this._storage);
+  const HiveMemoryBrainRepository(this._storage, {this.scope = 'anonymous'});
 
   static const String _memoriesKey = 'memory_brain_items';
 
   final StorageService _storage;
+  final String scope;
+
+  String get _scopedKey => '$_memoriesKey-$scope';
 
   @override
   Future<void> clearMemories() {
-    return _storage.delete(AppConstants.hiveMemoryBox, _memoriesKey);
+    return _storage.delete(AppConstants.hiveMemoryBox, _scopedKey);
   }
 
   @override
@@ -25,15 +28,39 @@ class HiveMemoryBrainRepository implements MemoryRepository {
   Future<List<MemoryModel>> readMemories() async {
     final data = await _storage.read<List<dynamic>>(
       AppConstants.hiveMemoryBox,
-      _memoriesKey,
+      _scopedKey,
     );
-    if (data == null) {
-      return _seedMemories();
-    }
+    if (data == null) return const [];
     return [
       for (final item in data)
         MemoryModel.fromJson(item as Map<dynamic, dynamic>),
     ];
+  }
+
+  @override
+  Future<MemoryModel?> getMemory(String id) async {
+    final memories = await readMemories();
+    for (final memory in memories) {
+      if (memory.id == id && memory.isActive) return memory;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<MemoryModel>> searchMemories(String query) async {
+    final normalized = query.trim().toLowerCase();
+    return (await readMemories()).where((memory) {
+      return memory.isActive &&
+          (normalized.isEmpty ||
+              memory.value.toLowerCase().contains(normalized) ||
+              memory.title.toLowerCase().contains(normalized) ||
+              memory.tags.any((tag) => tag.toLowerCase().contains(normalized)));
+    }).toList();
+  }
+
+  @override
+  Future<List<MemoryModel>> retrieveRelevantMemories(String query) {
+    return searchMemories(query);
   }
 
   @override
@@ -48,52 +75,13 @@ class HiveMemoryBrainRepository implements MemoryRepository {
     await _write(memories);
   }
 
+  Future<void> replaceMemories(List<MemoryModel> memories) => _write(memories);
+
   Future<void> _write(List<MemoryModel> memories) {
     return _storage.write<List<Map<String, Object?>>>(
       AppConstants.hiveMemoryBox,
-      _memoriesKey,
+      _scopedKey,
       memories.map((memory) => memory.toJson()).toList(),
     );
-  }
-
-  List<MemoryModel> _seedMemories() {
-    final now = DateTime.now();
-    return [
-      MemoryModel(
-        id: 'seed-project-maxie',
-        category: MemoryCategory.projects,
-        title: 'Current Project',
-        value: 'You are building MAXie Mobile for the Shipathon demo.',
-        createdAt: now,
-        updatedAt: now,
-        priority: MemoryPriority.high,
-        importance: 0.95,
-        tags: const ['maxie', 'shipathon', 'flutter'],
-        isPinned: true,
-      ),
-      MemoryModel(
-        id: 'seed-skill-flutter',
-        category: MemoryCategory.skills,
-        title: 'Flutter',
-        value: 'You are building with Flutter and a clean feature structure.',
-        createdAt: now,
-        updatedAt: now,
-        priority: MemoryPriority.high,
-        importance: 0.9,
-        tags: const ['flutter', 'clean-architecture'],
-      ),
-      MemoryModel(
-        id: 'seed-goal-shipaton',
-        category: MemoryCategory.goals,
-        title: 'Current Goal',
-        value: 'Win Shipathon with a focused AI companion demo.',
-        createdAt: now,
-        updatedAt: now,
-        priority: MemoryPriority.critical,
-        importance: 1,
-        tags: const ['goal', 'shipathon'],
-        isPinned: true,
-      ),
-    ];
   }
 }

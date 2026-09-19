@@ -38,34 +38,34 @@ class DailyMission {
   bool get completed => progress >= target;
 
   DailyMission copyWith({int? progress}) => DailyMission(
-        id: id,
-        title: title,
-        description: description,
-        target: target,
-        progress: progress ?? this.progress,
-        xpReward: xpReward,
-        date: date,
-      );
+    id: id,
+    title: title,
+    description: description,
+    target: target,
+    progress: progress ?? this.progress,
+    xpReward: xpReward,
+    date: date,
+  );
 
   factory DailyMission.fromJson(Map<dynamic, dynamic> json) => DailyMission(
-        id: json['id'] as String? ?? 'feed',
-        title: json['title'] as String? ?? 'Feed MAXie once',
-        description: json['description'] as String? ?? 'Give MAXie a little care.',
-        target: (json['target'] as num?)?.toInt() ?? 1,
-        progress: (json['progress'] as num?)?.toInt() ?? 0,
-        xpReward: (json['xpReward'] as num?)?.toInt() ?? 25,
-        date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.now(),
-      );
+    id: json['id'] as String? ?? 'feed',
+    title: json['title'] as String? ?? 'Feed MAXie once',
+    description: json['description'] as String? ?? 'Give MAXie a little care.',
+    target: (json['target'] as num?)?.toInt() ?? 1,
+    progress: (json['progress'] as num?)?.toInt() ?? 0,
+    xpReward: (json['xpReward'] as num?)?.toInt() ?? 25,
+    date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.now(),
+  );
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'target': target,
-        'progress': progress,
-        'xpReward': xpReward,
-        'date': date.toIso8601String(),
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'target': target,
+    'progress': progress,
+    'xpReward': xpReward,
+    'date': date.toIso8601String(),
+  };
 }
 
 class PetState {
@@ -78,11 +78,16 @@ class PetState {
     this.hunger = 72,
     this.energy = 82,
     this.happiness = 70,
+    this.sleepiness = 20,
     this.mood = PetMood.neutral,
     this.currentActivity = PetActivity.idle,
     this.personality = PetPersonality.kind,
     this.createdAt,
     this.updatedAt,
+    this.lastInteractionAt,
+    this.lastFedAt,
+    this.lastPlayedAt,
+    this.lastSleptAt,
     this.gifts = 0,
     this.lastAction = 'Ready to hang out',
     this.recentInteraction = 'MAXie is waiting for you.',
@@ -98,12 +103,17 @@ class PetState {
   final int friendship;
   final double hunger;
   final double happiness;
+  final double sleepiness;
   final PetMood mood;
   final double energy;
   final PetActivity currentActivity;
   final PetPersonality personality;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final DateTime? lastInteractionAt;
+  final DateTime? lastFedAt;
+  final DateTime? lastPlayedAt;
+  final DateTime? lastSleptAt;
   final int gifts;
   final String lastAction;
   final String recentInteraction;
@@ -124,12 +134,17 @@ class PetState {
     int? affinity,
     double? hunger,
     double? happiness,
+    double? sleepiness,
     PetMood? mood,
     double? energy,
     PetActivity? currentActivity,
     PetPersonality? personality,
     DateTime? createdAt,
     DateTime? updatedAt,
+    DateTime? lastInteractionAt,
+    DateTime? lastFedAt,
+    DateTime? lastPlayedAt,
+    DateTime? lastSleptAt,
     int? gifts,
     String? lastAction,
     String? recentInteraction,
@@ -145,12 +160,17 @@ class PetState {
       friendship: friendship ?? affinity ?? this.friendship,
       hunger: hunger ?? this.hunger,
       happiness: happiness ?? this.happiness,
+      sleepiness: sleepiness ?? this.sleepiness,
       mood: mood ?? this.mood,
       energy: energy ?? this.energy,
       currentActivity: currentActivity ?? this.currentActivity,
       personality: personality ?? this.personality,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      lastInteractionAt: lastInteractionAt ?? this.lastInteractionAt,
+      lastFedAt: lastFedAt ?? this.lastFedAt,
+      lastPlayedAt: lastPlayedAt ?? this.lastPlayedAt,
+      lastSleptAt: lastSleptAt ?? this.lastSleptAt,
       gifts: gifts ?? this.gifts,
       lastAction: lastAction ?? this.lastAction,
       recentInteraction: recentInteraction ?? this.recentInteraction,
@@ -162,44 +182,54 @@ class PetState {
 
   factory PetState.fromJson(Map<dynamic, dynamic> json) {
     PetMood readMood() => PetMood.values.firstWhere(
-          (value) => value.name == json['mood'],
-          orElse: () => PetMood.neutral,
-        );
+      (value) => value.name == json['mood'],
+      orElse: () => PetMood.neutral,
+    );
     PetActivity readActivity() => PetActivity.values.firstWhere(
-          (value) => value.name == json['currentActivity'],
-          orElse: () => PetActivity.idle,
-        );
+      (value) => value.name == json['currentActivity'],
+      orElse: () => PetActivity.idle,
+    );
     PetPersonality readPersonality() => PetPersonality.values.firstWhere(
-          (value) => value.name == json['personality'],
-          orElse: () => PetPersonality.kind,
-        );
+      (value) => value.name == json['personality'],
+      orElse: () => PetPersonality.kind,
+    );
 
     return PetState(
       id: json['id'] as String? ?? 'maxie-primary',
       name: json['name'] as String? ?? 'MAXie',
       level: (json['level'] as num?)?.toInt() ?? 1,
       xp: (json['xp'] as num?)?.toInt() ?? 0,
-      friendship: (json['friendship'] as num?)?.toInt() ??
-          (json['affinity'] as num?)?.toInt() ?? 0,
+      friendship:
+          (json['friendship'] as num?)?.toInt() ??
+          (json['affinity'] as num?)?.toInt() ??
+          0,
       hunger: (json['hunger'] as num?)?.toDouble() ?? 72,
       happiness: (json['happiness'] as num?)?.toDouble() ?? 70,
+      sleepiness: (json['sleepiness'] as num?)?.toDouble() ?? 20,
       mood: readMood(),
       energy: (json['energy'] as num?)?.toDouble() ?? 82,
       currentActivity: readActivity(),
       personality: readPersonality(),
       createdAt: DateTime.tryParse(json['createdAt'] as String? ?? ''),
       updatedAt: DateTime.tryParse(json['updatedAt'] as String? ?? ''),
+      lastInteractionAt: DateTime.tryParse(
+        json['lastInteractionAt'] as String? ?? '',
+      ),
+      lastFedAt: DateTime.tryParse(json['lastFedAt'] as String? ?? ''),
+      lastPlayedAt: DateTime.tryParse(json['lastPlayedAt'] as String? ?? ''),
+      lastSleptAt: DateTime.tryParse(json['lastSleptAt'] as String? ?? ''),
       gifts: (json['gifts'] as num?)?.toInt() ?? 0,
       lastAction: json['lastAction'] as String? ?? 'Ready to hang out',
-      recentInteraction: json['recentInteraction'] as String? ??
-          'MAXie is waiting for you.',
+      recentInteraction:
+          json['recentInteraction'] as String? ?? 'MAXie is waiting for you.',
       missions: (json['missions'] as List<dynamic>? ?? const [])
           .whereType<Map<dynamic, dynamic>>()
           .map(DailyMission.fromJson)
           .toList(),
-      inventory: (json['inventory'] as List<dynamic>? ?? const []).cast<String>(),
-      equippedItemIds:
-          (json['equippedItemIds'] as List<dynamic>? ?? const []).cast<String>(),
+      inventory: (json['inventory'] as List<dynamic>? ?? const [])
+          .cast<String>(),
+      equippedItemIds: (json['equippedItemIds'] as List<dynamic>? ?? const [])
+          .cast<String>(),
     );
   }
 
@@ -212,12 +242,17 @@ class PetState {
       'friendship': friendship,
       'hunger': hunger,
       'happiness': happiness,
+      'sleepiness': sleepiness,
       'mood': mood.name,
       'energy': energy,
       'currentActivity': currentActivity.name,
       'personality': personality.name,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      'lastInteractionAt': lastInteractionAt?.toIso8601String(),
+      'lastFedAt': lastFedAt?.toIso8601String(),
+      'lastPlayedAt': lastPlayedAt?.toIso8601String(),
+      'lastSleptAt': lastSleptAt?.toIso8601String(),
       'gifts': gifts,
       'lastAction': lastAction,
       'recentInteraction': recentInteraction,

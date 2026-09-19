@@ -24,7 +24,11 @@ class MemoryRanker {
     }
     if (memory.lastUsedAt != null) {
       final hoursAgo = DateTime.now().difference(memory.lastUsedAt!).inHours;
-      total += hoursAgo < 24 ? 8 : hoursAgo < 168 ? 4 : 1;
+      total += hoursAgo < 24
+          ? 8
+          : hoursAgo < 168
+          ? 4
+          : 1;
     }
     return total;
   }

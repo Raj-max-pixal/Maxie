@@ -1,4 +1,3 @@
-
 enum MemoryType {
   conversation,
   userPreference,
@@ -64,17 +63,17 @@ class MemoryModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': type.name,
-        'content': content,
-        'timestamp': timestamp.millisecondsSinceEpoch,
-        'tags': tags,
-        'importance': importance,
-        'accessCount': accessCount,
-        'lastAccessed': lastAccessed?.millisecondsSinceEpoch,
-        'metadata': metadata,
-        'isFavorite': isFavorite,
-      };
+    'id': id,
+    'type': type.name,
+    'content': content,
+    'timestamp': timestamp.millisecondsSinceEpoch,
+    'tags': tags,
+    'importance': importance,
+    'accessCount': accessCount,
+    'lastAccessed': lastAccessed?.millisecondsSinceEpoch,
+    'metadata': metadata,
+    'isFavorite': isFavorite,
+  };
 
   factory MemoryModel.fromJson(Map<String, dynamic> json) {
     return MemoryModel(
@@ -87,9 +86,8 @@ class MemoryModel {
       timestamp: json['timestamp'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int)
           : DateTime.now(),
-      tags: (json['tags'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
           [],
       importance: (json['importance'] as num?)?.toDouble() ?? 0.5,
       accessCount: json['accessCount'] as int? ?? 0,

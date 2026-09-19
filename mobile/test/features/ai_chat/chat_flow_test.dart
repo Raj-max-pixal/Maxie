@@ -138,6 +138,15 @@ class _FakeMemoryService implements MemoryService {
   Future<void> clearMemories() async {}
 
   @override
+  Future<void> updateMemory(MemoryModel memory) async {}
+
+  @override
+  Future<void> pinMemory(String id, {required bool pinned}) async {}
+
+  @override
+  Future<void> forgetMemory(String id) async {}
+
+  @override
   Future<MemorySummary> summarize() async => const MemorySummary(
     totalMemories: 1,
     pinnedMemories: 0,

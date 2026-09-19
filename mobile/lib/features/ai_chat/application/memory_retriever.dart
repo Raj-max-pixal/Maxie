@@ -7,7 +7,11 @@ class MemoryRetriever {
   final MemoryService _memoryService;
 
   Future<List<MemoryModel>> retrieve(String query, {int limit = 8}) async {
-    final memories = await _memoryService.recallMemory(query);
-    return memories.take(limit).toList(growable: false);
+    try {
+      final memories = await _memoryService.recallMemory(query);
+      return memories.take(limit).toList(growable: false);
+    } catch (_) {
+      return const [];
+    }
   }
 }

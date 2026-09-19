@@ -123,11 +123,11 @@ class HomeScreen extends ConsumerWidget {
                 onTap: () => context.go(AppRoutes.memory),
               ),
               _FeatureActionCard(
-                title: 'Mission Control',
-                subtitle: 'Track the roadmap, active phase, and next unlocks.',
-                icon: Icons.rocket_launch_rounded,
+                title: 'Agent Run',
+                subtitle: 'Plan, verify, and review MAXie’s live mobile state.',
+                icon: Icons.precision_manufacturing_rounded,
                 color: AppColors.electricBlue,
-                onTap: () => context.push(AppRoutes.missionControl),
+                onTap: () => context.push(AppRoutes.agentRun),
               ),
               _FeatureActionCard(
                 title: 'Pet State',
@@ -297,7 +297,8 @@ class HomeScreen extends ConsumerWidget {
     if (memories.isEmpty) {
       return null;
     }
-    final sorted = [...memories]..sort((left, right) => right.updatedAt.compareTo(left.updatedAt));
+    final sorted = [...memories]
+      ..sort((left, right) => right.updatedAt.compareTo(left.updatedAt));
     return sorted.first;
   }
 
@@ -356,10 +357,7 @@ class HomeScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
       );
   }
 }
@@ -407,7 +405,10 @@ class _TodaysCompanionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _CompanionLine(icon: greeting.icon, text: greeting.title),
-                  _CompanionLine(icon: greeting.detailIcon, text: greeting.detail),
+                  _CompanionLine(
+                    icon: greeting.detailIcon,
+                    text: greeting.detail,
+                  ),
                   const _CompanionLine(
                     icon: '\u{2728}',
                     text: 'You completed 3 tasks today.',
@@ -483,9 +484,9 @@ class _CompanionLine extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -522,9 +523,9 @@ class _QuickAction extends StatelessWidget {
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
         ],
       ),
@@ -737,10 +738,7 @@ class _StatusCapsule extends StatelessWidget {
         color: color.withValues(alpha: 0.14),
         border: Border.all(color: color.withValues(alpha: 0.22)),
         boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.18),
-            blurRadius: 18,
-          ),
+          BoxShadow(color: color.withValues(alpha: 0.18), blurRadius: 18),
         ],
       ),
       child: Row(
@@ -795,9 +793,9 @@ class _OrbitMetric extends StatelessWidget {
           ),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.white60,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.white60),
           ),
         ],
       ),
@@ -841,10 +839,7 @@ class _FeatureActionCard extends StatelessWidget {
                 ],
               ),
               boxShadow: [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.24),
-                  blurRadius: 16,
-                ),
+                BoxShadow(color: color.withValues(alpha: 0.24), blurRadius: 16),
               ],
             ),
             child: Icon(icon, color: Colors.white),
@@ -852,9 +847,9 @@ class _FeatureActionCard extends StatelessWidget {
           const Spacer(),
           Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 6),
           Text(
@@ -893,7 +888,9 @@ class _HomePetPanel extends StatelessWidget {
               Expanded(
                 child: Text(
                   '${pet.name} is ${pet.mood.name}',
-                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
               Text('Lv ${pet.level}', style: theme.textTheme.labelLarge),
@@ -904,9 +901,15 @@ class _HomePetPanel extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Row(
             children: [
-              Expanded(child: _HomeStat(label: 'Energy', value: pet.energy)),
-              Expanded(child: _HomeStat(label: 'Hunger', value: pet.hunger)),
-              Expanded(child: _HomeStat(label: 'Happy', value: pet.happiness)),
+              Expanded(
+                child: _HomeStat(label: 'Energy', value: pet.energy),
+              ),
+              Expanded(
+                child: _HomeStat(label: 'Hunger', value: pet.hunger),
+              ),
+              Expanded(
+                child: _HomeStat(label: 'Happy', value: pet.happiness),
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -914,11 +917,31 @@ class _HomePetPanel extends StatelessWidget {
             spacing: AppSpacing.xs,
             runSpacing: AppSpacing.xs,
             children: [
-              _HomeAction(label: 'Feed', icon: Icons.restaurant_rounded, onTap: () => onAction(PetAction.feed)),
-              _HomeAction(label: 'Play', icon: Icons.sports_esports_rounded, onTap: () => onAction(PetAction.play)),
-              _HomeAction(label: 'Sleep', icon: Icons.bedtime_rounded, onTap: () => onAction(PetAction.sleep)),
-              _HomeAction(label: 'Dance', icon: Icons.music_note_rounded, onTap: () => onAction(PetAction.dance)),
-              _HomeAction(label: 'Listen', icon: Icons.hearing_rounded, onTap: () => onAction(PetAction.listen)),
+              _HomeAction(
+                label: 'Feed',
+                icon: Icons.restaurant_rounded,
+                onTap: () => onAction(PetAction.feed),
+              ),
+              _HomeAction(
+                label: 'Play',
+                icon: Icons.sports_esports_rounded,
+                onTap: () => onAction(PetAction.play),
+              ),
+              _HomeAction(
+                label: 'Sleep',
+                icon: Icons.bedtime_rounded,
+                onTap: () => onAction(PetAction.sleep),
+              ),
+              _HomeAction(
+                label: 'Dance',
+                icon: Icons.music_note_rounded,
+                onTap: () => onAction(PetAction.dance),
+              ),
+              _HomeAction(
+                label: 'Listen',
+                icon: Icons.hearing_rounded,
+                onTap: () => onAction(PetAction.listen),
+              ),
             ],
           ),
         ],
@@ -939,14 +962,23 @@ class _HomeStat extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: Theme.of(context).textTheme.labelSmall),
-        Text('${value.round()}%', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900)),
+        Text(
+          '${value.round()}%',
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+        ),
       ],
     );
   }
 }
 
 class _HomeAction extends StatelessWidget {
-  const _HomeAction({required this.label, required this.icon, required this.onTap});
+  const _HomeAction({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
 
   final String label;
   final IconData icon;
@@ -954,10 +986,10 @@ class _HomeAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => OutlinedButton.icon(
-        onPressed: onTap,
-        icon: Icon(icon, size: 17),
-        label: Text(label),
-      );
+    onPressed: onTap,
+    icon: Icon(icon, size: 17),
+    label: Text(label),
+  );
 }
 
 class _PulseCard extends StatelessWidget {
@@ -987,9 +1019,9 @@ class _PulseCard extends StatelessWidget {
           const Spacer(),
           Text(
             value,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
           Text(
             label,
@@ -1001,9 +1033,9 @@ class _PulseCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             detail,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.white60,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.white60),
           ),
         ],
       ),
@@ -1013,11 +1045,15 @@ class _PulseCard extends StatelessWidget {
 
 _CompanionGreeting _timeGreeting(DateTime now, List<MemoryModel> memories) {
   final hour = now.hour;
-  
+
   // Find interesting memories to include in the greeting
-  final projects = memories.where((m) => m.category == MemoryCategory.projects).toList()..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-  final dreams = memories.where((m) => m.category == MemoryCategory.dreamCompanies).toList();
-  
+  final projects =
+      memories.where((m) => m.category == MemoryCategory.projects).toList()
+        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  final dreams = memories
+      .where((m) => m.category == MemoryCategory.dreamCompanies)
+      .toList();
+
   String title = 'Good Morning Raj';
   String icon = '☀️';
   String detail = "Today's mission awaits.";
@@ -1048,7 +1084,8 @@ _CompanionGreeting _timeGreeting(DateTime now, List<MemoryModel> memories) {
     detailIcon = '💜';
     detail = "You're doing great today.";
     if (dreams.isNotEmpty) {
-      detail = "You're getting closer to your ${dreams.first.value} dream. Let's continue today's mission.";
+      detail =
+          "You're getting closer to your ${dreams.first.value} dream. Let's continue today's mission.";
     }
   } else {
     title = 'Good Night Raj';
@@ -1056,7 +1093,7 @@ _CompanionGreeting _timeGreeting(DateTime now, List<MemoryModel> memories) {
     detailIcon = '🛌';
     detail = "Don't forget to rest. We'll continue tomorrow.";
   }
-  
+
   return _CompanionGreeting(
     icon: icon,
     title: title,
@@ -1072,7 +1109,9 @@ String _rotatingCompanionMessage(DateTime now, List<MemoryModel> memories) {
     'Ready to build something amazing?',
     "Today's a good day to learn.",
   ];
-  final goals = memories.where((m) => m.category == MemoryCategory.goals).toList();
+  final goals = memories
+      .where((m) => m.category == MemoryCategory.goals)
+      .toList();
   if (goals.isNotEmpty) {
     messages.add("Let's focus on: ${goals.first.value}");
   }

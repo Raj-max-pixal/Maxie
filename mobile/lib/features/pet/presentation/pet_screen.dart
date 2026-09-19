@@ -143,9 +143,23 @@ class PetScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
-                  Expanded(child: StatCard(label: 'Hunger', value: '${pet.hunger.round()}%', icon: Icons.restaurant_rounded, color: AppColors.warning)),
+                  Expanded(
+                    child: StatCard(
+                      label: 'Hunger',
+                      value: '${pet.hunger.round()}%',
+                      icon: Icons.restaurant_rounded,
+                      color: AppColors.warning,
+                    ),
+                  ),
                   const SizedBox(width: AppSpacing.sm),
-                  Expanded(child: StatCard(label: 'Friendship', value: 'Lv ${pet.friendshipLevel}', icon: Icons.favorite_rounded, color: AppColors.warmCoral)),
+                  Expanded(
+                    child: StatCard(
+                      label: 'Friendship',
+                      value: 'Lv ${pet.friendshipLevel}',
+                      icon: Icons.favorite_rounded,
+                      color: AppColors.warmCoral,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -176,7 +190,11 @@ class PetScreen extends ConsumerWidget {
     };
     await ref.read(petControllerProvider.notifier).perform(petAction);
     if (context.mounted) {
-      _showFoundationMessage(context, ref.read(petControllerProvider).valueOrNull?.recentInteraction ?? 'MAXie reacted.');
+      _showFoundationMessage(
+        context,
+        ref.read(petControllerProvider).valueOrNull?.recentInteraction ??
+            'MAXie reacted.',
+      );
     }
   }
 

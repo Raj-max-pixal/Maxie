@@ -20,12 +20,16 @@ class MemoryService {
   List<MemoryModel> get memories => List.unmodifiable(_memories);
 
   List<Map<String, dynamic>> getMemoriesAsMap() {
-    return _memories.map((m) => {
-      m.id: m.content,
-      'tags': m.tags.join(', '),
-      'type': m.type.name,
-      'timestamp': m.timestamp.toIso8601String(),
-    }).toList();
+    return _memories
+        .map(
+          (m) => {
+            m.id: m.content,
+            'tags': m.tags.join(', '),
+            'type': m.type.name,
+            'timestamp': m.timestamp.toIso8601String(),
+          },
+        )
+        .toList();
   }
 
   void addMemory({
@@ -107,8 +111,6 @@ class MemoryService {
 
     final preferences = getMemoriesByType(MemoryType.userPreference);
     final goals = getMemoriesByType(MemoryType.userGoal);
-    final recent = getRecentMemories(limit: 5);
-
     final buffer = StringBuffer();
 
     if (preferences.isNotEmpty) {

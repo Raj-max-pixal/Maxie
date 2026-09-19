@@ -22,7 +22,7 @@ class HiveMemoryRepository implements MemoryRepository {
       StorageKeys.memoryIndex,
     );
     if (data == null) {
-      return _seedMemories();
+      return const [];
     }
     return [
       for (final item in data)
@@ -48,23 +48,5 @@ class HiveMemoryRepository implements MemoryRepository {
       StorageKeys.memoryIndex,
       memories.map((memory) => memory.toJson()).toList(),
     );
-  }
-
-  List<MemoryEntry> _seedMemories() {
-    final now = DateTime.now();
-    return [
-      MemoryEntry(
-        id: 'memory-preference-planning',
-        title: 'You prefer morning planning',
-        createdAt: now,
-        tags: const ['preference', 'planning'],
-      ),
-      MemoryEntry(
-        id: 'memory-project-maxie',
-        title: 'MAXie Mobile is the current priority',
-        createdAt: now,
-        tags: const ['project', 'maxie'],
-      ),
-    ];
   }
 }

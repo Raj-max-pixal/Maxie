@@ -6,6 +6,7 @@ import 'package:maxie_mobile/features/auth/presentation/forgot_password_screen.d
 import 'package:maxie_mobile/features/auth/presentation/login_screen.dart';
 import 'package:maxie_mobile/features/auth/presentation/signup_screen.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
+import 'package:maxie_mobile/features/agent_run/presentation/agent_run_screen.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
 import 'package:maxie_mobile/features/memory/presentation/memory_screen.dart';
 import 'package:maxie_mobile/features/mission_control/presentation/mission_control_screen.dart';
@@ -30,7 +31,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.splash,
     refreshListenable: auth,
     redirect: (context, state) async {
-      if (!auth.isReady) return state.matchedLocation == AppRoutes.splash ? null : AppRoutes.splash;
+      if (!auth.isReady)
+        return state.matchedLocation == AppRoutes.splash
+            ? null
+            : AppRoutes.splash;
 
       final publicRoutes = {
         AppRoutes.splash,
@@ -121,6 +125,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.missionControl,
         name: 'missionControl',
         builder: (context, state) => const MissionControlScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.agentRun,
+        name: 'agentRun',
+        builder: (context, state) => const AgentRunScreen(),
       ),
     ],
   );

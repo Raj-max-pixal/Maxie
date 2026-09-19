@@ -8,6 +8,12 @@ abstract interface class MemoryRepository {
   Future<void> deleteMemory(String id);
 
   Future<void> clearMemories();
+
+  Future<MemoryModel?> getMemory(String id);
+
+  Future<List<MemoryModel>> searchMemories(String query);
+
+  Future<List<MemoryModel>> retrieveRelevantMemories(String query);
 }
 
 abstract interface class MemoryExtractor {
@@ -52,4 +58,10 @@ abstract interface class MemoryService {
   Future<MemorySummary> summarize();
 
   Future<MemoryTimeline> timeline();
+
+  Future<void> updateMemory(MemoryModel memory);
+
+  Future<void> pinMemory(String id, {required bool pinned});
+
+  Future<void> forgetMemory(String id);
 }

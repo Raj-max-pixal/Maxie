@@ -68,6 +68,8 @@ class MemoryCandidate {
     required this.confidence,
     this.tags = const [],
     this.sourceConversationId,
+    this.priority = MemoryPriority.normal,
+    this.importance = 0.5,
   });
 
   final String id;
@@ -77,6 +79,8 @@ class MemoryCandidate {
   final double confidence;
   final List<String> tags;
   final String? sourceConversationId;
+  final MemoryPriority priority;
+  final double importance;
 }
 
 class MemoryModel {
@@ -87,6 +91,7 @@ class MemoryModel {
     required this.value,
     required this.createdAt,
     required this.updatedAt,
+    this.userId,
     this.priority = MemoryPriority.normal,
     this.importance = 0.5,
     this.confidence = 0.8,
@@ -97,6 +102,8 @@ class MemoryModel {
     this.isPinned = false,
     this.isFavorite = false,
     this.isArchived = false,
+    this.isActive = true,
+    this.usageCount = 0,
   });
 
   factory MemoryModel.fromCandidate(MemoryCandidate candidate) {
@@ -119,6 +126,7 @@ class MemoryModel {
   }
 
   final String id;
+  final String? userId;
   final MemoryCategory category;
   final String title;
   final String value;
@@ -134,6 +142,8 @@ class MemoryModel {
   final bool isPinned;
   final bool isFavorite;
   final bool isArchived;
+  final bool isActive;
+  final int usageCount;
 
   MemoryModel copyWith({
     String? title,
@@ -143,17 +153,25 @@ class MemoryModel {
     bool? isPinned,
     bool? isFavorite,
     bool? isArchived,
+    String? userId,
+    bool? isActive,
+    int? usageCount,
+    MemoryCategory? category,
+    MemoryPriority? priority,
+    double? importance,
+    double? confidence,
   }) {
     return MemoryModel(
       id: id,
-      category: category,
+      userId: userId ?? this.userId,
+      category: category ?? this.category,
       title: title ?? this.title,
       value: value ?? this.value,
       createdAt: createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      priority: priority,
-      importance: importance,
-      confidence: confidence,
+      priority: priority ?? this.priority,
+      importance: importance ?? this.importance,
+      confidence: confidence ?? this.confidence,
       source: source,
       tags: tags,
       sourceConversationId: sourceConversationId,
@@ -161,12 +179,15 @@ class MemoryModel {
       isPinned: isPinned ?? this.isPinned,
       isFavorite: isFavorite ?? this.isFavorite,
       isArchived: isArchived ?? this.isArchived,
+      isActive: isActive ?? this.isActive,
+      usageCount: usageCount ?? this.usageCount,
     );
   }
 
   Map<String, Object?> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'category': category.name,
       'title': title,
       'value': value,
@@ -182,12 +203,15 @@ class MemoryModel {
       'isPinned': isPinned,
       'isFavorite': isFavorite,
       'isArchived': isArchived,
+      'isActive': isActive,
+      'usageCount': usageCount,
     };
   }
 
   factory MemoryModel.fromJson(Map<dynamic, dynamic> json) {
     return MemoryModel(
       id: json['id'] as String,
+      userId: json['userId'] as String?,
       category: MemoryCategory.values.byName(json['category'] as String),
       title: json['title'] as String,
       value: json['value'] as String,
@@ -209,6 +233,8 @@ class MemoryModel {
       isPinned: (json['isPinned'] as bool?) ?? false,
       isFavorite: (json['isFavorite'] as bool?) ?? false,
       isArchived: (json['isArchived'] as bool?) ?? false,
+      isActive: (json['isActive'] as bool?) ?? true,
+      usageCount: (json['usageCount'] as num?)?.toInt() ?? 0,
     );
   }
 }
@@ -376,10 +402,7 @@ class MemorySummary {
 }
 
 class MemoryTimeline {
-  const MemoryTimeline({
-    this.groups = const [],
-    this.entries = const [],
-  });
+  const MemoryTimeline({this.groups = const [], this.entries = const []});
 
   final List<MemoryTimelineGroup> groups;
   final List<MemoryTimelineEntry> entries;

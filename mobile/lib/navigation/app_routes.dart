@@ -16,4 +16,5 @@ class AppRoutes {
   static const String shimeji = '/shimeji';
   static const String tasks = '/tasks';
   static const String missionControl = '/mission-control';
+  static const String agentRun = '/agent-run';
 }

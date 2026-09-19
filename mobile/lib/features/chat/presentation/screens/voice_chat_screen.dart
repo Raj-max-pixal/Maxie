@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/ai_chat/application/chat_controller.dart';
 import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
+import 'package:maxie_mobile/features/voice/domain/services/voice_service.dart';
 
 class VoiceChatScreen extends ConsumerStatefulWidget {
   const VoiceChatScreen({super.key});
@@ -12,6 +14,8 @@ class VoiceChatScreen extends ConsumerStatefulWidget {
 class _VoiceChatScreenState extends ConsumerState<VoiceChatScreen>
     with SingleTickerProviderStateMixin {
   bool _isListening = false;
+  bool _isWorking = false;
+  String? _error;
   late AnimationController _animController;
 
   @override
@@ -71,13 +75,16 @@ class _VoiceChatScreenState extends ConsumerState<VoiceChatScreen>
             const SizedBox(height: 48),
             GlassCard(
               child: Text(
-                _isListening ? 'Listening...' : 'Tap to speak',
+                _error ??
+                    (_isWorking
+                        ? 'Thinking...'
+                        : (_isListening ? 'Listening...' : 'Tap to speak')),
                 style: theme.textTheme.titleMedium,
               ),
             ),
             const SizedBox(height: 32),
             GestureDetector(
-              onTap: () => setState(() => _isListening = !_isListening),
+              onTap: _toggleListening,
               child: Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -97,5 +104,42 @@ class _VoiceChatScreenState extends ConsumerState<VoiceChatScreen>
         ),
       ),
     );
+  }
+
+  Future<void> _toggleListening() async {
+    final voice = ref.read(voiceServiceProvider);
+    if (_isListening) {
+      await voice.stopListening();
+      setState(() => _isListening = false);
+      final words = voice.lastWords.trim();
+      if (words.isEmpty) {
+        setState(() => _error = 'MAXie did not hear anything. Try again.');
+        return;
+      }
+      setState(() {
+        _isWorking = true;
+        _error = null;
+      });
+      await ref.read(chatControllerProvider.notifier).sendMessage(words);
+      if (mounted) setState(() => _isWorking = false);
+      return;
+    }
+
+    setState(() => _error = null);
+    try {
+      await voice.initialize();
+      final available = await voice.startListening();
+      if (!available && mounted) {
+        setState(
+          () => _error = 'Microphone access is unavailable. Check permissions.',
+        );
+        return;
+      }
+      if (mounted) setState(() => _isListening = true);
+    } catch (_) {
+      if (mounted) {
+        setState(() => _error = 'MAXie needs microphone access to listen.');
+      }
+    }
   }
 }

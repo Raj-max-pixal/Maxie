@@ -153,6 +153,13 @@ class ChatController extends StateNotifier<ChatState> {
     );
     if (candidates.isNotEmpty) {
       state = state.copyWith(pendingMemoryCandidates: candidates);
+      for (final candidate in candidates) {
+        try {
+          await memoryService.saveMemory(MemoryModel.fromCandidate(candidate));
+        } catch (_) {
+          // Memory persistence must not prevent the chat response.
+        }
+      }
     }
 
     final pet = await petRepository.readPet();

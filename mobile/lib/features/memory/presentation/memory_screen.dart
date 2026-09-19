@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/memory/application/memory_manager.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
@@ -28,7 +27,6 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
     final memoriesAsync = ref.watch(memoryBrainListProvider);
     final summaryAsync = ref.watch(memoryBrainSummaryProvider);
     final timelineAsync = ref.watch(memoryBrainTimelineProvider);
-    final relationship = ref.watch(relationshipStatsProvider);
 
     return PremiumScaffold(
       title: 'Memory Brain',
@@ -48,8 +46,6 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
                 title: 'Memory Brain',
                 subtitle: 'MAXie remembers what matters and grows with you.',
               ),
-              const SizedBox(height: AppSpacing.lg),
-              _RelationshipPanel(stats: relationship),
               const SizedBox(height: AppSpacing.lg),
               AppTextField(
                 label: 'Search by keyword, tag, category, date, importance',
@@ -113,54 +109,6 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
           memory.tags.any((tag) => tag.toLowerCase().contains(query));
       return categoryMatches && queryMatches && !memory.isArchived;
     }).toList();
-  }
-}
-
-class _RelationshipPanel extends StatelessWidget {
-  const _RelationshipPanel({required this.stats});
-
-  final RelationshipStats stats;
-
-  @override
-  Widget build(BuildContext context) {
-    return PremiumCard(
-      glowColor: AppColors.seed,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionTitle(
-            title: 'Relationship Engine',
-            subtitle: 'Trust, friendship, and history foundation.',
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              _MiniStat(
-                label: 'Friendship',
-                value: 'Lv ${stats.friendshipLevel}',
-              ),
-              _MiniStat(label: 'Trust', value: '${stats.trustLevel}%'),
-              _MiniStat(label: 'Days', value: '${stats.daysTogether}'),
-              _MiniStat(label: 'Messages', value: '${stats.messagesExchanged}'),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
-            children: [
-              for (final milestone in stats.milestones)
-                Chip(
-                  avatar: const Icon(Icons.emoji_events_rounded, size: 16),
-                  label: Text(milestone),
-                ),
-            ],
-          ),
-        ],
-      ),
-    ).animate().fadeIn(duration: 240.ms).slideY(begin: 0.06, end: 0);
   }
 }
 
@@ -270,30 +218,28 @@ class _MemoryBrainCard extends ConsumerWidget {
             Row(
               children: [
                 TextButton.icon(
-                  onPressed: () => _show(
-                    context,
-                    'Tap delete and save a corrected memory from chat.',
-                  ),
+                  onPressed: () => _edit(context, ref),
                   icon: const Icon(Icons.edit_rounded),
                   label: const Text('Edit'),
                 ),
                 TextButton.icon(
-                  onPressed: () =>
-                      _show(context, 'Memory is stored locally for this demo.'),
-                  icon: const Icon(Icons.ios_share_rounded),
-                  label: const Text('Export'),
-                ),
-                const Spacer(),
-                IconButton(
-                  tooltip: 'Delete',
                   onPressed: () async {
                     await ref
                         .read(memoryBrainServiceProvider)
-                        .deleteMemory(memory.id);
-                    ref.invalidate(memoryBrainListProvider);
-                    ref.invalidate(memoryBrainSummaryProvider);
-                    ref.invalidate(memoryBrainTimelineProvider);
+                        .pinMemory(memory.id, pinned: !memory.isPinned);
+                    _refresh(ref);
                   },
+                  icon: Icon(
+                    memory.isPinned
+                        ? Icons.push_pin_rounded
+                        : Icons.push_pin_outlined,
+                  ),
+                  label: Text(memory.isPinned ? 'Unpin' : 'Pin'),
+                ),
+                const Spacer(),
+                IconButton(
+                  tooltip: 'Forget memory',
+                  onPressed: () => _forget(context, ref),
                   icon: const Icon(Icons.delete_outline_rounded),
                 ),
               ],
@@ -302,6 +248,66 @@ class _MemoryBrainCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _edit(BuildContext context, WidgetRef ref) async {
+    final controller = TextEditingController(text: memory.value);
+    final updated = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit memory'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLines: 4,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (updated == null || updated.trim().isEmpty) return;
+    await ref
+        .read(memoryBrainServiceProvider)
+        .updateMemory(memory.copyWith(value: updated.trim()));
+    _refresh(ref);
+  }
+
+  Future<void> _forget(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Forget this memory?'),
+        content: const Text('MAXie will stop using this memory.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Forget'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await ref.read(memoryBrainServiceProvider).forgetMemory(memory.id);
+    _refresh(ref);
+  }
+
+  void _refresh(WidgetRef ref) {
+    ref.invalidate(memoryBrainListProvider);
+    ref.invalidate(memoryBrainSummaryProvider);
+    ref.invalidate(memoryBrainTimelineProvider);
   }
 
   IconData _icon(MemoryCategory category) {
@@ -313,12 +319,6 @@ class _MemoryBrainCard extends ConsumerWidget {
       MemoryCategory.goals => Icons.flag_rounded,
       _ => Icons.psychology_rounded,
     };
-  }
-
-  void _show(BuildContext context, String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
   }
 }
 
