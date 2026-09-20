@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/config/app_state.dart';
 import 'package:maxie_mobile/navigation/navigation_items.dart';
-import 'package:maxie_mobile/shared/responsive_layout.dart';
 import 'package:maxie_mobile/widgets/offline_banner.dart';
 
-/// Shared shell for the mobile companion. The visual language is intentionally
-/// quiet: MAXie's character and content get the attention, not a giant chrome.
+/// MAXie is phone-first. On wider screens the exact mobile experience is
+/// centered as a device canvas instead of turning into a desktop dashboard.
 class PremiumScaffold extends ConsumerWidget {
   const PremiumScaffold({
     required this.child,
@@ -25,54 +24,64 @@ class PremiumScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = _selectedIndex(context);
-    final layout = ResponsiveLayout.of(context);
     final theme = Theme.of(context);
-    final content = DecoratedBox(
-      decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
-      child: Column(
-        children: [
-          if (ref.watch(offlineProvider)) const OfflineBanner(),
-          Expanded(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 960),
-                child: child,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
 
-    if (!showNavigation || layout == DeviceLayout.mobile) {
-      return Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: title == null
-            ? null
-            : AppBar(title: Text(title!), actions: actions),
-        body: content,
-        bottomNavigationBar: showNavigation
-            ? _BottomNavigation(selectedIndex: selectedIndex)
-            : null,
-      );
-    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final canvasWidth = constraints.maxWidth > 480
+            ? 480.0
+            : constraints.maxWidth;
+        final isWidePreview = constraints.maxWidth > 520;
+        final body = DecoratedBox(
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            border: isWidePreview
+                ? Border.symmetric(
+                    vertical: BorderSide(
+                      color: theme.colorScheme.onSurface.withValues(alpha: .08),
+                    ),
+                  )
+                : null,
+            boxShadow: isWidePreview
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(
+                        alpha: theme.brightness == Brightness.dark ? .26 : .10,
+                      ),
+                      blurRadius: 36,
+                      offset: const Offset(0, 12),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Column(
+            children: [
+              if (ref.watch(offlineProvider)) const OfflineBanner(),
+              if (title != null) _MobileTopBar(title: title!, actions: actions),
+              Expanded(child: child),
+            ],
+          ),
+        );
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: Row(
-        children: [
-          _SideNavigation(
-            selectedIndex: selectedIndex,
-            extended: layout == DeviceLayout.desktop,
+        return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          body: Center(
+            child: SizedBox(width: canvasWidth, child: body),
           ),
-          VerticalDivider(
-            width: 1,
-            color: theme.dividerColor.withValues(alpha: .55),
-          ),
-          Expanded(child: content),
-        ],
-      ),
+          bottomNavigationBar: showNavigation
+              ? Align(
+                  heightFactor: 1,
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: canvasWidth,
+                    child: _MobileBottomNavigation(
+                      selectedIndex: selectedIndex,
+                    ),
+                  ),
+                )
+              : null,
+        );
+      },
     );
   }
 
@@ -85,137 +94,80 @@ class PremiumScaffold extends ConsumerWidget {
   }
 }
 
-class _SideNavigation extends StatelessWidget {
-  const _SideNavigation({required this.selectedIndex, required this.extended});
-  final int selectedIndex;
-  final bool extended;
+class _MobileTopBar extends StatelessWidget {
+  const _MobileTopBar({required this.title, required this.actions});
+  final String title;
+  final List<Widget> actions;
 
   @override
-  Widget build(BuildContext context) => Container(
-    width: extended ? 224 : 84,
-    color: Theme.of(context).colorScheme.surface,
-    padding: const EdgeInsets.fromLTRB(12, 22, 12, 18),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: extended
-              ? MainAxisAlignment.start
-              : MainAxisAlignment.center,
+  Widget build(BuildContext context) {
+    final canPop = Navigator.of(context).canPop();
+    return SafeArea(
+      bottom: false,
+      child: SizedBox(
+        height: 58,
+        child: Row(
           children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(13),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFB8F4DE), Color(0xFF67C6BF)],
-                ),
-              ),
-              child: const Icon(
-                Icons.auto_awesome_rounded,
-                color: Color(0xFF102B31),
-                size: 20,
-              ),
-            ),
-            if (extended) ...[
-              const SizedBox(width: 10),
-              Text(
-                'MAXie',
+            if (canPop)
+              IconButton(
+                tooltip: 'Back',
+                onPressed: context.pop,
+                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+              )
+            else
+              const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
                 style: Theme.of(
                   context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
               ),
-            ],
+            ),
+            ...actions,
+            const SizedBox(width: 4),
           ],
         ),
-        const SizedBox(height: 28),
-        Expanded(
-          child: NavigationRail(
-            selectedIndex: selectedIndex,
-            extended: extended,
-            groupAlignment: -1,
-            backgroundColor: Colors.transparent,
-            onDestinationSelected: (index) =>
-                context.go(appNavigationItems[index].location),
-            selectedIconTheme: IconThemeData(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF9CEED1)
-                  : const Color(0xFF168A71),
-            ),
-            unselectedIconTheme: IconThemeData(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: .58),
-            ),
-            selectedLabelTextStyle: const TextStyle(
-              color: Color(0xFF168A71),
-              fontWeight: FontWeight.w800,
-            ),
-            unselectedLabelTextStyle: TextStyle(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: .58),
-              fontWeight: FontWeight.w600,
-            ),
-            indicatorColor: const Color(0xFF9CEED1).withValues(alpha: .12),
-            destinations: [
-              for (final item in appNavigationItems)
-                NavigationRailDestination(
-                  icon: Icon(item.icon),
-                  selectedIcon: Icon(item.icon),
-                  label: Text(item.label),
-                ),
-            ],
-          ),
-        ),
-        if (extended)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Your space · private by default',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: .48),
-              ),
-            ),
-          ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
 
-class _BottomNavigation extends StatelessWidget {
-  const _BottomNavigation({required this.selectedIndex});
+class _MobileBottomNavigation extends StatelessWidget {
+  const _MobileBottomNavigation({required this.selectedIndex});
   final int selectedIndex;
+
   @override
-  Widget build(BuildContext context) => SafeArea(
-    top: false,
-    child: Container(
-      padding: const EdgeInsets.fromLTRB(8, 7, 8, 7),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).dividerColor.withValues(alpha: .55),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(8, 7, 8, 8),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          border: Border(
+            top: BorderSide(
+              color: theme.colorScheme.onSurface.withValues(alpha: .08),
+            ),
           ),
         ),
-      ),
-      child: Row(
-        children: [
-          for (var index = 0; index < appNavigationItems.length; index++)
-            Expanded(
-              child: _NavItem(
-                isSelected: selectedIndex == index,
-                icon: appNavigationItems[index].icon,
-                label: appNavigationItems[index].label,
-                onTap: () => context.go(appNavigationItems[index].location),
+        child: Row(
+          children: [
+            for (var index = 0; index < appNavigationItems.length; index++)
+              Expanded(
+                child: _NavItem(
+                  isSelected: selectedIndex == index,
+                  icon: appNavigationItems[index].icon,
+                  label: appNavigationItems[index].label,
+                  onTap: () => context.go(appNavigationItems[index].location),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _NavItem extends StatelessWidget {
@@ -225,37 +177,39 @@ class _NavItem extends StatelessWidget {
     required this.label,
     required this.onTap,
   });
+
   final bool isSelected;
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final selectedColor = theme.brightness == Brightness.dark
+        ? const Color(0xFF9CEED1)
+        : const Color(0xFF168A71);
     final color = isSelected
-        ? (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF9CEED1)
-              : const Color(0xFF168A71))
-        : Theme.of(context).colorScheme.onSurface.withValues(alpha: .58);
+        ? selectedColor
+        : theme.colorScheme.onSurface.withValues(alpha: .55);
     return Semantics(
       button: true,
       selected: isSelected,
       label: label,
       child: InkWell(
-        borderRadius: BorderRadius.circular(15),
         onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(vertical: 7),
           decoration: BoxDecoration(
-            color: isSelected
-                ? color.withValues(alpha: .1)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(15),
+            color: isSelected ? selectedColor.withValues(alpha: .12) : null,
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: color, size: 21),
+              Icon(icon, size: 21, color: color),
               const SizedBox(height: 3),
               Text(
                 label,
@@ -263,8 +217,8 @@ class _NavItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: color,
-                  fontWeight: FontWeight.w700,
                   fontSize: 10,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

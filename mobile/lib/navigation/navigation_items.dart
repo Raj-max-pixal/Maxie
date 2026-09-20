@@ -14,17 +14,17 @@ const appNavigationItems = <NavigationItem>[
     icon: Icons.chat_bubble_outline_rounded,
   ),
   NavigationItem(
-    label: 'Memory',
+    label: 'Brain',
     location: AppRoutes.memory,
     icon: Icons.auto_stories_rounded,
   ),
   NavigationItem(
-    label: 'Pet',
+    label: 'Companion',
     location: AppRoutes.pet,
     icon: Icons.smart_toy_outlined,
   ),
   NavigationItem(
-    label: 'Profile',
+    label: 'You',
     location: AppRoutes.profile,
     icon: Icons.person_rounded,
   ),
