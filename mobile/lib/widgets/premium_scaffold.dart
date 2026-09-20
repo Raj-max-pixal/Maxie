@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/config/app_state.dart';
 import 'package:maxie_mobile/navigation/navigation_items.dart';
 import 'package:maxie_mobile/shared/responsive_layout.dart';
-import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/widgets/offline_banner.dart';
 
 /// Shared shell for the mobile companion. The visual language is intentionally
@@ -27,8 +26,9 @@ class PremiumScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = _selectedIndex(context);
     final layout = ResponsiveLayout.of(context);
+    final theme = Theme.of(context);
     final content = DecoratedBox(
-      decoration: const BoxDecoration(color: AppColors.darkScaffold),
+      decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
       child: Column(
         children: [
           if (ref.watch(offlineProvider)) const OfflineBanner(),
@@ -47,7 +47,7 @@ class PremiumScaffold extends ConsumerWidget {
 
     if (!showNavigation || layout == DeviceLayout.mobile) {
       return Scaffold(
-        backgroundColor: AppColors.darkScaffold,
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: title == null
             ? null
             : AppBar(title: Text(title!), actions: actions),
@@ -59,14 +59,17 @@ class PremiumScaffold extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.darkScaffold,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Row(
         children: [
           _SideNavigation(
             selectedIndex: selectedIndex,
             extended: layout == DeviceLayout.desktop,
           ),
-          const VerticalDivider(width: 1, color: Color(0xFF222B3A)),
+          VerticalDivider(
+            width: 1,
+            color: theme.dividerColor.withValues(alpha: .55),
+          ),
           Expanded(child: content),
         ],
       ),
@@ -90,7 +93,7 @@ class _SideNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     width: extended ? 224 : 84,
-    color: AppColors.darkSurface,
+    color: Theme.of(context).colorScheme.surface,
     padding: const EdgeInsets.fromLTRB(12, 22, 12, 18),
     child: Column(
       children: [
@@ -116,9 +119,11 @@ class _SideNavigation extends StatelessWidget {
             ),
             if (extended) ...[
               const SizedBox(width: 10),
-              const Text(
+              Text(
                 'MAXie',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
               ),
             ],
           ],
@@ -132,14 +137,24 @@ class _SideNavigation extends StatelessWidget {
             backgroundColor: Colors.transparent,
             onDestinationSelected: (index) =>
                 context.go(appNavigationItems[index].location),
-            selectedIconTheme: const IconThemeData(color: Color(0xFF9CEED1)),
-            unselectedIconTheme: const IconThemeData(color: Color(0xFF7E8B9E)),
+            selectedIconTheme: IconThemeData(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF9CEED1)
+                  : const Color(0xFF168A71),
+            ),
+            unselectedIconTheme: IconThemeData(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: .58),
+            ),
             selectedLabelTextStyle: const TextStyle(
-              color: Color(0xFF9CEED1),
+              color: Color(0xFF168A71),
               fontWeight: FontWeight.w800,
             ),
-            unselectedLabelTextStyle: const TextStyle(
-              color: Color(0xFF7E8B9E),
+            unselectedLabelTextStyle: TextStyle(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: .58),
               fontWeight: FontWeight.w600,
             ),
             indicatorColor: const Color(0xFF9CEED1).withValues(alpha: .12),
@@ -154,11 +169,15 @@ class _SideNavigation extends StatelessWidget {
           ),
         ),
         if (extended)
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Text(
               'Your space · private by default',
-              style: TextStyle(color: Color(0xFF66758A), fontSize: 10),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: .48),
+              ),
             ),
           ),
       ],
@@ -174,9 +193,13 @@ class _BottomNavigation extends StatelessWidget {
     top: false,
     child: Container(
       padding: const EdgeInsets.fromLTRB(8, 7, 8, 7),
-      decoration: const BoxDecoration(
-        color: AppColors.darkSurface,
-        border: Border(top: BorderSide(color: Color(0xFF222B3A))),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).dividerColor.withValues(alpha: .55),
+          ),
+        ),
       ),
       child: Row(
         children: [
@@ -209,8 +232,10 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isSelected
-        ? const Color(0xFF9CEED1)
-        : const Color(0xFF7E8B9E);
+        ? (Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF9CEED1)
+              : const Color(0xFF168A71))
+        : Theme.of(context).colorScheme.onSurface.withValues(alpha: .58);
     return Semantics(
       button: true,
       selected: isSelected,

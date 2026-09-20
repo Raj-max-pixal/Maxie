@@ -64,7 +64,7 @@ class _ShimejiScreenState extends ConsumerState<ShimejiScreen>
     final selected = state.selectedPet;
 
     return PremiumScaffold(
-      title: 'Shimeji',
+      title: 'Companion studio',
       actions: [
         IconButton(
           tooltip: 'Debug',
@@ -236,16 +236,16 @@ class _ShimejiStage extends StatelessWidget {
                     painter: _StagePainter(
                       paused: state.settings.paused,
                       overlayEnabled: state.settings.overlayEnabled,
-                        tick: state.tick,
+                      tick: state.tick,
                     ),
                   ),
                 ),
-                  Positioned(
-                    top: 14,
-                    left: 16,
-                    right: 16,
-                    child: _StageHud(state: state),
-                  ),
+                Positioned(
+                  top: 14,
+                  left: 16,
+                  right: 16,
+                  child: _StageHud(state: state),
+                ),
                 if (state.settings.hidden)
                   const Center(child: Text('Screen pets are hidden')),
                 for (final pet in state.pets)
@@ -422,9 +422,9 @@ class _StagePill extends StatelessWidget {
                   value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.white60,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: Colors.white60),
                 ),
               ],
             ),
@@ -975,7 +975,12 @@ class _StagePainter extends CustomPainter {
         ],
       ).createShader(Rect.fromLTWH(0, size.height - 82, size.width, 60));
     canvas.drawOval(
-      Rect.fromLTWH(-size.width * 0.12, size.height - 92, size.width * 1.24, 106),
+      Rect.fromLTWH(
+        -size.width * 0.12,
+        size.height - 92,
+        size.width * 1.24,
+        106,
+      ),
       floorPaint,
     );
 

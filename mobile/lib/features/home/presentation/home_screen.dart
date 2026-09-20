@@ -641,27 +641,27 @@ class _ExploreGrid extends StatelessWidget {
     children: [
       const _ExploreTile(
         icon: Icons.pets_rounded,
-        title: 'Companion',
+        title: 'Companion studio',
         color: Color(0xFF9CEED1),
-        route: AppRoutes.pet,
+        route: AppRoutes.shimeji,
       ),
       const _ExploreTile(
-        icon: Icons.auto_graph_rounded,
-        title: 'Missions',
+        icon: Icons.layers_outlined,
+        title: 'Live overlay',
         color: Color(0xFFFFCD89),
-        route: AppRoutes.tasks,
+        route: AppRoutes.shimeji,
       ),
       const _ExploreTile(
-        icon: Icons.security_outlined,
-        title: 'Privacy',
+        icon: Icons.shopping_bag_outlined,
+        title: 'Character store',
         color: Color(0xFF9EC4FF),
-        route: AppRoutes.settings,
+        route: AppRoutes.subscription,
       ),
       const _ExploreTile(
-        icon: Icons.tune_rounded,
-        title: 'Settings',
+        icon: Icons.graphic_eq_rounded,
+        title: 'Voice + brain',
         color: Color(0xFFB6A3FF),
-        route: AppRoutes.settings,
+        route: AppRoutes.aiChat,
       ),
     ],
   );

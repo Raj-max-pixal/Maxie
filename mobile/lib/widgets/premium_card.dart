@@ -23,14 +23,20 @@ class PremiumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final surface = DecoratedBox(
       decoration: BoxDecoration(
-        color: const Color(0xFF151D29),
+        color: isDark ? const Color(0xFF151D29) : theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withValues(alpha: .075)),
+        border: Border.all(
+          color: theme.colorScheme.onSurface.withValues(
+            alpha: isDark ? .075 : .10,
+          ),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: .22),
+            color: Colors.black.withValues(alpha: isDark ? .22 : .08),
             blurRadius: 18,
             offset: const Offset(0, 9),
           ),
