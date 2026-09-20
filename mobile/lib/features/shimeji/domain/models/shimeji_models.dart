@@ -134,6 +134,7 @@ class ShimejiPet {
     this.scale = 1,
     this.friendship = 0,
     this.xp = 0,
+    this.requiredLevel = 1,
     this.unlocked = false,
     this.visible = true,
     this.dragging = false,
@@ -156,6 +157,8 @@ class ShimejiPet {
   final double scale;
   final int friendship;
   final int xp;
+  /// The companion is available when MAXie reaches this real progression level.
+  final int requiredLevel;
   final bool unlocked;
   final bool visible;
   final bool dragging;
@@ -176,6 +179,7 @@ class ShimejiPet {
     double? scale,
     int? friendship,
     int? xp,
+    int? requiredLevel,
     bool? unlocked,
     bool? visible,
     bool? dragging,
@@ -198,6 +202,7 @@ class ShimejiPet {
       scale: scale ?? this.scale,
       friendship: friendship ?? this.friendship,
       xp: xp ?? this.xp,
+      requiredLevel: requiredLevel ?? this.requiredLevel,
       unlocked: unlocked ?? this.unlocked,
       visible: visible ?? this.visible,
       dragging: dragging ?? this.dragging,
@@ -233,6 +238,7 @@ class ShimejiPet {
       scale: (json['scale'] as num?)?.toDouble() ?? 1,
       friendship: (json['friendship'] as num?)?.toInt() ?? 0,
       xp: (json['xp'] as num?)?.toInt() ?? 0,
+      requiredLevel: (json['requiredLevel'] as num?)?.toInt() ?? 1,
       unlocked: json['unlocked'] as bool? ?? false,
       visible: json['visible'] as bool? ?? true,
       dragging: json['dragging'] as bool? ?? false,
@@ -258,6 +264,7 @@ class ShimejiPet {
       'scale': scale,
       'friendship': friendship,
       'xp': xp,
+      'requiredLevel': requiredLevel,
       'unlocked': unlocked,
       'visible': visible,
       'dragging': dragging,
@@ -461,9 +468,15 @@ class ShimejiState {
   }
 
   static List<ShimejiPet> _mergeDefaultPets(List<ShimejiPet> savedPets) {
+    final supportedIds = defaultShimejiPets.map((pet) => pet.id).toSet();
+    // Retire placeholder companions from earlier previews. Saved progress is
+    // only retained for the current, product-facing companion collection.
+    final currentPets = savedPets
+        .where((pet) => supportedIds.contains(pet.id))
+        .toList(growable: false);
     return [
       for (final defaultPet in defaultShimejiPets)
-        _savedOrDefault(savedPets, defaultPet),
+        _savedOrDefault(currentPets, defaultPet),
     ];
   }
 
@@ -489,78 +502,63 @@ final defaultShimejiPets = <ShimejiPet>[
     traits: ShimejiPersonalityTraits.forPersonality(
       ShimejiPersonality.friendly,
     ),
-    color: 0xFF7C3AED,
-    accentColor: 0xFF06B6D4,
+    color: 0xFF56D7E2,
+    accentColor: 0xFFB8FFF8,
     unlocked: true,
   ),
   ShimejiPet(
-    id: 'mimi',
-    name: 'mimi',
-    displayName: 'Mimi',
-    personality: ShimejiPersonality.playful,
-    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.playful),
-    color: 0xFFEC4899,
-    accentColor: 0xFFFDE68A,
+    id: 'webby',
+    name: 'webby',
+    displayName: 'Webby',
+    personality: ShimejiPersonality.curious,
+    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.curious),
+    color: 0xFF6E46CE,
+    accentColor: 0xFF60E7FF,
+    requiredLevel: 2,
     x: 160,
   ),
   ShimejiPet(
-    id: 'kuro',
-    name: 'kuro',
-    displayName: 'Kuro',
-    personality: ShimejiPersonality.calm,
-    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.calm),
-    color: 0xFF111827,
-    accentColor: 0xFFA78BFA,
+    id: 'drako',
+    name: 'drako',
+    displayName: 'Drako',
+    personality: ShimejiPersonality.playful,
+    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.playful),
+    color: 0xFF182746,
+    accentColor: 0xFF35A8FF,
+    requiredLevel: 3,
     x: 260,
   ),
   ShimejiPet(
-    id: 'luna',
-    name: 'luna',
-    displayName: 'Luna',
-    personality: ShimejiPersonality.curious,
-    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.curious),
-    color: 0xFF2563EB,
-    accentColor: 0xFF93C5FD,
+    id: 'byte',
+    name: 'byte',
+    displayName: 'Byte',
+    personality: ShimejiPersonality.friendly,
+    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.friendly),
+    color: 0xFFEDF4FF,
+    accentColor: 0xFF00D9FF,
+    requiredLevel: 4,
     x: 100,
   ),
   ShimejiPet(
-    id: 'nova',
-    name: 'nova',
-    displayName: 'Nova',
-    personality: ShimejiPersonality.lazy,
-    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.lazy),
-    color: 0xFFF59E0B,
-    accentColor: 0xFF22C55E,
+    id: 'milo',
+    name: 'milo',
+    displayName: 'Milo',
+    personality: ShimejiPersonality.friendly,
+    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.friendly),
+    color: 0xFFEFF7FF,
+    accentColor: 0xFF88BFFF,
+    requiredLevel: 5,
     x: 210,
   ),
   ShimejiPet(
-    id: 'bolt',
-    name: 'bolt',
-    displayName: 'Bolt',
+    id: 'ember',
+    name: 'ember',
+    displayName: 'Ember',
     personality: ShimejiPersonality.playful,
     traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.playful),
-    color: 0xFFFF8A34,
-    accentColor: 0xFFFFE08A,
+    color: 0xFFCF712D,
+    accentColor: 0xFFFFD477,
+    requiredLevel: 6,
     x: 310,
-  ),
-  ShimejiPet(
-    id: 'zen',
-    name: 'zen',
-    displayName: 'Zen',
-    personality: ShimejiPersonality.calm,
-    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.calm),
-    color: 0xFF2E8B78,
-    accentColor: 0xFFB8F4DE,
-    x: 360,
-  ),
-  ShimejiPet(
-    id: 'pixel',
-    name: 'pixel',
-    displayName: 'Pixel',
-    personality: ShimejiPersonality.curious,
-    traits: ShimejiPersonalityTraits.forPersonality(ShimejiPersonality.curious),
-    color: 0xFF5668E8,
-    accentColor: 0xFFFF9ED1,
-    x: 410,
   ),
 ];

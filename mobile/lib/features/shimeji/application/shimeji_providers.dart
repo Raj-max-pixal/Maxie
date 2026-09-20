@@ -209,11 +209,17 @@ class ShimejiController extends StateNotifier<ShimejiState> {
   }
 
   void unlockWithXp(String id) {
+    final companion = state.pets.where((pet) => pet.id == id).firstOrNull;
+    if (companion == null) return;
     final maxieXp = state.pets
         .where((pet) => pet.id == 'maxie')
         .fold<int>(0, (total, pet) => total + pet.xp + pet.friendship);
-    if (maxieXp < 20) {
-      state = state.copyWith(lastError: 'Earn 20 MAXie XP to unlock pets.');
+    final maxieLevel = (maxieXp ~/ 100) + 1;
+    if (maxieLevel < companion.requiredLevel) {
+      state = state.copyWith(
+        lastError:
+            'Reach MAXie level ${companion.requiredLevel} to unlock ${companion.displayName}.',
+      );
       return;
     }
     spawnPet(id);

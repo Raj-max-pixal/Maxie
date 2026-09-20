@@ -48,11 +48,15 @@ class UserProfileRepository {
     String? displayName,
     String? maxieName,
     String? maxiePersonality,
+    String? bio,
+    int? age,
   }) {
     return _document(uid).set({
       if (displayName != null) 'displayName': displayName.trim(),
       if (maxieName != null) 'maxieName': maxieName.trim(),
       if (maxiePersonality != null) 'maxiePersonality': maxiePersonality,
+      if (bio != null) 'bio': bio.trim(),
+      if (age != null) 'age': age,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }

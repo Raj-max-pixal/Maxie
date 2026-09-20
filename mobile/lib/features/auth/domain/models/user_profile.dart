@@ -11,6 +11,8 @@ class UserProfile {
     this.onboardingCompleted = false,
     this.maxieName = 'MAXie',
     this.maxiePersonality = 'Friendly',
+    this.bio,
+    this.age,
   });
 
   final String uid;
@@ -22,6 +24,8 @@ class UserProfile {
   final bool onboardingCompleted;
   final String maxieName;
   final String maxiePersonality;
+  final String? bio;
+  final int? age;
 
   factory UserProfile.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? const <String, dynamic>{};
@@ -35,6 +39,8 @@ class UserProfile {
       onboardingCompleted: data['onboardingCompleted'] as bool? ?? false,
       maxieName: data['maxieName'] as String? ?? 'MAXie',
       maxiePersonality: data['maxiePersonality'] as String? ?? 'Friendly',
+      bio: data['bio'] as String?,
+      age: (data['age'] as num?)?.toInt(),
     );
   }
 
@@ -48,6 +54,8 @@ class UserProfile {
     'onboardingCompleted': onboardingCompleted,
     'maxieName': maxieName,
     'maxiePersonality': maxiePersonality,
+    if (bio != null) 'bio': bio,
+    if (age != null) 'age': age,
   };
 
   static DateTime? _date(Object? value) {

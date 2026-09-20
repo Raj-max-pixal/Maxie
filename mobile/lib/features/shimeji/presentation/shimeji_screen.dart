@@ -505,17 +505,22 @@ class _CharacterCard extends StatelessWidget {
                 children: [
                   SizedBox.square(
                     dimension: 38,
-                    child: CustomPaint(
-                      painter: _AnimePetPainter(
-                        pet: pet.copyWith(
-                          currentAnimation: pet.unlocked
-                              ? ShimejiAnimation.happy
-                              : ShimejiAnimation.sleep,
-                        ),
-                        selected: selected,
-                        tick: 0,
-                      ),
-                    ),
+                    child: pet.id == 'webby'
+                        ? Image.asset(
+                            'assets/images/webby_companion_v1.png',
+                            fit: BoxFit.contain,
+                          )
+                        : CustomPaint(
+                            painter: _AnimePetPainter(
+                              pet: pet.copyWith(
+                                currentAnimation: pet.unlocked
+                                    ? ShimejiAnimation.happy
+                                    : ShimejiAnimation.sleep,
+                              ),
+                              selected: selected,
+                              tick: 0,
+                            ),
+                          ),
                   ),
                   const Spacer(),
                   Icon(
@@ -538,7 +543,9 @@ class _CharacterCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                pet.unlocked ? (pet.visible ? 'Active' : 'Owned') : 'Unlock XP',
+                pet.unlocked
+                    ? (pet.visible ? 'Active' : 'Owned')
+                    : 'Unlock at Lv ${pet.requiredLevel}',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: pet.unlocked ? AppColors.calmTeal : AppColors.warning,
                   fontWeight: FontWeight.w800,
