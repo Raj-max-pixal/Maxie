@@ -17,4 +17,5 @@ class AppRoutes {
   static const String tasks = '/tasks';
   static const String missionControl = '/mission-control';
   static const String agentRun = '/agent-run';
+  static const String focus = '/focus';
 }

@@ -44,6 +44,8 @@ class HomeScreen extends ConsumerWidget {
           _CompanionHero(pet: pet),
           const SizedBox(height: AppSpacing.md),
           const _QuickActions(),
+          const SizedBox(height: AppSpacing.lg),
+          const _DailyCommandGrid(),
           const SizedBox(height: AppSpacing.xl),
           _SectionHeading(
             eyebrow: 'YOUR DAY',
@@ -243,9 +245,9 @@ class _QuickActions extends StatelessWidget {
           onTap: () => context.push(AppRoutes.memory),
         ),
         _QuickChip(
-          icon: Icons.route_rounded,
-          label: 'Plan my day',
-          onTap: () => context.push(AppRoutes.agentRun),
+          icon: Icons.timer_outlined,
+          label: 'Start focus',
+          onTap: () => context.push(AppRoutes.focus),
         ),
       ],
     ),
@@ -272,6 +274,89 @@ class _QuickChip extends StatelessWidget {
       side: BorderSide(color: Colors.white.withValues(alpha: .08)),
       backgroundColor: Colors.white.withValues(alpha: .055),
       padding: const EdgeInsets.symmetric(horizontal: 6),
+    ),
+  );
+}
+
+class _DailyCommandGrid extends StatelessWidget {
+  const _DailyCommandGrid();
+
+  @override
+  Widget build(BuildContext context) => GridView.count(
+    crossAxisCount: 2,
+    mainAxisSpacing: 10,
+    crossAxisSpacing: 10,
+    childAspectRatio: 1.58,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    children: const [
+      _DailyCommand(
+        icon: Icons.timer_outlined,
+        title: 'Focus',
+        subtitle: 'Start a real timer',
+        color: Color(0xFFB6A3FF),
+        route: AppRoutes.focus,
+      ),
+      _DailyCommand(
+        icon: Icons.menu_book_outlined,
+        title: 'Knowledge',
+        subtitle: 'Open your brain',
+        color: Color(0xFF9EC4FF),
+        route: AppRoutes.memory,
+      ),
+      _DailyCommand(
+        icon: Icons.checklist_rounded,
+        title: 'Today',
+        subtitle: 'Tasks and missions',
+        color: Color(0xFFFFCD89),
+        route: AppRoutes.tasks,
+      ),
+      _DailyCommand(
+        icon: Icons.pets_outlined,
+        title: 'Play',
+        subtitle: 'Visit MAXie',
+        color: Color(0xFF9CEED1),
+        route: AppRoutes.shimeji,
+      ),
+    ],
+  );
+}
+
+class _DailyCommand extends StatelessWidget {
+  const _DailyCommand({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.route,
+  });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final String route;
+
+  @override
+  Widget build(BuildContext context) => PremiumCard(
+    onTap: () => context.push(route),
+    padding: const EdgeInsets.all(14),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color, size: 21),
+        const SizedBox(height: 9),
+        Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+        const SizedBox(height: 2),
+        Text(
+          subtitle,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: .56),
+          ),
+        ),
+      ],
     ),
   );
 }

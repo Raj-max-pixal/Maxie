@@ -8,6 +8,7 @@ import 'package:maxie_mobile/features/auth/presentation/signup_screen.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
 import 'package:maxie_mobile/features/agent_run/presentation/agent_run_screen.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
+import 'package:maxie_mobile/features/focus/presentation/focus_screen.dart';
 import 'package:maxie_mobile/features/memory/presentation/memory_screen.dart';
 import 'package:maxie_mobile/features/mission_control/presentation/mission_control_screen.dart';
 import 'package:maxie_mobile/features/onboarding/presentation/onboarding_screen.dart';
@@ -80,6 +81,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.home,
         name: 'home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.focus,
+        name: 'focus',
+        builder: (context, state) => const FocusScreen(),
       ),
       GoRoute(
         path: AppRoutes.settings,
