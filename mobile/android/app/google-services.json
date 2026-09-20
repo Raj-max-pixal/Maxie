@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "167651560898",
+    "project_id": "maxie-52c8f",
+    "storage_bucket": "maxie-52c8f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167651560898:android:5e48ec1154a50a63ff9a5b",
+        "android_client_info": {
+          "package_name": "com.multimax.maxie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZF_hoCzCdj6G7afyj-TOks4B3yE77g10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

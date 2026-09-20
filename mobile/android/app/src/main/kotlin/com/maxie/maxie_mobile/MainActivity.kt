@@ -1,4 +1,4 @@
-package com.maxie.maxie_mobile
+package com.multimax.maxie
 
 import io.flutter.embedding.android.FlutterActivity
 
