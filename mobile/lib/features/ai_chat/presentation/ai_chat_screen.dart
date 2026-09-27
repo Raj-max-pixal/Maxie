@@ -141,22 +141,6 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: Row(
                 children: [
-                  IconButton.filledTonal(
-                    tooltip: 'Voice input',
-                    onPressed: () => _showMessage(
-                      'Voice is a preview; type now for the live demo loop.',
-                    ),
-                    icon: const Icon(Icons.mic_rounded),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  IconButton.filledTonal(
-                    tooltip: 'Upload image',
-                    onPressed: () => _showMessage(
-                      'Image chat is previewed; text chat is live for Shipathon.',
-                    ),
-                    icon: const Icon(Icons.image_rounded),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: TextField(
                       controller: _controller,

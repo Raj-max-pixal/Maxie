@@ -7,7 +7,6 @@ class RevenueCatService {
 
   static const String _androidApiKey = String.fromEnvironment(
     'REVENUECAT_ANDROID_API_KEY',
-    defaultValue: 'test_YgRJRqKrTZKHwhujYVuCstqtRpb',
   );
   static const String _iosApiKey = String.fromEnvironment(
     'REVENUECAT_IOS_API_KEY',
@@ -54,15 +53,19 @@ class RevenueCatService {
       final isPremium = customerInfo.entitlements.active.containsKey(
         _premiumEntitlement,
       );
+      final hasPurchasableOffering =
+          current != null && current.availablePackages.isNotEmpty;
 
       return MonetizationState(
         status: isPremium
             ? MonetizationStatus.active
-            : MonetizationStatus.ready,
+            : hasPurchasableOffering
+            ? MonetizationStatus.ready
+            : MonetizationStatus.unavailable,
         message: isPremium
             ? 'MAXie Premium is active.'
-            : current == null
-            ? 'RevenueCat is active. Add a current offering with monthly and yearly packages.'
+            : !hasPurchasableOffering
+            ? 'MAXie Premium is not available yet. Configure a current RevenueCat offering to enable purchases.'
             : 'MAXie Premium is ready for purchase.',
         isPremium: isPremium,
         offeringId: current?.identifier,
