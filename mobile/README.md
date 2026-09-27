@@ -1,12 +1,12 @@
 # MAXie Mobile
 
-MAXie is an AI companion demo built for Shipathon: chat with MAXie, save meaningful facts into Memory Brain, and watch the companion grow through mood and XP changes.
+MAXie is a local-first AI companion built for Shipathon: chat with MAXie, save meaningful facts into Memory Brain, and watch the companion grow through mood and XP changes.
 
 Full product vision and phase roadmap: [../docs/MAXIE_PRODUCT_BLUEPRINT.md](../docs/MAXIE_PRODUCT_BLUEPRINT.md). In-app **Mission Control** (Home → Mission Control) mirrors the 18-phase plan.
 
 Shipathon fit:
 
-- RevenueCat requirement: `purchases_flutter` is integrated for MAXie Plus.
+- RevenueCat requirement: `purchases_flutter` is integrated for MAXie Premium.
 - HAMM Award: free companion loop with paid upgrades for voice, cloud memory sync, and premium companion styles.
 - Most Viral App: shareable #BuildInPublic posts from the Home screen.
 - RevenueCat Design Award: animated companion, Memory Brain, and Shimeji-style pet demo.
@@ -29,8 +29,8 @@ For judge-facing details, use [SHIPATHON_SUBMISSION.md](SHIPATHON_SUBMISSION.md)
 - Memory extraction from chat for birthdays, interests, dream companies, and projects.
 - Manual saving of assistant replies into Memory Brain.
 - Companion mood, friendship XP, and last action updates from chat and memories.
-- In-app Shimeji-style pet demo with movement, drag, interactions, settings, XP, and unlocks.
-- RevenueCat-backed MAXie Plus screen with purchase and restore actions.
+- In-app Shimeji-style pet with movement, drag, interactions, settings, XP, unlocks, and Android overlay support.
+- RevenueCat-backed MAXie Premium screen with purchase and restore actions.
 - Shareable launch post for the #BuildInPublic growth loop.
 
 ## Demo Command
@@ -49,10 +49,13 @@ flutter run --dart-define=REVENUECAT_ANDROID_API_KEY=googl_your_public_key --dar
 
 Use `REVENUECAT_IOS_API_KEY` for iOS.
 
-## Next Release Work
+## Before public release
 
-- Android native overlay service.
-- Real voice input and voice output.
-- Real notifications and reminders.
-- App icon, release signing, privacy policy, and Play Store assets.
-- Play Store product setup and RevenueCat offering/package configuration.
+- Complete a sandbox purchase and restore with the configured RevenueCat entitlement.
+- Build a signed app bundle and install it on a clean Android device.
+- Publish the privacy policy and store listing assets.
+- Match the Play Console products and RevenueCat offering to the final MAXie Premium plan.
+
+## Submission verification
+
+Read [SHIPATHON_SUBMISSION.md](SHIPATHON_SUBMISSION.md) before recording the final video. The app never claims that a purchase is available until RevenueCat returns a configured offering.

@@ -25,10 +25,8 @@ final shimejiControllerProvider =
     });
 
 class ShimejiController extends StateNotifier<ShimejiState> {
-  ShimejiController({
-    required this._repository,
-    required this._petRepository,
-  }) : super(ShimejiState.initial());
+  ShimejiController({required this._repository, required this._petRepository})
+    : super(ShimejiState.initial());
 
   final ShimejiRepository _repository;
   final PetRepository _petRepository;
@@ -199,11 +197,11 @@ class ShimejiController extends StateNotifier<ShimejiState> {
     state = state.copyWith(
       settings: state.settings.copyWith(
         overlayEnabled: enabled,
-        inAppFallback: true,
+        inAppFallback: !enabled,
       ),
       overlayStatus: enabled
-          ? 'Demo stage active; Android overlay permission is the next release step'
-          : 'Demo stage active',
+          ? 'MAXie is visible over other Android apps'
+          : 'Overlay is off',
     );
     unawaitedSave();
   }

@@ -22,11 +22,18 @@ class AuthService extends ChangeNotifier {
   StreamSubscription<User?>? _subscription;
   User? _user;
   bool _ready = false;
+  bool _isGuest = false;
 
   bool get isReady => _ready;
   bool get isConfigured => _auth != null;
+  bool get isGuest => _isGuest;
   User? get user => _user ?? _auth?.currentUser;
   Object? get configurationError => AppBootstrap.firebaseError;
+
+  void continueAsGuest() {
+    _isGuest = true;
+    notifyListeners();
+  }
 
   Future<UserCredential> signUp({
     required String email,

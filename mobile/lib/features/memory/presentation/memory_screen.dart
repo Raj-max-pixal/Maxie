@@ -30,6 +30,12 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
 
     return PremiumScaffold(
       title: 'Memory Brain',
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'add-memory',
+        onPressed: () => _addMemory(context),
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Add memory'),
+      ),
       child: memoriesAsync.when(
         loading: () => const LoadingIndicator(message: 'Opening Memory Brain'),
         error: (error, stackTrace) => AppEmptyState(
@@ -96,6 +102,127 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _addMemory(BuildContext context) async {
+    final titleController = TextEditingController();
+    final valueController = TextEditingController();
+    var category = MemoryCategory.preferences;
+    var pinned = false;
+    final result = await showModalBottomSheet<MemoryModel>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => StatefulBuilder(
+        builder: (context, setSheetState) => Padding(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            4,
+            20,
+            20 + MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Teach MAXie something',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'You control what is saved and can forget it anytime.',
+                ),
+                const SizedBox(height: 18),
+                TextField(
+                  controller: titleController,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(
+                    labelText: 'Memory title',
+                    hintText: 'Preferred study time',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: valueController,
+                  maxLines: 3,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(
+                    labelText: 'What should MAXie remember?',
+                    hintText: 'I prefer studying after 9 PM.',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<MemoryCategory>(
+                  initialValue: category,
+                  decoration: const InputDecoration(labelText: 'Category'),
+                  items: MemoryCategory.values
+                      .map(
+                        (item) => DropdownMenuItem(
+                          value: item,
+                          child: Text(item.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) => setSheetState(
+                    () => category = value ?? MemoryCategory.preferences,
+                  ),
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: pinned,
+                  onChanged: (value) => setSheetState(() => pinned = value),
+                  title: const Text('Pin this memory'),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      final title = titleController.text.trim();
+                      final value = valueController.text.trim();
+                      if (title.isEmpty || value.isEmpty) return;
+                      final now = DateTime.now();
+                      Navigator.pop(
+                        sheetContext,
+                        MemoryModel(
+                          id: 'manual-${now.microsecondsSinceEpoch}',
+                          category: category,
+                          title: title,
+                          value: value,
+                          createdAt: now,
+                          updatedAt: now,
+                          source: MemorySource.manual,
+                          confidence: 1,
+                          importance: pinned ? .9 : .6,
+                          priority: pinned
+                              ? MemoryPriority.high
+                              : MemoryPriority.normal,
+                          isPinned: pinned,
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.psychology_alt_rounded),
+                    label: const Text('Save to Memory Brain'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    titleController.dispose();
+    valueController.dispose();
+    if (result == null) return;
+    await ref.read(memoryBrainServiceProvider).saveMemory(result);
+    ref.invalidate(memoryBrainListProvider);
+    ref.invalidate(memoryBrainSummaryProvider);
+    ref.invalidate(memoryBrainTimelineProvider);
   }
 
   List<MemoryModel> _filter(List<MemoryModel> memories) {

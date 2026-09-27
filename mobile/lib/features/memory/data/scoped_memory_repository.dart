@@ -5,16 +5,16 @@ import 'package:maxie_mobile/features/memory/data/hive_memory_brain_repository.d
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart';
 
+/// Scoped memory repository that guarantees every memory is saved locally to Hive DB.
+/// If Firebase is connected and authenticated, it also syncs to Cloud Firestore.
 class ScopedMemoryRepository implements MemoryRepository {
   ScopedMemoryRepository(
     this._local, {
     this.requireAuthentication = false,
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  });
 
   final HiveMemoryBrainRepository _local;
   final bool requireAuthentication;
-  final FirebaseFirestore _firestore;
 
   String? get _uid => AppBootstrap.firebaseReady
       ? FirebaseAuth.instance.currentUser?.uid
@@ -22,33 +22,41 @@ class ScopedMemoryRepository implements MemoryRepository {
 
   CollectionReference<Map<String, dynamic>>? get _remote {
     final uid = _uid;
-    return uid == null
-        ? null
-        : _firestore.collection('users').doc(uid).collection('memories');
+    if (!AppBootstrap.firebaseReady || uid == null) return null;
+    try {
+      return FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('memories');
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
   Future<List<MemoryModel>> readMemories() async {
-    if (requireAuthentication && _uid == null) return const [];
+    final localMemories = await _local.readMemories();
     final remote = _remote;
-    if (remote == null) return _local.readMemories();
+    if (remote == null) return localMemories;
     try {
       final snapshot = await remote
           .orderBy('updatedAt', descending: true)
           .get();
       final memories = snapshot.docs.map(_fromDocument).toList();
-      await _local.replaceMemories(memories);
-      return memories;
-    } catch (_) {
-      return _local.readMemories();
-    }
+      if (memories.isNotEmpty) {
+        await _local.replaceMemories(memories);
+        return memories;
+      }
+    } catch (_) {}
+    return localMemories;
   }
 
   @override
   Future<void> saveMemory(MemoryModel memory) async {
-    if (requireAuthentication && _uid == null) return;
     final scoped = memory.copyWith(userId: _uid);
+    // ALWAYS save to local Hive DB first so user never loses memories
     await _local.saveMemory(scoped);
+
     final remote = _remote;
     if (remote != null) {
       try {
@@ -64,7 +72,7 @@ class ScopedMemoryRepository implements MemoryRepository {
 
   @override
   Future<void> clearMemories() async {
-    if (requireAuthentication && _uid == null) return;
+    await _local.clearMemories();
     final memories = await readMemories();
     for (final memory in memories) {
       await forgetMemory(memory.id);
@@ -73,7 +81,6 @@ class ScopedMemoryRepository implements MemoryRepository {
 
   @override
   Future<MemoryModel?> getMemory(String id) async {
-    if (requireAuthentication && _uid == null) return null;
     final memories = await readMemories();
     for (final memory in memories) {
       if (memory.id == id && memory.isActive) return memory;

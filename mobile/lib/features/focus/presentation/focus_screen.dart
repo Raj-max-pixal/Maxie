@@ -176,9 +176,62 @@ class FocusScreen extends ConsumerWidget {
               ),
             ),
           ),
+          const SizedBox(height: 22),
+          Row(
+            children: [
+              Text(
+                'Previous focus',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
+              const Spacer(),
+              Text('${session.history.length} completed'),
+            ],
+          ),
+          const SizedBox(height: 10),
+          if (session.history.isEmpty)
+            PremiumCard(
+              child: const ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.history_toggle_off_rounded),
+                title: Text('No completed sessions yet'),
+                subtitle: Text(
+                  'Finish a focus timer and it will be saved here on this device.',
+                ),
+              ),
+            )
+          else
+            for (final item in session.history.take(8))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: PremiumCard(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const CircleAvatar(
+                      child: Icon(Icons.done_rounded),
+                    ),
+                    title: Text('${item.minutes} minute focus'),
+                    subtitle: Text(_formatFocusDate(item.completedAt)),
+                    trailing: const Text('+25 XP'),
+                  ),
+                ),
+              ),
         ],
       ),
     );
+  }
+
+  String _formatFocusDate(DateTime date) {
+    final local = date.toLocal();
+    final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
+    final minute = local.minute.toString().padLeft(2, '0');
+    final period = local.hour >= 12 ? 'PM' : 'AM';
+    return '${local.day}/${local.month}/${local.year} · $hour:$minute $period';
   }
 }
 

@@ -7,13 +7,14 @@ class RevenueCatService {
 
   static const String _androidApiKey = String.fromEnvironment(
     'REVENUECAT_ANDROID_API_KEY',
+    defaultValue: 'test_YgRJRqKrTZKHwhujYVuCstqtRpb',
   );
   static const String _iosApiKey = String.fromEnvironment(
     'REVENUECAT_IOS_API_KEY',
   );
   static const String _premiumEntitlement = String.fromEnvironment(
     'REVENUECAT_PREMIUM_ENTITLEMENT',
-    defaultValue: 'maxie_plus',
+    defaultValue: 'maxie_premium',
   );
 
   bool _configured = false;
@@ -59,10 +60,10 @@ class RevenueCatService {
             ? MonetizationStatus.active
             : MonetizationStatus.ready,
         message: isPremium
-            ? 'MAXie Plus is active.'
+            ? 'MAXie Premium is active.'
             : current == null
-            ? 'RevenueCat is active. Add a MAXie Plus offering in the dashboard.'
-            : 'MAXie Plus is ready for purchase.',
+            ? 'RevenueCat is active. Add a current offering with monthly and yearly packages.'
+            : 'MAXie Premium is ready for purchase.',
         isPremium: isPremium,
         offeringId: current?.identifier,
         packageCount: current?.availablePackages.length ?? 0,
@@ -83,7 +84,11 @@ class RevenueCatService {
     try {
       final offerings = await rc.Purchases.getOfferings();
       final packages = offerings.current?.availablePackages ?? [];
-      final package = packages.isEmpty ? null : packages.first;
+      final package =
+          packages.where((item) {
+            return item.packageType == rc.PackageType.monthly;
+          }).firstOrNull ??
+          (packages.isEmpty ? null : packages.first);
       if (package == null) {
         return const MonetizationState(
           status: MonetizationStatus.unavailable,
@@ -102,7 +107,7 @@ class RevenueCatService {
         status: isPremium
             ? MonetizationStatus.active
             : MonetizationStatus.ready,
-        message: isPremium ? 'MAXie Plus unlocked.' : 'Purchase finished.',
+        message: isPremium ? 'MAXie Premium unlocked.' : 'Purchase finished.',
         isPremium: isPremium,
         offeringId: offerings.current?.identifier,
         packageCount: offerings.current?.availablePackages.length ?? 0,
@@ -129,7 +134,9 @@ class RevenueCatService {
         status: isPremium
             ? MonetizationStatus.active
             : MonetizationStatus.ready,
-        message: isPremium ? 'MAXie Plus restored.' : 'No active plan found.',
+        message: isPremium
+            ? 'MAXie Premium restored.'
+            : 'No active plan found.',
         isPremium: isPremium,
       );
     } catch (error) {

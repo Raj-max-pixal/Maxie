@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/config/app_state.dart';
 import 'package:maxie_mobile/features/agent_run/presentation/agent_run_screen.dart';
+import 'package:maxie_mobile/features/activity/presentation/activity_screen.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
 import 'package:maxie_mobile/features/auth/application/auth_providers.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
@@ -76,6 +77,10 @@ final _previewRouter = GoRouter(
     GoRoute(path: AppRoutes.splash, redirect: (_, _) => AppRoutes.home),
     GoRoute(path: AppRoutes.home, builder: (_, _) => const HomeScreen()),
     GoRoute(path: AppRoutes.focus, builder: (_, _) => const FocusScreen()),
+    GoRoute(
+      path: AppRoutes.activity,
+      builder: (_, _) => const ActivityScreen(),
+    ),
     GoRoute(path: AppRoutes.aiChat, builder: (_, _) => const AiChatScreen()),
     GoRoute(path: AppRoutes.memory, builder: (_, _) => const MemoryScreen()),
     GoRoute(path: AppRoutes.pet, builder: (_, _) => const PetScreen()),

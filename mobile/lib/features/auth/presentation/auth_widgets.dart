@@ -45,10 +45,36 @@ class AuthFrame extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(
-                    Icons.auto_awesome_rounded,
-                    size: 56,
-                    color: theme.colorScheme.primary,
+                  Center(
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF102B31),
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(
+                          color: const Color(0xFF84E4C5).withValues(alpha: 0.3),
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF84E4C5).withValues(alpha: 0.2),
+                            blurRadius: 18,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.auto_awesome_rounded,
+                          size: 42,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(

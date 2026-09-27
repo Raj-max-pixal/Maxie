@@ -7,6 +7,7 @@ import 'package:maxie_mobile/features/auth/presentation/login_screen.dart';
 import 'package:maxie_mobile/features/auth/presentation/signup_screen.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
 import 'package:maxie_mobile/features/agent_run/presentation/agent_run_screen.dart';
+import 'package:maxie_mobile/features/activity/presentation/activity_screen.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
 import 'package:maxie_mobile/features/focus/presentation/focus_screen.dart';
 import 'package:maxie_mobile/features/memory/presentation/memory_screen.dart';
@@ -32,23 +33,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.splash,
     refreshListenable: auth,
     redirect: (context, state) async {
-      if (!auth.isReady)
-        return state.matchedLocation == AppRoutes.splash
-            ? null
-            : AppRoutes.splash;
+      // Safe routing: allow users to explore MAXie Home, AI Chat, Shimeji, Memory,
+      // Focus, and Subscription without blocking on Firebase authentication.
+      if (auth.user != null) {
+        final user = auth.user!;
+        try {
+          await ref.read(userProfileRepositoryProvider).ensureProfile(user);
+        } catch (_) {}
+      }
 
-      final publicRoutes = {
-        AppRoutes.splash,
-        AppRoutes.login,
-        AppRoutes.signup,
-        AppRoutes.forgotPassword,
-      };
-      final isPublic = publicRoutes.contains(state.matchedLocation);
-      if (auth.user == null) return isPublic ? null : AppRoutes.login;
-
-      final user = auth.user!;
-      await ref.read(userProfileRepositoryProvider).ensureProfile(user);
-      if (isPublic) return AppRoutes.home;
+      // If user is on splash, let splash timer navigate to home naturally
       return null;
     },
     routes: [
@@ -86,6 +80,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.focus,
         name: 'focus',
         builder: (context, state) => const FocusScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.activity,
+        name: 'activity',
+        builder: (context, state) => const ActivityScreen(),
       ),
       GoRoute(
         path: AppRoutes.settings,

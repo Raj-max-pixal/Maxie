@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/everywhere_mode/application/everywhere_mode_providers.dart';
 import 'package:maxie_mobile/features/shimeji/application/shimeji_providers.dart';
 import 'package:maxie_mobile/features/shimeji/domain/models/shimeji_models.dart';
 import 'package:maxie_mobile/theme/app_colors.dart';
@@ -137,7 +138,7 @@ class _ShimejiScreenState extends ConsumerState<ShimejiScreen>
           _CustomizationPanel(
             state: state,
             onSettingsChanged: controller.updateSettings,
-            onOverlayChanged: controller.toggleOverlay,
+            onOverlayChanged: _setOverlay,
             onReset: controller.resetPositions,
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -145,6 +146,37 @@ class _ShimejiScreenState extends ConsumerState<ShimejiScreen>
         ],
       ),
     );
+  }
+
+  Future<void> _setOverlay(bool enabled) async {
+    final controller = ref.read(shimejiControllerProvider.notifier);
+    final overlay = ref.read(everywhereModeFoundationProvider);
+    try {
+      if (enabled) {
+        await overlay.prepareOverlay();
+      } else {
+        await overlay.stopOverlay();
+      }
+      controller.toggleOverlay(enabled);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              enabled
+                  ? 'Allow Display over other apps if Android asks. Then switch MAXie on again.'
+                  : 'MAXie overlay stopped.',
+            ),
+          ),
+        );
+    } catch (error) {
+      controller.toggleOverlay(false);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Overlay is unavailable here: $error')),
+      );
+    }
   }
 
   void _showPetControls(BuildContext context, ShimejiPet pet) {
@@ -632,7 +664,7 @@ class _CustomizationPanel extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             title: const Text('Show over other apps'),
             subtitle: const Text(
-              'Demo stage today; Android overlay is the next release step.',
+              'Android only. MAXie appears above other apps after you grant permission.',
             ),
           ),
           SwitchListTile(

@@ -12,7 +12,7 @@ class MonetizationState {
   const MonetizationState.demo()
     : status = MonetizationStatus.demo,
       message =
-          'RevenueCat is wired. Add the public SDK key to enable live purchases.',
+          'MAXie Premium is unavailable in this build. Configure RevenueCat to enable secure purchases.',
       isPremium = false,
       offeringId = null,
       packageCount = 0;

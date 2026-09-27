@@ -14,12 +14,14 @@ class PremiumScaffold extends ConsumerWidget {
     this.title,
     this.actions = const [],
     this.showNavigation = true,
+    this.floatingActionButton,
   });
 
   final String? title;
   final Widget child;
   final List<Widget> actions;
   final bool showNavigation;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,6 +82,7 @@ class PremiumScaffold extends ConsumerWidget {
                   ),
                 )
               : null,
+          floatingActionButton: floatingActionButton,
         );
       },
     );

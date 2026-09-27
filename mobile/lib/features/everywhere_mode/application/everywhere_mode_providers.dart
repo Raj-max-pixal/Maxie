@@ -24,21 +24,23 @@ class EverywhereModeFoundation
   Future<void> prepareOverlay() async {
     final bool isActive = await FlutterOverlayWindow.isActive();
     if (isActive) {
-      await FlutterOverlayWindow.closeOverlay();
-    } else {
-      if (await FlutterOverlayWindow.isPermissionGranted()) {
-        await FlutterOverlayWindow.showOverlay(
-          enableDrag: true,
-          flag: OverlayFlag.focusPointer,
-          visibility: NotificationVisibility.visibilityPublic,
-          positionGravity: PositionGravity.right,
-          height: 400,
-          width: 400,
-        );
-      } else {
-        await FlutterOverlayWindow.requestPermission();
-      }
+      return;
     }
+    var granted = await FlutterOverlayWindow.isPermissionGranted();
+    if (!granted) {
+      granted = await FlutterOverlayWindow.requestPermission() ?? false;
+    }
+    if (!granted) {
+      throw StateError('Display-over-other-apps permission was not granted.');
+    }
+    await FlutterOverlayWindow.showOverlay(
+      enableDrag: true,
+      flag: OverlayFlag.focusPointer,
+      visibility: NotificationVisibility.visibilityPublic,
+      positionGravity: PositionGravity.right,
+      height: 280,
+      width: 280,
+    );
   }
 
   Future<void> stopOverlay() async {

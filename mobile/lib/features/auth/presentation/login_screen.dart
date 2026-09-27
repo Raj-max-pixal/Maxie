@@ -80,6 +80,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             onPressed: _loading ? null : _submit,
             child: Text(_loading ? 'Signing in...' : 'Sign in'),
           ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () {
+              ref.read(authServiceProvider).continueAsGuest();
+              goHome(context);
+            },
+            icon: const Icon(Icons.rocket_launch_rounded, size: 18),
+            label: const Text('Explore MAXie (Instant Guest Access)'),
+          ),
+          const SizedBox(height: 12),
           AuthLink(label: 'Create an account', route: AppRoutes.signup),
         ],
       ),

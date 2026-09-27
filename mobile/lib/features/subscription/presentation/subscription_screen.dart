@@ -25,9 +25,10 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     final monetization = ref.watch(monetizationStateProvider);
 
     return PremiumScaffold(
-      title: 'MAXie Plus',
+      title: 'MAXie Premium',
       child: monetization.when(
-        loading: () => const LoadingIndicator(message: 'Checking MAXie Plus'),
+        loading: () =>
+            const LoadingIndicator(message: 'Checking MAXie Premium'),
         error: (error, stackTrace) => _PaywallBody(
           state: MonetizationState(
             status: MonetizationStatus.error,
@@ -84,7 +85,8 @@ class _PaywallBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isLive =
+    final canPurchase = state.status == MonetizationStatus.ready;
+    final canRestore =
         state.status == MonetizationStatus.ready ||
         state.status == MonetizationStatus.active;
 
@@ -92,8 +94,8 @@ class _PaywallBody extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 108),
       children: [
         const SectionTitle(
-          title: 'MAXie Plus',
-          subtitle: 'RevenueCat-powered upgrade path for Shipathon.',
+          title: 'MAXie Premium',
+          subtitle: 'Keep the companion free. Upgrade the power around it.',
         ),
         const SizedBox(height: AppSpacing.lg),
         PremiumCard(
@@ -113,8 +115,8 @@ class _PaywallBody extends StatelessWidget {
                   Expanded(
                     child: Text(
                       state.isPremium
-                          ? 'MAXie Plus active'
-                          : 'Unlock MAXie Plus',
+                          ? 'MAXie Premium active'
+                          : 'Unlock MAXie Premium',
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
@@ -131,9 +133,9 @@ class _PaywallBody extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               const _BenefitRow(
-                icon: Icons.record_voice_over_rounded,
-                title: 'Advanced voice companion',
-                subtitle: 'A natural next upgrade after the free chat loop.',
+                icon: Icons.pets_rounded,
+                title: 'Multiple premium companions',
+                subtitle: 'Unlock more pets, reactions, animations and rooms.',
               ),
               const _BenefitRow(
                 icon: Icons.cloud_sync_rounded,
@@ -142,25 +144,37 @@ class _PaywallBody extends StatelessWidget {
               ),
               const _BenefitRow(
                 icon: Icons.auto_awesome_rounded,
-                title: 'Premium companion styles',
-                subtitle: 'A viral reason to share MAXie screenshots.',
+                title: 'Advanced AI, study and focus',
+                subtitle:
+                    'Deeper assistance, premium themes and customization.',
               ),
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
                 label: isWorking
                     ? 'Working'
-                    : isLive
-                    ? 'Continue'
-                    : 'RevenueCat Demo Mode',
+                    : state.isPremium
+                    ? 'MAXie Premium active'
+                    : canPurchase
+                    ? 'Unlock MAXie Premium'
+                    : 'Purchases unavailable',
                 icon: Icons.shopping_bag_rounded,
-                onPressed: isWorking ? null : onPurchase,
+                onPressed: isWorking || !canPurchase ? null : onPurchase,
               ),
               const SizedBox(height: AppSpacing.sm),
               OutlinedButton.icon(
-                onPressed: isWorking ? null : onRestore,
+                onPressed: isWorking || !canRestore ? null : onRestore,
                 icon: const Icon(Icons.restore_rounded),
                 label: const Text('Restore purchases'),
               ),
+              if (!canPurchase && !state.isPremium) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  'Purchases are enabled only when MAXie Premium has a configured RevenueCat offering.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -178,7 +192,7 @@ class _PaywallBody extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               const Text(
-                'Free users get the core companion. MAXie Plus monetizes power users with voice, sync, and collectible companion styles without blocking the viral first experience.',
+                'Free includes MAXie, basic themes, focus and interactions. Premium adds companion packs, advanced AI, richer animations, study tools, cloud sync and customization.',
               ),
               const SizedBox(height: AppSpacing.md),
               Wrap(

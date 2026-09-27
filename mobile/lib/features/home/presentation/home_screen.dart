@@ -133,11 +133,7 @@ class _HomeHeader extends StatelessWidget {
         ),
         IconButton(
           tooltip: 'Notifications',
-          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('MAXie will surface important notifications here.'),
-            ),
-          ),
+          onPressed: () => context.push(AppRoutes.activity),
           icon: const Icon(Icons.notifications_none_rounded),
         ),
       ],
