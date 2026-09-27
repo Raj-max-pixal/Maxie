@@ -38,8 +38,10 @@ class EverywhereModeFoundation
       flag: OverlayFlag.focusPointer,
       visibility: NotificationVisibility.visibilityPublic,
       positionGravity: PositionGravity.right,
-      height: 280,
-      width: 280,
+      // The companion contains both a speech bubble and a pet. A 280px
+      // canvas clips either one when MAXie walks near an edge.
+      height: 360,
+      width: 360,
     );
   }
 
