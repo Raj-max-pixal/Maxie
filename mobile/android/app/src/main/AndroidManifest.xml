@@ -19,7 +19,13 @@
         <!-- Flutter Overlay Window Service for Screen Floating Companion -->
         <service
             android:name="flutter.overlay.window.flutter_overlay_window.OverlayService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <!-- Required for Android 14+ foreground overlay services. -->
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="MAXie displays the user-enabled floating companion over other apps." />
+        </service>
 
         <activity
             android:name=".MainActivity"
