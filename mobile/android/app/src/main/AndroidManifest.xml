@@ -11,6 +11,9 @@
     <!-- Notifications — required on Android 13+ (API 33+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
+    <!-- Optional, user-enabled integrations. These services are inert until the
+         user explicitly enables them in Android Settings. -->
+
     <application
         android:label="MAXie"
         android:name="${applicationName}"
@@ -25,6 +28,29 @@
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="MAXie displays the user-enabled floating companion over other apps." />
+        </service>
+
+        <service
+            android:name=".MaxieNotificationListenerService"
+            android:label="MAXie message and music access"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MaxieYouTubeAccessibilityService"
+            android:label="MAXie YouTube awareness"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/maxie_accessibility_service" />
         </service>
 
         <activity

@@ -1,8 +1,23 @@
 import 'package:flutter/services.dart';
 
 class NativeService {
-  static const MethodChannel _channel = MethodChannel('com.maxie.mobile/native');
-  static const MethodChannel _overlayChannel = MethodChannel('com.maxie.mobile/overlay');
+  static const MethodChannel _channel = MethodChannel(
+    'com.maxie.mobile/native',
+  );
+  static const MethodChannel _overlayChannel = MethodChannel(
+    'com.maxie.mobile/overlay',
+  );
+  static const EventChannel _integrationEvents = EventChannel(
+    'com.maxie.mobile/integration_events',
+  );
+
+  /// Emits only after the user enables Notification Access or MAXie's
+  /// YouTube-only accessibility service in Android Settings.
+  static Stream<Map<String, dynamic>> get integrationEvents =>
+      _integrationEvents
+          .receiveBroadcastStream()
+          .where((event) => event is Map)
+          .map((event) => Map<String, dynamic>.from(event as Map));
 
   // Overlay Permissions
   static Future<bool> checkOverlayPermission() async {
@@ -25,7 +40,9 @@ class NativeService {
   // Accessibility Permissions
   static Future<bool> checkAccessibilityPermission() async {
     try {
-      final result = await _channel.invokeMethod('checkAccessibilityPermission');
+      final result = await _channel.invokeMethod(
+        'checkAccessibilityPermission',
+      );
       return result as bool;
     } catch (e) {
       return false;
@@ -55,6 +72,22 @@ class NativeService {
       await _channel.invokeMethod('openNotificationSettings');
     } catch (e) {
       // Handle error
+    }
+  }
+
+  /// Active media sessions are available only while Notification Access is on.
+  static Future<List<Map<String, dynamic>>> activeMediaSessions() async {
+    try {
+      final sessions = await _channel.invokeMethod<List<dynamic>>(
+        'getActiveMediaSessions',
+      );
+      return sessions
+              ?.whereType<Map>()
+              .map((session) => Map<String, dynamic>.from(session))
+              .toList() ??
+          const [];
+    } catch (_) {
+      return const [];
     }
   }
 

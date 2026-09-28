@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maxie_mobile/core/services/native_service.dart';
 import 'package:maxie_mobile/features/memory/application/memory_manager.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 import 'package:maxie_mobile/features/pet/application/pet_controller.dart';
@@ -783,8 +784,48 @@ class _ExploreTile extends StatelessWidget {
   );
 }
 
-class _ConnectionSheet extends StatelessWidget {
+class _ConnectionSheet extends StatefulWidget {
   const _ConnectionSheet();
+
+  @override
+  State<_ConnectionSheet> createState() => _ConnectionSheetState();
+}
+
+class _ConnectionSheetState extends State<_ConnectionSheet>
+    with WidgetsBindingObserver {
+  bool _notificationAccess = false;
+  bool _accessibilityAccess = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _refreshStatus();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refreshStatus();
+  }
+
+  Future<void> _refreshStatus() async {
+    final notificationAccess =
+        await NativeService.checkNotificationPermission();
+    final accessibilityAccess =
+        await NativeService.checkAccessibilityPermission();
+    if (!mounted) return;
+    setState(() {
+      _notificationAccess = notificationAccess;
+      _accessibilityAccess = accessibilityAccess;
+    });
+  }
+
   @override
   Widget build(BuildContext context) => SafeArea(
     child: SingleChildScrollView(
@@ -806,20 +847,32 @@ class _ConnectionSheet extends StatelessWidget {
               style: TextStyle(color: Color(0xFF98A5B8), height: 1.4),
             ),
             const SizedBox(height: 18),
-            const _PermissionRow(
+            _PermissionRow(
               icon: Icons.chat_outlined,
               label: 'Messages',
-              detail: 'Coming with notification access',
+              detail: _notificationAccess
+                  ? 'Connected with notification access'
+                  : 'Tap to enable notification access',
+              connected: _notificationAccess,
+              onTap: NativeService.openNotificationSettings,
             ),
-            const _PermissionRow(
+            _PermissionRow(
               icon: Icons.play_circle_outline_rounded,
               label: 'YouTube',
-              detail: 'Coming with accessibility access',
+              detail: _accessibilityAccess
+                  ? 'Connected with YouTube awareness'
+                  : 'Tap to enable YouTube awareness',
+              connected: _accessibilityAccess,
+              onTap: NativeService.openAccessibilitySettings,
             ),
-            const _PermissionRow(
+            _PermissionRow(
               icon: Icons.music_note_rounded,
               label: 'Music',
-              detail: 'Coming with media session access',
+              detail: _notificationAccess
+                  ? 'Connected with media-session access'
+                  : 'Enable notification access for music detection',
+              connected: _notificationAccess,
+              onTap: NativeService.openNotificationSettings,
             ),
           ],
         ),
@@ -833,12 +886,17 @@ class _PermissionRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.detail,
+    required this.connected,
+    required this.onTap,
   });
   final IconData icon;
   final String label;
   final String detail;
+  final bool connected;
+  final Future<void> Function() onTap;
   @override
   Widget build(BuildContext context) => ListTile(
+    onTap: onTap,
     contentPadding: EdgeInsets.zero,
     leading: Icon(icon, color: const Color(0xFF9CEED1)),
     title: Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
@@ -846,10 +904,10 @@ class _PermissionRow extends StatelessWidget {
       detail,
       style: const TextStyle(fontSize: 11, color: Color(0xFF98A5B8)),
     ),
-    trailing: const Icon(
-      Icons.lock_outline_rounded,
+    trailing: Icon(
+      connected ? Icons.verified_rounded : Icons.lock_outline_rounded,
       size: 17,
-      color: Color(0xFF7E8B9E),
+      color: connected ? const Color(0xFF9CEED1) : const Color(0xFF7E8B9E),
     ),
   );
 }

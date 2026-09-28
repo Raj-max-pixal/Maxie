@@ -1,5 +1,6 @@
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/core/services/native_service.dart';
 import 'package:maxie_mobile/features/everywhere_mode/domain/services/everywhere_mode_services.dart';
 
 final everywhereModeFoundationProvider = Provider<EverywhereModeFoundation>(
@@ -52,7 +53,8 @@ class EverywhereModeFoundation
   }
 
   @override
-  Future<void> prepareAccessibilityBridge() async {}
+  Future<void> prepareAccessibilityBridge() =>
+      NativeService.openAccessibilitySettings();
 
   @override
   Future<void> prepareBatteryEvents() async {}
@@ -67,13 +69,18 @@ class EverywhereModeFoundation
   Future<void> prepareHeadphoneEvents() async {}
 
   @override
-  Future<void> prepareMediaSession() async {}
+  Future<void> prepareMediaSession() async {
+    if (!await NativeService.checkNotificationPermission()) {
+      await NativeService.openNotificationSettings();
+    }
+  }
 
   @override
-  Future<void> prepareMusicDetection() async {}
+  Future<void> prepareMusicDetection() => prepareMediaSession();
 
   @override
-  Future<void> prepareNotificationAccess() async {}
+  Future<void> prepareNotificationAccess() =>
+      NativeService.openNotificationSettings();
 
   @override
   Future<void> prepareUsageStats() async {}
