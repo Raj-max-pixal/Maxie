@@ -145,8 +145,27 @@ class ShimejiController extends StateNotifier<ShimejiState> {
     );
     if (id == 'maxie') {
       unawaitedMaxieSync(mood, animation);
+      if (state.settings.soundEnabled && state.settings.volume > 0) {
+        // The same DeviceVoiceService receives the persisted volume slider
+        // value, so this audible interaction is muted immediately at 0%.
+        _voiceService.speak(_interactionSpeech(animation));
+      }
     }
     unawaitedSave();
+  }
+
+  String _interactionSpeech(ShimejiAnimation animation) {
+    return switch (animation) {
+      ShimejiAnimation.dance => 'Let us dance!',
+      ShimejiAnimation.sleep => 'I am taking a tiny nap.',
+      ShimejiAnimation.eat => 'Yummy! Thank you.',
+      ShimejiAnimation.love => 'You are my favorite human!',
+      ShimejiAnimation.listen => 'I am listening.',
+      ShimejiAnimation.think => 'Let me think about that.',
+      ShimejiAnimation.jump => 'Whee!',
+      ShimejiAnimation.wave => 'Hello from MAXie!',
+      _ => 'MAXie is here with you!',
+    };
   }
 
   void startDrag(String id) {
