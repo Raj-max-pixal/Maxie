@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/ai_companion/domain/models/ai_companion_state.dart';
 import 'package:maxie_mobile/features/everywhere_mode/application/everywhere_mode_providers.dart';
 import 'package:maxie_mobile/features/shimeji/application/shimeji_providers.dart';
 import 'package:maxie_mobile/features/shimeji/domain/models/shimeji_models.dart';
@@ -11,6 +12,7 @@ import 'package:maxie_mobile/theme/app_spacing.dart';
 import 'package:maxie_mobile/widgets/premium_card.dart';
 import 'package:maxie_mobile/widgets/premium_scaffold.dart';
 import 'package:maxie_mobile/widgets/primary_button.dart';
+import 'package:maxie_mobile/widgets/maxie_companion_view.dart';
 import 'package:maxie_mobile/widgets/section_title.dart';
 
 class ShimejiScreen extends ConsumerStatefulWidget {
@@ -81,90 +83,129 @@ class _ShimejiScreenState extends ConsumerState<ShimejiScreen>
           ),
         ),
       ],
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
+      child: Stack(
         children: [
-          _ShimejiStage(
-            state: state,
-            onTapPet: (id) => controller.interact(id, ShimejiAnimation.love),
-            onDoubleTapPet: (id) =>
-                controller.interact(id, ShimejiAnimation.dance),
-            onLongPressPet: (pet) => _showPetControls(context, pet),
-            onDragStart: controller.startDrag,
-            onDragUpdate: (id, delta) =>
-                controller.dragPet(id, delta, _arenaSize),
-            onDragEnd: controller.throwPet,
-            onSizeChanged: (size) {
-              if (_arenaSize != size) {
-                _arenaSize = size;
-                // Re-clamp pet positions when arena size changes (orientation,
-                // settings navigation, etc.) so MAXie never renders off-screen.
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) {
-                    ref
-                        .read(shimejiControllerProvider.notifier)
-                        .clampAllPositions(size);
+          ListView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
+            children: [
+              _ShimejiStage(
+                state: state,
+                onTapPet: (id) =>
+                    controller.interact(id, ShimejiAnimation.love),
+                onDoubleTapPet: (id) =>
+                    controller.interact(id, ShimejiAnimation.dance),
+                onLongPressPet: (pet) => _showPetControls(context, pet),
+                onDragStart: controller.startDrag,
+                onDragUpdate: (id, delta) =>
+                    controller.dragPet(id, delta, _arenaSize),
+                onDragEnd: controller.throwPet,
+                onSizeChanged: (size) {
+                  if (_arenaSize != size) {
+                    _arenaSize = size;
+                    // Re-clamp pet positions when arena size changes (orientation,
+                    // settings navigation, etc.) so MAXie never renders off-screen.
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted) {
+                        ref
+                            .read(shimejiControllerProvider.notifier)
+                            .clampAllPositions(size);
+                      }
+                    });
                   }
-                });
-              }
-            },
+                },
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              _StatusStrip(state: state),
+              const SizedBox(height: AppSpacing.lg),
+              const SectionTitle(
+                title: 'Characters',
+                subtitle:
+                    'Original free companions; more packs can be added later.',
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              SizedBox(
+                height: 154,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: state.pets.length,
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(width: AppSpacing.sm),
+                  itemBuilder: (context, index) {
+                    final pet = state.pets[index];
+                    return _CharacterCard(
+                      pet: pet,
+                      selected: pet.id == state.selectedPetId,
+                      onTap: () => pet.unlocked
+                          ? controller.selectPet(pet.id)
+                          : controller.unlockWithXp(pet.id),
+                      onSpawn: () => controller.spawnPet(pet.id),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              if (selected != null) ...[
+                const SectionTitle(
+                  title: 'Actions',
+                  subtitle: 'Tap, drag, throw, or trigger an animation.',
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                _ActionGrid(
+                  selectedPetId: selected.id,
+                  onAction: controller.interact,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+              ],
+              _CustomizationPanel(
+                state: state,
+                onSettingsChanged: (settings) {
+                  controller.updateSettings(settings);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted && _arenaSize != Size.zero) {
+                      controller.clampAllPositions(_arenaSize);
+                    }
+                  });
+                },
+                onOverlayChanged: _setOverlay,
+                onReset: controller.resetPositions,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              if (state.settings.debugEnabled) _DebugPanel(state: state),
+            ],
           ),
-          const SizedBox(height: AppSpacing.lg),
-          _StatusStrip(state: state),
-          const SizedBox(height: AppSpacing.lg),
-          const SectionTitle(
-            title: 'Characters',
-            subtitle:
-                'Original free companions; more packs can be added later.',
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          SizedBox(
-            height: 154,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: state.pets.length,
-              separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
-              itemBuilder: (context, index) {
-                final pet = state.pets[index];
-                return _CharacterCard(
-                  pet: pet,
-                  selected: pet.id == state.selectedPetId,
-                  onTap: () => pet.unlocked
-                      ? controller.selectPet(pet.id)
-                      : controller.unlockWithXp(pet.id),
-                  onSpawn: () => controller.spawnPet(pet.id),
-                );
-              },
+          if (!state.settings.hidden)
+            Positioned(
+              right: 16,
+              bottom: 16,
+              child: IgnorePointer(
+                child: Semantics(
+                  label: 'MAXie companion is visible',
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: AppColors.darkSurface.withValues(alpha: 0.88),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: AppColors.calmTeal.withValues(alpha: 0.50),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.calmTeal.withValues(alpha: 0.24),
+                          blurRadius: 22,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(6),
+                      child: MaxieCompanionView(
+                        state: CompanionPresence.idle,
+                        size: 72,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          if (selected != null) ...[
-            const SectionTitle(
-              title: 'Actions',
-              subtitle: 'Tap, drag, throw, or trigger an animation.',
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            _ActionGrid(
-              selectedPetId: selected.id,
-              onAction: controller.interact,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-          ],
-          _CustomizationPanel(
-            state: state,
-            onSettingsChanged: (settings) {
-              controller.updateSettings(settings);
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted && _arenaSize != Size.zero) {
-                  controller.clampAllPositions(_arenaSize);
-                }
-              });
-            },
-            onOverlayChanged: _setOverlay,
-            onReset: controller.resetPositions,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          if (state.settings.debugEnabled) _DebugPanel(state: state),
         ],
       ),
     );
