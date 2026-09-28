@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:maxie_mobile/features/pet/application/pet_providers.dart';
 import 'package:maxie_mobile/features/pet/domain/models/pet_state.dart';
 import 'package:maxie_mobile/features/pet/domain/repositories/pet_repository.dart';
@@ -9,6 +10,8 @@ import 'package:maxie_mobile/features/shimeji/data/hive_shimeji_repository.dart'
 import 'package:maxie_mobile/features/shimeji/domain/models/shimeji_models.dart';
 import 'package:maxie_mobile/features/shimeji/domain/repositories/shimeji_repository.dart';
 import 'package:maxie_mobile/services/storage/storage_providers.dart';
+import 'package:maxie_mobile/services/voice/voice_providers.dart';
+import 'package:maxie_mobile/services/voice/voice_service.dart';
 
 final shimejiRepositoryProvider = Provider<ShimejiRepository>(
   (ref) => HiveShimejiRepository(ref.watch(storageServiceProvider)),
@@ -19,18 +22,26 @@ final shimejiControllerProvider =
       final controller = ShimejiController(
         repository: ref.watch(shimejiRepositoryProvider),
         petRepository: ref.watch(petRepositoryProvider),
+        voiceService: ref.read(voiceServiceProvider),
       );
       controller.load();
       return controller;
     });
 
 class ShimejiController extends StateNotifier<ShimejiState> {
-  ShimejiController({required this._repository, required this._petRepository})
-    : super(ShimejiState.initial());
+  ShimejiController({
+    required this._repository,
+    required this._petRepository,
+    required this._voiceService,
+  }) : super(ShimejiState.initial());
 
   final ShimejiRepository _repository;
   final PetRepository _petRepository;
+  final VoiceService _voiceService;
   final Random _random = Random();
+
+  /// Shared AudioPlayer for all MAXie sounds so volume is applied globally.
+  final AudioPlayer _audioPlayer = AudioPlayer();
   Offset _lastDragDelta = Offset.zero;
   int _saveThrottle = 0;
 
@@ -38,6 +49,13 @@ class ShimejiController extends StateNotifier<ShimejiState> {
     final saved = await _repository.readState();
     final maxie = await _petRepository.readPet();
     state = _syncFromMaxie(saved, maxie);
+    await _applyVolume(state.settings);
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   Future<void> save() async {
@@ -177,7 +195,10 @@ class ShimejiController extends StateNotifier<ShimejiState> {
       pets: [
         for (final pet in state.pets)
           pet.copyWith(
-            x: 34 + (index++ * 62),
+            x: 34 + (index++ * 62).toDouble(),
+            // Place pet at y = 0 which maps to the top of the arena.
+            // The _stepPet physics will immediately push it to the ground,
+            // and _PositionedPet clamps it to the arena bounds on render.
             y: 0,
             vx: 0,
             vy: 0,
@@ -188,9 +209,42 @@ class ShimejiController extends StateNotifier<ShimejiState> {
     unawaitedSave();
   }
 
+  /// Clamp all pet positions so they remain inside the given arena bounds.
+  /// Called whenever the arena size changes (screen rotation, returning from
+  /// settings, pet size change, etc.).
+  void clampAllPositions(Size bounds) {
+    state = state.copyWith(
+      pets: [
+        for (final pet in state.pets)
+          pet.copyWith(
+            x: pet.x.clamp(0, max(0.0, bounds.width - _petPixels(pet))),
+            y: pet.y.clamp(0, max(0.0, bounds.height - _petPixels(pet))),
+          ),
+      ],
+    );
+  }
+
   void updateSettings(ShimejiSettings settings) {
     state = state.copyWith(settings: settings);
+    // Apply volume immediately to every current MAXie audio engine. The TTS
+    // service is the live voice path; the shared player receives the same
+    // value for present and future companion sound effects.
+    _applyVolume(settings);
     unawaitedSave();
+  }
+
+  Future<void> _applyVolume(ShimejiSettings settings) async {
+    final volume = settings.soundEnabled
+        ? settings.volume.clamp(0.0, 1.0).toDouble()
+        : 0.0;
+    try {
+      await Future.wait([
+        _audioPlayer.setVolume(volume),
+        _voiceService.setVolume(volume),
+      ]);
+    } catch (_) {
+      // A missing device TTS engine must not stop companion persistence.
+    }
   }
 
   void toggleOverlay(bool enabled) {

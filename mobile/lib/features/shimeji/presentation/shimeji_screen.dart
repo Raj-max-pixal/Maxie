@@ -64,6 +64,8 @@ class _ShimejiScreenState extends ConsumerState<ShimejiScreen>
     final controller = ref.read(shimejiControllerProvider.notifier);
     final selected = state.selectedPet;
 
+    // Let the platform/router handle Back. The previous PopScope consumed the
+    // Android event even when GoRouter had no route to pop.
     return PremiumScaffold(
       title: 'Companion studio',
       actions: [
@@ -92,7 +94,20 @@ class _ShimejiScreenState extends ConsumerState<ShimejiScreen>
             onDragUpdate: (id, delta) =>
                 controller.dragPet(id, delta, _arenaSize),
             onDragEnd: controller.throwPet,
-            onSizeChanged: (size) => _arenaSize = size,
+            onSizeChanged: (size) {
+              if (_arenaSize != size) {
+                _arenaSize = size;
+                // Re-clamp pet positions when arena size changes (orientation,
+                // settings navigation, etc.) so MAXie never renders off-screen.
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    ref
+                        .read(shimejiControllerProvider.notifier)
+                        .clampAllPositions(size);
+                  }
+                });
+              }
+            },
           ),
           const SizedBox(height: AppSpacing.lg),
           _StatusStrip(state: state),
@@ -137,7 +152,14 @@ class _ShimejiScreenState extends ConsumerState<ShimejiScreen>
           ],
           _CustomizationPanel(
             state: state,
-            onSettingsChanged: controller.updateSettings,
+            onSettingsChanged: (settings) {
+              controller.updateSettings(settings);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted && _arenaSize != Size.zero) {
+                  controller.clampAllPositions(_arenaSize);
+                }
+              });
+            },
             onOverlayChanged: _setOverlay,
             onReset: controller.resetPositions,
           ),
@@ -255,51 +277,79 @@ class _ShimejiStage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final stageSize = Size(constraints.maxWidth, 430);
+        // The arena height is the stage area where pets can roam.
+        // Use a responsive height: 40% of the available width, bounded
+        // between 260 and 430 px, so it works on small phones too.
+        final arenaHeight = (constraints.maxWidth * 0.85).clamp(260.0, 430.0);
+        final stageSize = Size(constraints.maxWidth, arenaHeight);
         onSizeChanged(stageSize);
 
-        return PremiumCard(
-          child: SizedBox(
-            height: stageSize.height,
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: _StagePainter(
-                      paused: state.settings.paused,
-                      overlayEnabled: state.settings.overlayEnabled,
-                      tick: state.tick,
+        // Use a DecoratedBox instead of PremiumCard so we don't clip pets.
+        // PremiumCard uses clipBehavior: Clip.antiAlias which cuts off any
+        // AnimatedPositioned widget that renders near the card edges.
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: const Color(0xFF101A2D),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.075)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.22),
+                blurRadius: 18,
+                offset: const Offset(0, 9),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            // ClipRRect clips the background/painter to the card shape but
+            // the Stack inside has overflow: Clip.none so pets can extend
+            // slightly beyond without being hidden. Pets are position-clamped
+            // in the controller so they should never actually go outside.
+            borderRadius: BorderRadius.circular(22),
+            child: SizedBox(
+              height: arenaHeight,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: _StagePainter(
+                        paused: state.settings.paused,
+                        overlayEnabled: state.settings.overlayEnabled,
+                        tick: state.tick,
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  top: 14,
-                  left: 16,
-                  right: 16,
-                  child: _StageHud(state: state),
-                ),
-                if (state.settings.hidden)
-                  const Center(child: Text('Screen pets are hidden')),
-                for (final pet in state.pets)
-                  if (pet.visible && !state.settings.hidden)
-                    _PositionedPet(
-                      pet: pet,
-                      selected: pet.id == state.selectedPetId,
-                      settings: state.settings,
-                      onTap: () => onTapPet(pet.id),
-                      onDoubleTap: () => onDoubleTapPet(pet.id),
-                      onLongPress: () => onLongPressPet(pet),
-                      onDragStart: () => onDragStart(pet.id),
-                      onDragUpdate: (delta) => onDragUpdate(pet.id, delta),
-                      onDragEnd: () => onDragEnd(pet.id),
-                    ),
-                Positioned(
-                  left: 12,
-                  right: 12,
-                  bottom: 12,
-                  child: _OverlayBanner(status: state.overlayStatus),
-                ),
-              ],
+                  Positioned(
+                    top: 14,
+                    left: 16,
+                    right: 16,
+                    child: _StageHud(state: state),
+                  ),
+                  if (state.settings.hidden)
+                    const Center(child: Text('Screen pets are hidden')),
+                  for (final pet in state.pets)
+                    if (pet.visible && !state.settings.hidden)
+                      _PositionedPet(
+                        pet: pet,
+                        arenaSize: stageSize,
+                        selected: pet.id == state.selectedPetId,
+                        settings: state.settings,
+                        onTap: () => onTapPet(pet.id),
+                        onDoubleTap: () => onDoubleTapPet(pet.id),
+                        onLongPress: () => onLongPressPet(pet),
+                        onDragStart: () => onDragStart(pet.id),
+                        onDragUpdate: (delta) => onDragUpdate(pet.id, delta),
+                        onDragEnd: () => onDragEnd(pet.id),
+                      ),
+                  Positioned(
+                    left: 12,
+                    right: 12,
+                    bottom: 12,
+                    child: _OverlayBanner(status: state.overlayStatus),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -311,6 +361,7 @@ class _ShimejiStage extends StatelessWidget {
 class _PositionedPet extends StatelessWidget {
   const _PositionedPet({
     required this.pet,
+    required this.arenaSize,
     required this.selected,
     required this.settings,
     required this.onTap,
@@ -322,6 +373,7 @@ class _PositionedPet extends StatelessWidget {
   });
 
   final ShimejiPet pet;
+  final Size arenaSize;
   final bool selected;
   final ShimejiSettings settings;
   final VoidCallback onTap;
@@ -335,12 +387,21 @@ class _PositionedPet extends StatelessWidget {
   Widget build(BuildContext context) {
     final petSize = 78 * pet.scale * settings.petSize;
 
+    // Clamp position so MAXie is always fully inside the visible arena.
+    // This is the last line of defense — the controller also clamps, but
+    // persisted positions from a wider screen or a different petSize setting
+    // may still be out of bounds until the controller gets a chance to update.
+    final maxLeft = max(0.0, arenaSize.width - petSize);
+    final maxTop = max(0.0, arenaSize.height - petSize);
+    final clampedLeft = pet.x.clamp(0.0, maxLeft);
+    final clampedTop = pet.y.clamp(0.0, maxTop);
+
     return AnimatedPositioned(
       duration: settings.reducedMotion
           ? Duration.zero
           : const Duration(milliseconds: 80),
-      left: pet.x,
-      top: pet.y,
+      left: clampedLeft,
+      top: clampedTop,
       child: Opacity(
         opacity: settings.opacity,
         child: GestureDetector(

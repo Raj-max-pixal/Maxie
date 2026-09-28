@@ -17,17 +17,15 @@ class ShimejiOverlay extends StatefulWidget {
 }
 
 class _ShimejiOverlayState extends State<ShimejiOverlay> {
-  // Keep the animated content inside the 360 x 360 native overlay canvas.
-  // The bounds include room for MAXie's speech bubble as well as its body.
-  static const double _minX = 20;
-  static const double _maxX = 120;
-  static const double _minY = 96;
-  static const double _maxY = 160;
+  static const double _edgePadding = 12;
+  static const double _contentWidth = 216;
+  static const double _contentHeight = 230;
   static const double _petSize = 104;
 
   CompanionPresence _presence = CompanionPresence.idle;
-  double _x = 70;
-  double _y = 132;
+  double _x = 24;
+  double _y = 96;
+  Size _viewportSize = Size.zero;
   final Random _random = Random();
   Timer? _behaviorTimer;
   Timer? _complimentTimer;
@@ -167,10 +165,8 @@ class _ShimejiOverlayState extends State<ShimejiOverlay> {
       _presence = CompanionPresence.walking;
       _x += (_random.nextDouble() - 0.5) * 80;
       _y += (_random.nextDouble() - 0.5) * 80;
-
-      // Keep the full speech bubble and companion inside the native window.
-      _x = _x.clamp(_minX, _maxX);
-      _y = _y.clamp(_minY, _maxY);
+      _x = _clampX(_x);
+      _y = _clampY(_y);
     });
 
     Future.delayed(const Duration(seconds: 2), () {
@@ -194,72 +190,109 @@ class _ShimejiOverlayState extends State<ShimejiOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 1800),
-            curve: Curves.easeInOut,
-            left: _x,
-            top: _y,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Speech Bubble Float Above Head
-                if (_currentSpeech != null)
-                  Container(
-                        margin: const EdgeInsets.only(bottom: 6),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        constraints: const BoxConstraints(maxWidth: 200),
-                        decoration: BoxDecoration(
-                          color: const Color(
-                            0xFF101B2B,
-                          ).withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: _speechCategoryColor(_speechCategory),
-                            width: 1.5,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: _speechCategoryColor(
-                                _speechCategory,
-                              ).withValues(alpha: 0.35),
-                              blurRadius: 12,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          _currentSpeech!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      )
-                      .animate()
-                      .fadeIn(duration: 250.ms)
-                      .scale(begin: const Offset(0.8, 0.8)),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _viewportSize = constraints.biggest;
+        return Material(
+          color: Colors.transparent,
+          child: Stack(
+            clipBehavior: Clip.hardEdge,
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 1800),
+                curve: Curves.easeInOut,
+                left: _clampX(_x),
+                top: _clampY(_y),
+                child: SizedBox(
+                  width: _contentWidth,
+                  height: _contentHeight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Speech Bubble Float Above Head
+                      if (_currentSpeech != null)
+                        ConstrainedBox(
+                              constraints: const BoxConstraints(maxHeight: 92),
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 6),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                constraints: const BoxConstraints(
+                                  maxWidth: 200,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFF101B2B,
+                                  ).withValues(alpha: 0.92),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: _speechCategoryColor(
+                                      _speechCategory,
+                                    ),
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: _speechCategoryColor(
+                                        _speechCategory,
+                                      ).withValues(alpha: 0.35),
+                                      blurRadius: 12,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  _currentSpeech!,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .animate()
+                            .fadeIn(duration: 250.ms)
+                            .scale(begin: const Offset(0.8, 0.8)),
 
-                // Floating MAXie Pet Character
-                GestureDetector(
-                  onTap: _onTapCompanion,
-                  child: MaxieCompanionView(state: _presence, size: _petSize),
+                      // Floating MAXie Pet Character
+                      GestureDetector(
+                        onTap: _onTapCompanion,
+                        child: MaxieCompanionView(
+                          state: _presence,
+                          size: _petSize,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
+  }
+
+  double _clampX(double value) {
+    final maxX = max(
+      _edgePadding,
+      _viewportSize.width - _contentWidth - _edgePadding,
+    );
+    return value.clamp(_edgePadding, maxX).toDouble();
+  }
+
+  double _clampY(double value) {
+    final maxY = max(
+      _edgePadding,
+      _viewportSize.height - _contentHeight - _edgePadding,
+    );
+    return value.clamp(_edgePadding, maxY).toDouble();
   }
 
   Color _speechCategoryColor(String category) {

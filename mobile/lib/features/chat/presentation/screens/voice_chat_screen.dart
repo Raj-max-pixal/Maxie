@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/ai_chat/application/chat_controller.dart';
 import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
-import 'package:maxie_mobile/features/voice/domain/services/voice_service.dart';
+import 'package:maxie_mobile/services/voice/voice_providers.dart';
+import 'package:maxie_mobile/services/voice/voice_service.dart';
 
 class VoiceChatScreen extends ConsumerStatefulWidget {
   const VoiceChatScreen({super.key});
