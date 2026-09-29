@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/core/services/native_service.dart';
@@ -25,6 +28,9 @@ class EverywhereModeFoundation
   Future<void> prepareOverlay() async {
     final bool isActive = await FlutterOverlayWindow.isActive();
     if (isActive) {
+      // resizeOverlay uses dp, unlike showOverlay's physical-pixel arguments.
+      await FlutterOverlayWindow.updateFlag(OverlayFlag.defaultFlag);
+      await FlutterOverlayWindow.resizeOverlay(240, 254, true);
       return;
     }
     var granted = await FlutterOverlayWindow.isPermissionGranted();
@@ -34,15 +40,19 @@ class EverywhereModeFoundation
     if (!granted) {
       throw StateError('Display-over-other-apps permission was not granted.');
     }
+    final view = PlatformDispatcher.instance.views.first;
+    final density = view.devicePixelRatio;
     await FlutterOverlayWindow.showOverlay(
       enableDrag: true,
-      flag: OverlayFlag.focusPointer,
+      flag: OverlayFlag.defaultFlag,
       visibility: NotificationVisibility.visibilityPublic,
       positionGravity: PositionGravity.right,
-      // The companion contains both a speech bubble and a pet. A 280px
-      // canvas clips either one when MAXie walks near an edge.
-      height: 360,
-      width: 360,
+      // Plugin 0.4.5 passes these directly to WindowManager in physical pixels.
+      height: math.min(
+        (254 * density).ceil(),
+        view.physicalSize.height.floor(),
+      ),
+      width: math.min((240 * density).ceil(), view.physicalSize.width.floor()),
     );
   }
 

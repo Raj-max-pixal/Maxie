@@ -198,77 +198,81 @@ class _ShimejiOverlayState extends State<ShimejiOverlay> {
           child: Stack(
             clipBehavior: Clip.hardEdge,
             children: [
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 1800),
-                curve: Curves.easeInOut,
-                left: _clampX(_x),
-                top: _clampY(_y),
-                child: SizedBox(
-                  width: _contentWidth,
-                  height: _contentHeight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      // Speech Bubble Float Above Head
-                      if (_currentSpeech != null)
-                        ConstrainedBox(
-                              constraints: const BoxConstraints(maxHeight: 92),
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 6),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                constraints: const BoxConstraints(
-                                  maxWidth: 200,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFF101B2B,
-                                  ).withValues(alpha: 0.92),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: _speechCategoryColor(
-                                      _speechCategory,
-                                    ),
-                                    width: 1.5,
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: SizedBox(
+                      width: _contentWidth,
+                      height: _contentHeight,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // Speech Bubble Float Above Head
+                          if (_currentSpeech != null)
+                            ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 92,
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: _speechCategoryColor(
-                                        _speechCategory,
-                                      ).withValues(alpha: 0.35),
-                                      blurRadius: 12,
-                                      spreadRadius: 2,
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
                                     ),
-                                  ],
-                                ),
-                                child: Text(
-                                  _currentSpeech!,
-                                  maxLines: 4,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 200,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(
+                                        0xFF101B2B,
+                                      ).withValues(alpha: 0.92),
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: _speechCategoryColor(
+                                          _speechCategory,
+                                        ),
+                                        width: 1.5,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: _speechCategoryColor(
+                                            _speechCategory,
+                                          ).withValues(alpha: 0.35),
+                                          blurRadius: 12,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      _currentSpeech!,
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            )
-                            .animate()
-                            .fadeIn(duration: 250.ms)
-                            .scale(begin: const Offset(0.8, 0.8)),
+                                )
+                                .animate()
+                                .fadeIn(duration: 250.ms)
+                                .scale(begin: const Offset(0.8, 0.8)),
 
-                      // Floating MAXie Pet Character
-                      GestureDetector(
-                        onTap: _onTapCompanion,
-                        child: MaxieCompanionView(
-                          state: _presence,
-                          size: _petSize,
-                        ),
+                          // Floating MAXie Pet Character
+                          GestureDetector(
+                            onTap: _onTapCompanion,
+                            child: MaxieCompanionView(
+                              state: _presence,
+                              size: _petSize,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
