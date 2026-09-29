@@ -843,13 +843,13 @@ class _ConnectionSheetState extends State<_ConnectionSheet>
             ),
             const SizedBox(height: 8),
             const Text(
-              'MAXie can react to messages, videos and music only after you choose a connection. Nothing is monitored silently.',
+              'Music uses track/artist metadata from Android. App awareness identifies video apps and games without reading screen contents. Tap the floating pet for chat, AI consent and voice controls.',
               style: TextStyle(color: Color(0xFF98A5B8), height: 1.4),
             ),
             const SizedBox(height: 18),
             _PermissionRow(
               icon: Icons.chat_outlined,
-              label: 'Messages',
+              label: 'Media access',
               detail: _notificationAccess
                   ? 'Connected with notification access'
                   : 'Tap to enable notification access',
@@ -858,10 +858,10 @@ class _ConnectionSheetState extends State<_ConnectionSheet>
             ),
             _PermissionRow(
               icon: Icons.play_circle_outline_rounded,
-              label: 'YouTube',
+              label: 'Video & game apps',
               detail: _accessibilityAccess
-                  ? 'Connected with YouTube awareness'
-                  : 'Tap to enable YouTube awareness',
+                  ? 'App awareness enabled in Android'
+                  : 'Enable MAXie app awareness in Android',
               connected: _accessibilityAccess,
               onTap: NativeService.openAccessibilitySettings,
             ),

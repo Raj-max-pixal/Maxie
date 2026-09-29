@@ -11,7 +11,7 @@ class GeminiProvider implements AiProvider {
   static const String _apiKey = String.fromEnvironment('GEMINI_API_KEY');
   static const String _model = String.fromEnvironment(
     'GEMINI_MODEL',
-    defaultValue: 'gemini-1.5-flash',
+    defaultValue: 'gemini-3.1-flash-lite',
   );
 
   final http.Client _client;

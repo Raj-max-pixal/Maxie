@@ -19,6 +19,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        MaxieIntegrationBridge.start(applicationContext)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, nativeChannel)
             .setMethodCallHandler(::handleMethod)
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, eventsChannel)

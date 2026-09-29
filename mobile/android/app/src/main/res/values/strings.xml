@@ -2,5 +2,5 @@
 <resources>
     <string name="app_name">MAXie</string>
     <string name="widget_description">Your MAXie companion, habits, and daily progress.</string>
-    <string name="maxie_accessibility_description">Lets MAXie know when YouTube is open. MAXie does not read video titles, comments, or typed text.</string>
+    <string name="maxie_accessibility_description">Lets MAXie identify the foreground app for video and game reactions. No screen contents, messages, typed text, or screenshots are read. Turn off this service anytime to stop app detection.</string>
 </resources>
