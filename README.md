@@ -10,7 +10,7 @@
 
 # 🐾 MAXie
 
-### **An Intelligent AI Desktop Companion That Lives, Learns, and Grows With You.**
+### **An Intelligent AI Desktop and Mobile Companion That Lives, Learns, and Grows With You.**
 
 <p align="center">
 Making your desktop more productive, interactive, and alive with AI.
@@ -57,11 +57,11 @@ Making your desktop more productive, interactive, and alive with AI.
 
 MAXie isn't just another desktop pet.
 
-It's an intelligent desktop companion designed to make your computer feel alive.
+It's an intelligent desktop and mobile companion designed to make your computer feel alive.
 
 Whether you're coding late at night, studying for exams, listening to music, gaming with friends, or simply browsing the web, MAXie stays by your side—reacting, learning, remembering, and growing with every interaction.
 
-Unlike traditional desktop pets that simply play animations, MAXie understands your workflow, adapts to your routine, and becomes more personalized over time.
+Unlike traditional desktop and mobile pets that simply play animations, MAXie understands your workflow, adapts to your routine, and becomes more personalized over time.
 
 Think of it as your digital companion that blends artificial intelligence, productivity, personality, and fun into one seamless desktop experience.
 
@@ -321,7 +321,7 @@ Expected showcase:
 
 ---
 
-> 💙 **MAXie is more than software. It's an evolving AI companion designed to make every desktop feel a little more alive.**
+> 💙 **MAXie is more than software and app. It's an evolving AI companion designed to make every desktop feel a little more alive.**
 <!-- ========================================================= -->
 <!--                 MAXie README - Part 2                      -->
 <!--        Architecture • Installation • Development          -->
@@ -790,6 +790,7 @@ Controls:
 |-----------|---------|
 | Windows 10 | ✅ |
 | Windows 11 | ✅ |
+| Android 10+ | ✅ |
 | Linux | 🚧 Planned |
 | macOS | 🚧 Planned |
 
@@ -1405,6 +1406,7 @@ Current support:
 
 - Windows 10
 - Windows 11
+- Android 10+
 
 Linux and macOS support are planned for future releases.
 
