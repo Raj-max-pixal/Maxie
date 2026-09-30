@@ -2,19 +2,6 @@
   "cleanUrls": true,
   "headers": [
     {
-      "source": "/downloads/maxie-setup-0.1.0.exe",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/vnd.microsoft.portable-executable"
-        },
-        {
-          "key": "Content-Disposition",
-          "value": "attachment; filename=\"MAXie Setup 0.1.0.exe\""
-        }
-      ]
-    },
-    {
       "source": "/downloads/(.*)",
       "headers": [
         {
@@ -24,6 +11,19 @@
         {
           "key": "Content-Disposition",
           "value": "attachment; filename=\"MAXie-v1.0.0+3-overlay-fixed.apk\""
+        }
+      ]
+    },
+    {
+      "source": "/downloads/maxie-setup-0.1.0.exe",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/vnd.microsoft.portable-executable"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"MAXie Setup 0.1.0.exe\""
         }
       ]
     }
