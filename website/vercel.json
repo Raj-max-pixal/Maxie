@@ -10,7 +10,7 @@
         },
         {
           "key": "Content-Disposition",
-          "value": "attachment"
+          "value": "attachment; filename=\"MAXie-v1.0.0+3-overlay-fixed.apk\""
         }
       ]
     }
