@@ -10,10 +10,10 @@
 
 # 🐾 MAXie
 
-### **An Intelligent AI Desktop and Mobile Companion That Lives, Learns, and Grows With You.**
+### **An Intelligent AI Companion for Desktop and Mobile That Lives, Learns, and Grows With You.**
 
 <p align="center">
-Making your desktop more productive, interactive, and alive with AI.
+Making your desktop and mobile experience more productive, interactive, and alive with AI.
 </p>
 
 <p align="center">
@@ -31,6 +31,9 @@ Making your desktop more productive, interactive, and alive with AI.
 <img src="https://img.shields.io/badge/Electron-v31+-47848F?style=flat-square">
 <img src="https://img.shields.io/badge/Node.js-v20+-339933?style=flat-square">
 <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square">
+<img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=flat-square&logo=android&logoColor=white">
+<img src="https://img.shields.io/badge/Flutter-3.12+-02569B?style=flat-square&logo=flutter&logoColor=white">
+<img src="https://img.shields.io/badge/Dart-3.12+-0175C2?style=flat-square&logo=dart&logoColor=white">
 <img src="https://img.shields.io/badge/License-MIT-success?style=flat-square">
 <img src="https://img.shields.io/badge/Status-Beta-orange?style=flat-square">
 
@@ -38,9 +41,9 @@ Making your desktop more productive, interactive, and alive with AI.
 
 <p align="center">
 
-<a href="#-features">Features</a> •
-<a href="#-installation">Installation</a> •
-<a href="#-roadmap">Roadmap</a> •
+<a href="#-core-features">Features</a> •
+<a href="#-getting-started">Getting Started</a> •
+<a href="#-development-roadmap">Roadmap</a> •
 <a href="#-contributing">Contributing</a> •
 <a href="#-license">License</a>
 
@@ -55,15 +58,15 @@ Making your desktop more productive, interactive, and alive with AI.
 <img width="1983" height="793" alt="banner" src="https://github.com/user-attachments/assets/bbb2f270-501a-4e9c-ac10-cca68232b387" />
 
 
-MAXie isn't just another desktop pet.
+MAXie isn't just another desktop or mobile pet.
 
-It's an intelligent desktop and mobile companion designed to make your computer feel alive.
+It's an intelligent companion designed to make your computer and phone feel alive.
 
 Whether you're coding late at night, studying for exams, listening to music, gaming with friends, or simply browsing the web, MAXie stays by your side—reacting, learning, remembering, and growing with every interaction.
 
-Unlike traditional desktop and mobile pets that simply play animations, MAXie understands your workflow, adapts to your routine, and becomes more personalized over time.
+Unlike traditional desktop pets that simply play animations, MAXie understands your workflow, adapts to your routine, and becomes more personalized over time.
 
-Think of it as your digital companion that blends artificial intelligence, productivity, personality, and fun into one seamless desktop experience.
+Think of it as your digital companion that blends artificial intelligence, productivity, personality, and fun into one seamless cross-device experience.
 
 ---
 
@@ -71,11 +74,11 @@ Think of it as your digital companion that blends artificial intelligence, produ
 
 Our vision is simple:
 
-> **Create the world's most intelligent and lovable desktop AI companion.**
+> **Create the world's most intelligent and lovable AI companion across desktop and mobile.**
 
 MAXie is built to bridge the gap between productivity software and emotional interaction.
 
-Instead of opening another chatbot in your browser, imagine having an AI friend living directly on your desktop—always available, always learning, and always evolving.
+Instead of opening another chatbot in your browser, imagine having an AI friend on your desktop and in your pocket—always available, always learning, and always evolving.
 
 ---
 
@@ -259,6 +262,21 @@ MAXie keeps your data on your device whenever possible.
 
 ---
 
+## 📱 Mobile Features
+
+MAXie Mobile brings the companion experience to Android with a Flutter app designed around daily interaction, memory, and growth.
+
+- AI chat with local demo responses and optional Gemini integration
+- Memory Brain for saved personal facts and conversation memories
+- Companion mood, friendship XP, and achievement progress
+- Interactive in-app Shimeji-style companion with movement and drag interactions
+- Home dashboard with quick actions, companion status, and daily summaries
+- Voice-chat experience, tasks, Pomodoro focus timer, and wellbeing reminders
+- Local data persistence with Hive
+- MAXie Plus subscription screen with purchase and restore flows
+
+---
+
 ## 🎭 Expressions
 
 MAXie can express dozens of emotions.
@@ -299,7 +317,10 @@ MAXie can express dozens of emotions.
 | Local LLM Support | ✅ Complete |
 | Voice Chat | ✅ Complete (Phase 7 SpeechSynthesis/Rec) |
 | Plugin System | 📅 Planned |
-| Mobile Companion | ✅ Complete (Phase 6.5 & 7) |
+| Mobile Companion | ✅ Complete |
+| Mobile AI Chat & Memory Brain | ✅ Complete |
+| Mobile Shimeji & Gamification | ✅ Complete |
+| Mobile Productivity Tools | ✅ Complete |
 | Cloud Sync | 📅 Planned |
 
 ---
@@ -321,7 +342,7 @@ Expected showcase:
 
 ---
 
-> 💙 **MAXie is more than software and app. It's an evolving AI companion designed to make every desktop feel a little more alive.**
+> 💙 **MAXie is more than software. It's an evolving AI companion designed to make every desktop feel a little more alive.**
 <!-- ========================================================= -->
 <!--                 MAXie README - Part 2                      -->
 <!--        Architecture • Installation • Development          -->
@@ -456,34 +477,23 @@ Coming Soon
                            │        User             │
                            └────────────┬────────────┘
                                         │
-                         Mouse / Keyboard / Voice
+                  Mouse / Keyboard / Touch / Voice
                                         │
                                         ▼
-                   ┌───────────────────────────────┐
-                   │        Electron Desktop       │
-                   │        Application Layer      │
-                   └────────────┬──────────────────┘
-                                │
-        ┌───────────────────────┼─────────────────────────┐
-        │                       │                         │
-        ▼                       ▼                         ▼
-
- Animation Engine       AI Personality Engine      Desktop Monitor
-
-        │                       │                         │
-        ▼                       ▼                         ▼
-
- Mood System          Memory Manager         Activity Detection
-
-        │                       │                         │
-        └───────────────┬───────┴───────────────┬────────┘
-                        ▼
-                Local Data Storage
-
-                        │
-                        ▼
-
-             Ollama / Local AI Models
+          ┌─────────────────────┴─────────────────────┐
+          ▼                                           ▼
+ ┌───────────────────┐                       ┌───────────────────┐
+ │ Electron Desktop  │                       │ Flutter Mobile    │
+ │ Windows companion │                       │ Android companion │
+ └─────────┬─────────┘                       └─────────┬─────────┘
+           │                                           │
+           └──────────────────┬────────────────────────┘
+                              ▼
+              Personality • Mood • Memory • XP
+                              │
+                              ▼
+          Local-first storage and AI integrations
+          Ollama / Local LLMs / Gemini when configured
 ```
 
 <img width="1536" height="1024" alt="archicture 2" src="https://github.com/user-attachments/assets/fade6a9d-007e-434e-aa3a-917108b17416" />
@@ -530,6 +540,16 @@ Coming Soon
 
 ---
 
+## 📱 Mobile Framework
+
+- Flutter
+- Dart
+- Android
+- Riverpod
+- GoRouter
+
+---
+
 ## 💻 Frontend
 
 - HTML5
@@ -546,6 +566,7 @@ Coming Soon
 - Personality Engine
 - Memory Engine
 - Context Processing
+- Gemini integration (mobile, when configured)
 
 ---
 
@@ -555,6 +576,7 @@ Coming Soon
 - Local Configuration
 - Local User Memory
 - Settings Manager
+- Hive local storage (mobile)
 
 ---
 
@@ -574,6 +596,7 @@ Coming Soon
 - GitHub
 - npm
 - Electron Builder
+- Flutter SDK
 
 ---
 
@@ -582,28 +605,27 @@ Coming Soon
 ```
 MAXie
 │
-├── assets/
-│   ├── gifs/
-│   ├── icons/
-│   ├── sounds/
-│   ├── screenshots/
-│   └── animations/
-│
-├── src/
+├── desktop/                 # Electron desktop companion
 │   ├── ai/
 │   ├── animations/
-│   ├── desktop/
-│   ├── memory/
-│   ├── personality/
-│   ├── reactions/
+│   ├── renderer/
 │   ├── settings/
-│   └── utils/
+│   ├── storage/
+│   └── main.js
 │
-├── app.js
-├── main.js
-├── preload.js
-├── index.html
-├── styles.css
+├── mobile/                  # Flutter mobile companion
+│   ├── android/
+│   ├── ios/
+│   ├── assets/
+│   ├── lib/
+│   │   ├── features/
+│   │   ├── services/
+│   │   └── widgets/
+│   ├── test/
+│   └── pubspec.yaml
+│
+├── assets/
+├── docs/
 ├── package.json
 ├── LICENSE
 └── README.md
@@ -615,12 +637,11 @@ MAXie
 
 ## Prerequisites
 
-Before installing MAXie, make sure you have:
+Install the prerequisites for the platform you want to run:
 
-- Node.js 20+
-- npm
 - Git
-- Windows 10/11
+- **Desktop:** Windows 10/11, Node.js 20+, and npm
+- **Mobile:** Flutter SDK (Dart 3.12+) and an Android device or emulator
 
 ---
 
@@ -640,34 +661,39 @@ cd MAXie
 
 ---
 
-## Install Dependencies
+## Run the Desktop Companion
 
 ```bash
+cd desktop
 npm install
-```
-
----
-
-## Start Development
-
-```bash
 npm start
 ```
 
 ---
 
-## Build Application
+## Build the Desktop Companion
 
 ```bash
-npm run build
+npm run dist
 ```
 
 ---
 
-## Package for Windows
+## Run the Mobile Companion
 
 ```bash
-npm run dist
+cd mobile
+flutter pub get
+flutter run
+```
+
+---
+
+## Build the Mobile Companion
+
+```bash
+cd mobile
+flutter build apk --release
 ```
 
 ---
@@ -681,6 +707,7 @@ Available formats:
 - Windows Installer (.exe)
 - Portable Version
 - ZIP Package
+- Android APK
 
 ---
 
@@ -784,7 +811,7 @@ Controls:
 
 ---
 
-# 🖥 Supported Environment
+# 🖥📱 Supported Environment
 
 | Component | Support |
 |-----------|---------|
@@ -843,6 +870,10 @@ Future configuration options include:
 - ✔ System Tray
 - ✔ Local Storage
 - ✔ Offline AI
+- ✔ Mobile Launch
+- ✔ Mobile Chat & Memory
+- ✔ Mobile Companion & Shimeji Experience
+- ✔ Mobile XP, moods & achievements
 
 ---
 
@@ -1182,6 +1213,9 @@ Community translations will also be welcomed.
 - ✅ Desktop Awareness
 - ✅ Offline AI
 - ✅ Productivity Features
+- ✅ Mobile Companion
+- ✅ Mobile Chat, Memory & Friendship XP
+- ✅ Mobile Shimeji-style Companion
 
 ---
 
@@ -1201,7 +1235,6 @@ Community translations will also be welcomed.
 ## Version 3.x
 
 - Cross-platform Support
-- Mobile Companion
 - Cloud Sync (Optional)
 - Collaborative AI Agents
 - Wearable Integration
@@ -1243,11 +1276,12 @@ MAXie is being built with scalability in mind, ensuring that today's companion c
 | Voice Assistant | 🚧 In Development |
 | Plugin SDK | 📅 Planned |
 | Cross-Platform | 📅 Planned |
-| Mobile Integration | 📅 Planned |
+| Mobile Companion | ✅ Complete |
+| Mobile Integration | ✅ Complete |
 
 ---
 
-> **MAXie is more than a desktop application—it is an evolving AI ecosystem designed to make technology feel more personal, intelligent, and human while keeping users in control of their data and experience.**
+> **MAXie is more than a desktop application—it is an evolving desktop-and-mobile AI ecosystem designed to make technology feel more personal, intelligent, and human while keeping users in control of their data and experience.**
 >
 > <!-- ========================================================= -->
 <!--                 MAXie README - Part 4                      -->
