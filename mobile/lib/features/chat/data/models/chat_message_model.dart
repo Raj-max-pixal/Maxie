@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 
 enum MessageSender { user, assistant, system }
 
@@ -11,6 +10,9 @@ class ChatMessageModel {
   final Map<String, dynamic>? metadata;
   final bool isVoiceMessage;
   final String? voiceUrl;
+
+  String get text => content;
+  bool get isUser => sender == MessageSender.user;
 
   const ChatMessageModel({
     required this.id,

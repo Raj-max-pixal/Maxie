@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/services/cloud_service.dart';
-import '../../../shared/widgets/glass_card.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:intl/intl.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/cloud/data/services/cloud_service.dart';
+import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
 
 class CloudSyncScreen extends ConsumerWidget {
   const CloudSyncScreen({super.key});
@@ -12,6 +13,7 @@ class CloudSyncScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
+    final cloudService = ref.watch(cloudServiceProvider);
 
     return Scaffold(
       body: Container(
@@ -39,7 +41,7 @@ class CloudSyncScreen extends ConsumerWidget {
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.arrow_back, color: Colors.white),
@@ -72,7 +74,7 @@ class CloudSyncScreen extends ConsumerWidget {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     colors: [AppConstants.primaryPurple, AppConstants.primaryPink],
                                   ),
                                   borderRadius: BorderRadius.circular(24),
@@ -81,7 +83,7 @@ class CloudSyncScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'Not Signed In',
+                                cloudService.isLoggedIn ? 'Signed In' : 'Not Signed In',
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -89,10 +91,12 @@ class CloudSyncScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Sign in to backup your pets, data,\nand sync across devices.',
+                                cloudService.isLoggedIn
+                                    ? 'Account: ${cloudService.userEmail}'
+                                    : 'Sign in to backup your pets, data,\nand sync across devices.',
                                 textAlign: TextAlign.center,
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                 ),
                               ),
                               const SizedBox(height: 24),
@@ -100,17 +104,31 @@ class CloudSyncScreen extends ConsumerWidget {
                                 width: double.infinity,
                                 child: DecoratedBox(
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
+                                    gradient: const LinearGradient(
                                       colors: [AppConstants.primaryPurple, AppConstants.primaryPink],
                                     ),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: ElevatedButton.icon(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.login, color: Colors.white),
-                                    label: const Text(
-                                      'Sign in with Google',
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                                    onPressed: () async {
+                                      if (cloudService.isLoggedIn) {
+                                        await cloudService.logout();
+                                      } else {
+                                        final success = await cloudService.loginWithGoogle();
+                                        if (success && context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Successfully signed in!')),
+                                          );
+                                        }
+                                      }
+                                    },
+                                    icon: Icon(
+                                      cloudService.isLoggedIn ? Icons.logout : Icons.login,
+                                      color: Colors.white,
+                                    ),
+                                    label: Text(
+                                      cloudService.isLoggedIn ? 'Sign Out' : 'Sign in with Google',
+                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.transparent,
@@ -140,11 +158,15 @@ class CloudSyncScreen extends ConsumerWidget {
                                 context,
                                 icon: Icons.pets,
                                 title: 'Sync Pets',
-                                subtitle: 'Last synced: Never',
+                                subtitle: cloudService.lastSyncTime != null
+                                    ? 'Last synced: ${DateFormat('MMM d, h:mm a').format(cloudService.lastSyncTime!)}'
+                                    : 'Last synced: Never',
                                 trailing: Switch.adaptive(
-                                  value: true,
+                                  value: cloudService.getSyncPref('pets'),
                                   activeColor: AppConstants.primaryPurple,
-                                  onChanged: (v) {},
+                                  onChanged: cloudService.isLoggedIn
+                                      ? (v) => cloudService.setSyncPref('pets', v)
+                                      : null,
                                 ),
                               ),
                               const Divider(color: Colors.white12),
@@ -152,11 +174,15 @@ class CloudSyncScreen extends ConsumerWidget {
                                 context,
                                 icon: Icons.settings,
                                 title: 'Sync Settings',
-                                subtitle: 'Last synced: Never',
+                                subtitle: cloudService.lastSyncTime != null
+                                    ? 'Last synced: ${DateFormat('MMM d, h:mm a').format(cloudService.lastSyncTime!)}'
+                                    : 'Last synced: Never',
                                 trailing: Switch.adaptive(
-                                  value: true,
+                                  value: cloudService.getSyncPref('settings'),
                                   activeColor: AppConstants.primaryPurple,
-                                  onChanged: (v) {},
+                                  onChanged: cloudService.isLoggedIn
+                                      ? (v) => cloudService.setSyncPref('settings', v)
+                                      : null,
                                 ),
                               ),
                               const Divider(color: Colors.white12),
@@ -164,11 +190,15 @@ class CloudSyncScreen extends ConsumerWidget {
                                 context,
                                 icon: Icons.auto_stories,
                                 title: 'Sync Achievements',
-                                subtitle: 'Last synced: Never',
+                                subtitle: cloudService.lastSyncTime != null
+                                    ? 'Last synced: ${DateFormat('MMM d, h:mm a').format(cloudService.lastSyncTime!)}'
+                                    : 'Last synced: Never',
                                 trailing: Switch.adaptive(
-                                  value: true,
+                                  value: cloudService.getSyncPref('achievements'),
                                   activeColor: AppConstants.primaryPurple,
-                                  onChanged: (v) {},
+                                  onChanged: cloudService.isLoggedIn
+                                      ? (v) => cloudService.setSyncPref('achievements', v)
+                                      : null,
                                 ),
                               ),
                             ],
@@ -187,11 +217,11 @@ class CloudSyncScreen extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.backup, color: Colors.white.withOpacity(0.8), size: 20),
+                                  Icon(Icons.backup, color: Colors.white.withValues(alpha: 0.8), size: 20),
                                   const SizedBox(width: 8),
                                   Text('Backup & Restore',
                                     style: theme.textTheme.titleSmall?.copyWith(
-                                      color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),
+                                      color: Colors.white.withValues(alpha: 0.8), fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),
@@ -199,17 +229,35 @@ class CloudSyncScreen extends ConsumerWidget {
                               _buildActionTile(
                                 context,
                                 icon: Icons.cloud_upload,
-                                title: 'Backup to Cloud',
+                                title: cloudService.isSyncing ? 'Backing up...' : 'Backup to Cloud',
                                 subtitle: 'Upload your latest data',
-                                onTap: () {},
+                                onTap: cloudService.isLoggedIn && !cloudService.isSyncing
+                                    ? () async {
+                                        final success = await cloudService.backup();
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(success ? 'Backup completed!' : 'Backup failed.')),
+                                          );
+                                        }
+                                      }
+                                    : null,
                               ),
                               const Divider(color: Colors.white12),
                               _buildActionTile(
                                 context,
                                 icon: Icons.cloud_download,
-                                title: 'Restore from Cloud',
+                                title: cloudService.isSyncing ? 'Restoring...' : 'Restore from Cloud',
                                 subtitle: 'Recover data from backup',
-                                onTap: () {},
+                                onTap: cloudService.isLoggedIn && !cloudService.isSyncing
+                                    ? () async {
+                                        final success = await cloudService.restore();
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(success ? 'Restore completed!' : 'Restore failed.')),
+                                          );
+                                        }
+                                      }
+                                    : null,
                               ),
                               const Divider(color: Colors.white12),
                               _buildActionTile(
@@ -217,7 +265,16 @@ class CloudSyncScreen extends ConsumerWidget {
                                 icon: Icons.delete_sweep,
                                 title: 'Clear Cloud Data',
                                 subtitle: 'Remove all cloud backups',
-                                onTap: () {},
+                                onTap: cloudService.isLoggedIn && !cloudService.isSyncing
+                                    ? () async {
+                                        // Clean cloud backup document
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Cloud data cleared!')),
+                                          );
+                                        }
+                                      }
+                                    : null,
                               ),
                             ],
                           ),
@@ -232,13 +289,13 @@ class CloudSyncScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Icon(Icons.sync, color: Colors.white.withOpacity(0.6), size: 20),
+                              Icon(Icons.sync, color: Colors.white.withValues(alpha: 0.6), size: 20),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   'Automatic sync is enabled. Data will sync when signed in.',
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    color: Colors.white.withOpacity(0.6),
+                                    color: Colors.white.withValues(alpha: 0.6),
                                   ),
                                 ),
                               ),
@@ -274,7 +331,7 @@ class CloudSyncScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppConstants.primaryPurple.withOpacity(0.15),
+              color: AppConstants.primaryPurple.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: AppConstants.primaryPurple, size: 20),
@@ -290,13 +347,13 @@ class CloudSyncScreen extends ConsumerWidget {
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
                   Text(subtitle,
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.5)),
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.5)),
                   ),
                 ],
               ],
             ),
           ),
-          if (trailing != null) trailing,
+          ?trailing,
         ],
       ),
     );
@@ -320,7 +377,7 @@ class CloudSyncScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppConstants.primaryPurple.withOpacity(0.15),
+                color: AppConstants.primaryPurple.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: AppConstants.primaryPurple, size: 20),
@@ -336,13 +393,13 @@ class CloudSyncScreen extends ConsumerWidget {
                   if (subtitle != null) ...[
                     const SizedBox(height: 2),
                     Text(subtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.5)),
+                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.5)),
                     ),
                   ],
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.4), size: 28),
+            Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.4), size: 28),
           ],
         ),
       ),

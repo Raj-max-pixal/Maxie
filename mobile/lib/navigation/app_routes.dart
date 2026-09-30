@@ -2,6 +2,9 @@ class AppRoutes {
   const AppRoutes._();
 
   static const String splash = '/';
+  static const String login = '/login';
+  static const String signup = '/signup';
+  static const String forgotPassword = '/forgot-password';
   static const String onboarding = '/onboarding';
   static const String home = '/home';
   static const String settings = '/settings';
@@ -10,5 +13,10 @@ class AppRoutes {
   static const String aiChat = '/ai-chat';
   static const String memory = '/memory';
   static const String pet = '/pet';
+  static const String shimeji = '/shimeji';
   static const String tasks = '/tasks';
+  static const String missionControl = '/mission-control';
+  static const String agentRun = '/agent-run';
+  static const String focus = '/focus';
+  static const String activity = '/activity';
 }

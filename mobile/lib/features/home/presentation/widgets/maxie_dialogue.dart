@@ -22,15 +22,15 @@ class MaxieDialogue extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.85),
+            color: Colors.white.withValues(alpha: 0.85),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: Colors.white.withOpacity(0.4),
+              color: Colors.white.withValues(alpha: 0.4),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.12),
+                color: Colors.black.withValues(alpha: 0.12),
                 blurRadius: 12,
                 offset: const Offset(0, 6),
               ),
@@ -51,7 +51,7 @@ class MaxieDialogue extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
-                        color: Colors.indigo.shade950,
+                        color: Colors.indigo.shade900,
                       ),
                     ),
                   ),
@@ -67,7 +67,7 @@ class MaxieDialogue extends StatelessWidget {
         // Dialogue pointer tail
         CustomPaint(
           size: const Size(12, 6),
-          painter: TrianglePainter(color: Colors.white.withOpacity(0.85)),
+          painter: TrianglePainter(color: Colors.white.withValues(alpha: 0.85)),
         ),
       ],
     );

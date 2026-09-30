@@ -4,3 +4,10 @@ out/
 mobile/www/
 *.log
 desktop-state.json
+.preview-profile/
+*.apk
+*.jks
+desktop/android/.gradle/
+mobile/.dart_tool/
+mobile/.flutter-plugins-dependencies
+mobile/android/key.properties

@@ -19,6 +19,7 @@ class AppTheme {
 
     return _base(colorScheme).copyWith(
       scaffoldBackgroundColor: AppColors.lightScaffold,
+      dividerColor: Colors.transparent,
     );
   }
 
@@ -34,6 +35,7 @@ class AppTheme {
 
     return _base(colorScheme).copyWith(
       scaffoldBackgroundColor: AppColors.darkScaffold,
+      dividerColor: Colors.transparent,
     );
   }
 
@@ -47,12 +49,13 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       textTheme: textTheme,
+      splashFactory: InkSparkle.splashFactory,
+      dividerColor: Colors.transparent,
       appBarTheme: AppBarTheme(
         centerTitle: false,
         elevation: AppElevation.none,
-        backgroundColor: colorScheme.brightness == Brightness.dark
-            ? AppColors.darkScaffold
-            : Colors.transparent,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         foregroundColor: colorScheme.onSurface,
       ),
       cardTheme: CardThemeData(
@@ -67,6 +70,8 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           minimumSize: const Size.fromHeight(52),
           elevation: AppElevation.none,
+          foregroundColor: Colors.white,
+          backgroundColor: AppColors.seed,
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.md,
@@ -80,6 +85,9 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size.fromHeight(52),
+          foregroundColor: Colors.white,
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.14)),
+          backgroundColor: Colors.white.withValues(alpha: 0.04),
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.md,
@@ -92,9 +100,33 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
+        fillColor: colorScheme.brightness == Brightness.dark
+            ? Colors.white.withValues(alpha: 0.06)
+            : Colors.white,
+        labelStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface.withValues(alpha: 0.72),
+        ),
+        hintStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface.withValues(alpha: 0.42),
+        ),
         border: OutlineInputBorder(
           borderRadius: AppRadius.input,
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: colorScheme.onSurface.withValues(alpha: 0.08),
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: AppRadius.input,
+          borderSide: BorderSide(
+            color: colorScheme.onSurface.withValues(alpha: 0.08),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppRadius.input,
+          borderSide: BorderSide(
+            color: colorScheme.primary.withValues(alpha: 0.55),
+            width: 1.4,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
@@ -112,6 +144,39 @@ class AppTheme {
         indicatorColor: colorScheme.primary.withValues(alpha: 0.18),
         labelTextStyle: WidgetStatePropertyAll(
           textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: Colors.white.withValues(alpha: 0.06),
+        selectedColor: colorScheme.primary.withValues(alpha: 0.22),
+        disabledColor: Colors.white.withValues(alpha: 0.03),
+        deleteIconColor: colorScheme.onSurface,
+        labelStyle: textTheme.labelMedium?.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w700,
+        ),
+        secondaryLabelStyle: textTheme.labelMedium?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: colorScheme.primary,
+        selectionColor: colorScheme.primary.withValues(alpha: 0.22),
+        selectionHandleColor: colorScheme.primary,
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          foregroundColor: colorScheme.onSurface,
+          backgroundColor: Colors.white.withValues(alpha: 0.05),
+          hoverColor: Colors.white.withValues(alpha: 0.08),
+          highlightColor: Colors.white.withValues(alpha: 0.1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+          ),
         ),
       ),
     );

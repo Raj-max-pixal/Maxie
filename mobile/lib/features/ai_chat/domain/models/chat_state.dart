@@ -6,8 +6,8 @@ class ChatState {
     required this.conversations,
     required this.activeConversationId,
     this.isGenerating = false,
+    this.pendingMemoryCandidates = const [],
     this.errorMessage,
-    this.pendingMemorySuggestion,
   });
 
   factory ChatState.initial() {
@@ -20,8 +20,8 @@ class ChatState {
   final List<Conversation> conversations;
   final String activeConversationId;
   final bool isGenerating;
+  final List<MemoryCandidate> pendingMemoryCandidates;
   final String? errorMessage;
-  final MemorySuggestion? pendingMemorySuggestion;
 
   Conversation get activeConversation {
     return conversations.firstWhere(
@@ -34,19 +34,17 @@ class ChatState {
     List<Conversation>? conversations,
     String? activeConversationId,
     bool? isGenerating,
+    List<MemoryCandidate>? pendingMemoryCandidates,
     String? errorMessage,
-    MemorySuggestion? pendingMemorySuggestion,
     bool clearError = false,
-    bool clearMemorySuggestion = false,
   }) {
     return ChatState(
       conversations: conversations ?? this.conversations,
       activeConversationId: activeConversationId ?? this.activeConversationId,
       isGenerating: isGenerating ?? this.isGenerating,
+      pendingMemoryCandidates:
+          pendingMemoryCandidates ?? this.pendingMemoryCandidates,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      pendingMemorySuggestion: clearMemorySuggestion
-          ? null
-          : pendingMemorySuggestion ?? this.pendingMemorySuggestion,
     );
   }
 }

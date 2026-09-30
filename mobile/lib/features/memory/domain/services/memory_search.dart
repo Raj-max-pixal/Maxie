@@ -51,7 +51,10 @@ class MemorySearch {
       }
       final searchable = memory.searchableText;
       return searchable.contains(normalized) ||
-          query.semanticHint?.toLowerCase().split(' ').any(searchable.contains) ==
+          query.semanticHint
+                  ?.toLowerCase()
+                  .split(' ')
+                  .any(searchable.contains) ==
               true;
     }).toList();
 

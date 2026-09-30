@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/config/app_state.dart';
 import 'package:maxie_mobile/features/ai_chat/application/ai_settings_providers.dart';
-import 'package:maxie_mobile/features/everywhere_mode/application/everywhere_mode_providers.dart';
 import 'package:maxie_mobile/features/voice/application/voice_state_providers.dart';
 import 'package:maxie_mobile/features/voice/domain/models/voice_state.dart';
 import 'package:maxie_mobile/services/connectivity_service.dart';
@@ -22,7 +21,6 @@ class SettingsScreen extends ConsumerWidget {
     final isOffline = ref.watch(offlineProvider);
     final aiSettings = ref.watch(aiSettingsProvider);
     final voiceState = ref.watch(voiceStateProvider).valueOrNull;
-    final shimejiEnabled = ref.watch(shimejiEnabledProvider);
 
     return PremiumScaffold(
       title: 'Settings',
@@ -32,34 +30,9 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           const SectionTitle(
             title: 'Settings',
-            subtitle: 'Grouped foundations for premium companion controls.',
+            subtitle: 'Tune the demo and companion behavior.',
           ),
           const SizedBox(height: AppSpacing.lg),
-          PremiumCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const _SettingsGroupTitle('Everywhere Mode (Shimeji)'),
-                const SizedBox(height: AppSpacing.sm),
-                _SettingsSwitch(
-                  title: 'Screen Pet',
-                  subtitle: 'Let MAXie walk on your screen over other apps.',
-                  icon: Icons.pets_rounded,
-                  value: shimejiEnabled,
-                  onChanged: (value) async {
-                    ref.read(shimejiEnabledProvider.notifier).state = value;
-                    final foundation = ref.read(everywhereModeFoundationProvider);
-                    if (value) {
-                      await foundation.prepareOverlay();
-                    } else {
-                      await foundation.stopOverlay();
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
           PremiumCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,17 +107,13 @@ class SettingsScreen extends ConsumerWidget {
                 const Divider(),
                 _SettingsSwitch(
                   title: 'Memory',
-                  subtitle: 'Future automatic memory extraction hooks.',
+                  subtitle: 'Chat can suggest facts for Memory Brain.',
                   icon: Icons.psychology_rounded,
                   value: aiSettings.memoryEnabled,
-                  onChanged: (value) {
-                    ref.read(aiSettingsProvider.notifier).state =
-                        aiSettings.copyWith(memoryEnabled: value);
-                    _showFoundationMessage(
-                      context,
-                      value ? 'Automatic memory is enabled.' : 'Automatic memory is disabled.',
-                    );
-                  },
+                  onChanged: (_) => _showFoundationMessage(
+                    context,
+                    'Memory Brain is active in chat.',
+                  ),
                 ),
               ],
             ),
@@ -155,15 +124,16 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 _SettingsSwitch(
                   title: 'Voice',
-                  subtitle: 'Speech input and MAXie voice output.',
+                  subtitle: 'Voice mode preview for the companion experience.',
                   icon: Icons.mic_rounded,
                   value: voiceState?.conversationModeEnabled ?? false,
                   onChanged: (value) async {
-                    await ref.read(voiceRepositoryProvider).saveState(
-                          (voiceState ?? const VoiceState()).copyWith(
-                            conversationModeEnabled: value,
-                          ),
-                        );
+                    final repository = ref.read(voiceRepositoryProvider);
+                    await repository.saveState(
+                      (voiceState ?? const VoiceState()).copyWith(
+                        conversationModeEnabled: value,
+                      ),
+                    );
                     ref.invalidate(voiceStateProvider);
                     if (context.mounted) {
                       _showFoundationMessage(context, 'Voice setting saved.');
@@ -173,7 +143,7 @@ class SettingsScreen extends ConsumerWidget {
                 const Divider(),
                 _SettingsSwitch(
                   title: 'Notifications',
-                  subtitle: 'Prepared for reminders and companion nudges.',
+                  subtitle: 'Reminder controls preview for companion nudges.',
                   icon: Icons.notifications_rounded,
                   value: true,
                   onChanged: (_) => _showFoundationMessage(
@@ -202,7 +172,7 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 _SettingsRow(
                   title: 'Privacy',
-                  subtitle: 'Local-first controls foundation',
+                  subtitle: 'Memories are stored locally in this demo',
                   icon: Icons.lock_rounded,
                 ),
                 Divider(),
@@ -241,9 +211,9 @@ class _SettingsGroupTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.w900,
-      ),
+      style: Theme.of(
+        context,
+      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
     );
   }
 }
@@ -298,7 +268,9 @@ class _SettingsRow extends StatelessWidget {
       onTap: () {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text('$title foundation is ready.')));
+          ..showSnackBar(
+            SnackBar(content: Text('$title foundation is ready.')),
+          );
       },
     );
   }

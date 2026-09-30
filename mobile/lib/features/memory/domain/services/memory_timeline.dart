@@ -15,8 +15,7 @@ class MemoryTimelineBuilder {
         tags: memory.tags,
         memoryId: memory.id,
       );
-    }).toList()
-      ..sort((left, right) => right.date.compareTo(left.date));
+    }).toList()..sort((left, right) => right.date.compareTo(left.date));
 
     return MemoryTimeline(entries: entries);
   }

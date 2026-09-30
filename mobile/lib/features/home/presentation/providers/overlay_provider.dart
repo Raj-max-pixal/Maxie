@@ -72,14 +72,12 @@ class OverlayState {
         type: 'music_player',
         position: const Offset(100, 320),
         size: 60,
-        isVisible: true,
       ),
       FloatingWidget(
         id: 'pomodoro_timer',
         type: 'pomodoro_timer',
         position: const Offset(100, 400),
         size: 60,
-        isVisible: true,
       ),
     ];
   }

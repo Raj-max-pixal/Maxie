@@ -1,21 +1,19 @@
 import 'package:maxie_mobile/features/ai_chat/domain/models/conversation.dart';
 import 'package:maxie_mobile/features/ai_chat/domain/repositories/conversation_repository.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
-import 'package:maxie_mobile/features/memory/domain/repositories/memory_repository.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_extractor.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_ranker.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_search.dart';
-import 'package:maxie_mobile/features/memory/domain/services/memory_service.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_summarizer.dart';
 import 'package:maxie_mobile/features/memory/domain/services/memory_timeline.dart';
 
-class DefaultMemoryService implements MemoryService {
+class DefaultMemoryService {
   DefaultMemoryService({
     required this._memoryRepository,
     required this._conversationRepository,
   });
 
-  final MemoryRepository _memoryRepository;
+  final dynamic _memoryRepository;
   final ConversationRepository _conversationRepository;
   final MemoryExtractor _extractor = const MemoryExtractor();
   final MemoryRanker _ranker = const MemoryRanker();
@@ -23,7 +21,6 @@ class DefaultMemoryService implements MemoryService {
   final MemorySummarizer _summarizer = const MemorySummarizer();
   final MemoryTimelineBuilder _timelineBuilder = const MemoryTimelineBuilder();
 
-  @override
   Future<MemorySuggestion?> extractSuggestion(
     String text, {
     String? conversationId,
@@ -44,20 +41,16 @@ class DefaultMemoryService implements MemoryService {
     );
   }
 
-  @override
   Future<void> saveMemory(MemoryRecord memory) async {
     await _memoryRepository.saveMemory(
       memory.copyWith(updatedAt: DateTime.now(), lastUsedAt: DateTime.now()),
     );
   }
 
-  @override
   Future<void> deleteMemory(String id) => _memoryRepository.deleteMemory(id);
 
-  @override
   Future<void> clearMemories() => _memoryRepository.clearMemories();
 
-  @override
   Future<List<MemoryRecord>> recallMemory(String query) async {
     final memories = await _memoryRepository.readMemories();
     if (query.trim().isEmpty) {
@@ -66,13 +59,11 @@ class DefaultMemoryService implements MemoryService {
     return _search.search(memories, MemorySearchQuery(query: query));
   }
 
-  @override
   Future<List<MemoryRecord>> searchMemories(MemorySearchQuery query) async {
     final memories = await _memoryRepository.readMemories();
     return _search.search(memories, query);
   }
 
-  @override
   Future<MemorySummary> summarize() async {
     final memories = await _memoryRepository.readMemories();
     return _summarizer.summarize(
@@ -81,12 +72,10 @@ class DefaultMemoryService implements MemoryService {
     );
   }
 
-  @override
   Future<MemoryTimeline> buildTimeline() async {
     return _timelineBuilder.build(await _memoryRepository.readMemories());
   }
 
-  @override
   Future<MemoryRelationshipState> relationshipSnapshot() async {
     final conversations = await _conversationRepository.readConversations();
     final memories = await _memoryRepository.readMemories();
@@ -105,7 +94,7 @@ class DefaultMemoryService implements MemoryService {
     final xpEarnedTogether =
         (messagesExchanged * 8) +
         (memories.length * 25) +
-        memories.where((memory) => memory.isPinned).length * 12;
+        (memories.where((memory) => memory.isPinned).length * 12);
     final friendshipLevel = (12 + (xpEarnedTogether / 120)).round().clamp(
       1,
       99,
@@ -134,12 +123,11 @@ class DefaultMemoryService implements MemoryService {
       conversationCount: conversationCount,
       daysTogether: daysTogether,
       messagesExchanged: messagesExchanged,
-      xpEarnedTogether: xpEarnedTogether,
+      xpEarnedTogether: xpEarnedTogether.toInt(),
       milestones: milestones,
     );
   }
 
-  @override
   Future<MemoryRecord?> updateMemory(MemoryRecord memory) async {
     final current = await _memoryRepository.readMemories();
     final next = memory.copyWith(updatedAt: DateTime.now());
@@ -150,7 +138,6 @@ class DefaultMemoryService implements MemoryService {
     return null;
   }
 
-  @override
   Future<MemoryRecord?> pinMemory(String id, {bool pinned = true}) async {
     final current = await _memoryRepository.readMemories();
     final target = current.where((memory) => memory.id == id).firstOrNull;
@@ -165,7 +152,6 @@ class DefaultMemoryService implements MemoryService {
     return updated;
   }
 
-  @override
   Future<List<Conversation>> readConversations() {
     return _conversationRepository.readConversations();
   }

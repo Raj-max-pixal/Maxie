@@ -1,11 +1,32 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maxie_mobile/features/shared/widgets/glass_card.dart';
+import 'package:maxie_mobile/services/storage/storage_providers.dart';
+import 'package:maxie_mobile/services/storage/storage_service.dart';
 
 enum PomodoroState { focus, shortBreak, longBreak }
+
 enum TimerStatus { idle, running, paused }
+
+class FocusHistoryItem {
+  const FocusHistoryItem({required this.completedAt, required this.minutes});
+
+  final DateTime completedAt;
+  final int minutes;
+
+  Map<String, Object?> toJson() => {
+    'completedAt': completedAt.toIso8601String(),
+    'minutes': minutes,
+  };
+
+  factory FocusHistoryItem.fromJson(Map<dynamic, dynamic> json) {
+    return FocusHistoryItem(
+      completedAt: DateTime.parse(json['completedAt'] as String),
+      minutes: (json['minutes'] as num).toInt(),
+    );
+  }
+}
 
 class PomodoroSession {
   final int completedPomodoros;
@@ -13,6 +34,7 @@ class PomodoroSession {
   final TimerStatus status;
   final int secondsRemaining;
   final int totalSeconds;
+  final List<FocusHistoryItem> history;
 
   const PomodoroSession({
     this.completedPomodoros = 0,
@@ -20,6 +42,7 @@ class PomodoroSession {
     this.status = TimerStatus.idle,
     this.secondsRemaining = 25 * 60,
     this.totalSeconds = 25 * 60,
+    this.history = const [],
   });
 
   PomodoroSession copyWith({
@@ -28,6 +51,7 @@ class PomodoroSession {
     TimerStatus? status,
     int? secondsRemaining,
     int? totalSeconds,
+    List<FocusHistoryItem>? history,
   }) {
     return PomodoroSession(
       completedPomodoros: completedPomodoros ?? this.completedPomodoros,
@@ -35,6 +59,7 @@ class PomodoroSession {
       status: status ?? this.status,
       secondsRemaining: secondsRemaining ?? this.secondsRemaining,
       totalSeconds: totalSeconds ?? this.totalSeconds,
+      history: history ?? this.history,
     );
   }
 }
@@ -42,7 +67,23 @@ class PomodoroSession {
 class PomodoroNotifier extends StateNotifier<PomodoroSession> {
   Timer? _timer;
 
-  PomodoroNotifier() : super(const PomodoroSession());
+  PomodoroNotifier(this._storage) : super(const PomodoroSession());
+
+  final StorageService _storage;
+  static const _historyBox = 'maxie_focus_history';
+  static const _historyKey = 'completed_sessions';
+
+  Future<void> loadHistory() async {
+    final stored =
+        await _storage.read<List<dynamic>>(_historyBox, _historyKey) ??
+        const <dynamic>[];
+    state = state.copyWith(
+      history: stored
+          .whereType<Map<dynamic, dynamic>>()
+          .map(FocusHistoryItem.fromJson)
+          .toList(),
+    );
+  }
 
   int get _focusDuration => 25 * 60;
   int get _shortBreakDuration => 5 * 60;
@@ -62,14 +103,31 @@ class PomodoroNotifier extends StateNotifier<PomodoroSession> {
 
   void _onSessionComplete() {
     if (state.currentState == PomodoroState.focus) {
+      final history = [
+        FocusHistoryItem(
+          completedAt: DateTime.now(),
+          minutes: (state.totalSeconds / 60).round(),
+        ),
+        ...state.history,
+      ].take(50).toList();
       final newCompleted = state.completedPomodoros + 1;
       final isLongBreak = newCompleted % 4 == 0;
       state = state.copyWith(
         completedPomodoros: newCompleted,
-        currentState: isLongBreak ? PomodoroState.longBreak : PomodoroState.shortBreak,
+        currentState: isLongBreak
+            ? PomodoroState.longBreak
+            : PomodoroState.shortBreak,
         totalSeconds: isLongBreak ? _longBreakDuration : _shortBreakDuration,
-        secondsRemaining: isLongBreak ? _longBreakDuration : _shortBreakDuration,
+        secondsRemaining: isLongBreak
+            ? _longBreakDuration
+            : _shortBreakDuration,
         status: TimerStatus.idle,
+        history: history,
+      );
+      _storage.write<List<Map<String, Object?>>>(
+        _historyBox,
+        _historyKey,
+        history.map((item) => item.toJson()).toList(),
       );
     } else {
       state = state.copyWith(
@@ -124,9 +182,12 @@ class PomodoroNotifier extends StateNotifier<PomodoroSession> {
   }
 }
 
-final pomodoroProvider = StateNotifierProvider<PomodoroNotifier, PomodoroSession>((ref) {
-  return PomodoroNotifier();
-});
+final pomodoroProvider =
+    StateNotifierProvider<PomodoroNotifier, PomodoroSession>((ref) {
+      final notifier = PomodoroNotifier(ref.watch(storageServiceProvider));
+      notifier.loadHistory();
+      return notifier;
+    });
 
 class PomodoroScreen extends ConsumerWidget {
   const PomodoroScreen({super.key});
@@ -135,7 +196,7 @@ class PomodoroScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final session = ref.watch(pomodoroProvider);
-    final progress = session.totalSeconds > 0 
+    final progress = session.totalSeconds > 0
         ? 1.0 - (session.secondsRemaining / session.totalSeconds)
         : 0.0;
     final minutes = (session.secondsRemaining ~/ 60).toString().padLeft(2, '0');
@@ -167,9 +228,16 @@ class PomodoroScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 16),
             child: Row(
               children: [
-                Icon(Icons.check_circle, size: 16, color: Colors.green.shade400),
+                Icon(
+                  Icons.check_circle,
+                  size: 16,
+                  color: Colors.green.shade400,
+                ),
                 const SizedBox(width: 4),
-                Text('${session.completedPomodoros}', style: theme.textTheme.bodyMedium),
+                Text(
+                  '${session.completedPomodoros}',
+                  style: theme.textTheme.bodyMedium,
+                ),
               ],
             ),
           ),
@@ -187,9 +255,12 @@ class PomodoroScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
-                        color: stateColor.withOpacity(0.2),
+                        color: stateColor.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -212,7 +283,8 @@ class PomodoroScreen extends ConsumerWidget {
                           CircularProgressIndicator(
                             value: progress,
                             strokeWidth: 8,
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
                             valueColor: AlwaysStoppedAnimation(stateColor),
                           ),
                           Center(
@@ -221,18 +293,19 @@ class PomodoroScreen extends ConsumerWidget {
                               children: [
                                 Text(
                                   '$minutes:$seconds',
-                                  style: theme.textTheme.displayMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'monospace',
-                                  ),
+                                  style: theme.textTheme.displayMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'monospace',
+                                      ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  session.status == TimerStatus.running 
-                                      ? 'Running...' 
-                                      : session.status == TimerStatus.paused 
-                                          ? 'Paused' 
-                                          : 'Ready',
+                                  session.status == TimerStatus.running
+                                      ? 'Running...'
+                                      : session.status == TimerStatus.paused
+                                      ? 'Paused'
+                                      : 'Ready',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
@@ -249,27 +322,32 @@ class PomodoroScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton.filled(
-                          onPressed: () => ref.read(pomodoroProvider.notifier).resetTimer(),
+                          onPressed: () =>
+                              ref.read(pomodoroProvider.notifier).resetTimer(),
                           icon: const Icon(Icons.refresh),
                           style: IconButton.styleFrom(
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
                           ),
                         ),
                         const SizedBox(width: 16),
                         FloatingActionButton.large(
-                          onPressed: () => ref.read(pomodoroProvider.notifier).toggleTimer(),
+                          onPressed: () =>
+                              ref.read(pomodoroProvider.notifier).toggleTimer(),
                           child: Icon(
-                            session.status == TimerStatus.running 
-                                ? Icons.pause 
+                            session.status == TimerStatus.running
+                                ? Icons.pause
                                 : Icons.play_arrow,
                           ),
                         ),
                         const SizedBox(width: 16),
                         IconButton.filled(
-                          onPressed: () => ref.read(pomodoroProvider.notifier).skipSession(),
+                          onPressed: () =>
+                              ref.read(pomodoroProvider.notifier).skipSession(),
                           icon: const Icon(Icons.skip_next),
                           style: IconButton.styleFrom(
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
                           ),
                         ),
                       ],
@@ -297,7 +375,10 @@ class PomodoroScreen extends ConsumerWidget {
                                 color: stateColor,
                               ),
                             ),
-                            const Text('Pomodoros', style: TextStyle(fontSize: 12)),
+                            const Text(
+                              'Pomodoros',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
                       ),
@@ -317,7 +398,10 @@ class PomodoroScreen extends ConsumerWidget {
                                 color: Colors.blue,
                               ),
                             ),
-                            const Text('Cycles', style: TextStyle(fontSize: 12)),
+                            const Text(
+                              'Cycles',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
                       ),
@@ -337,7 +421,10 @@ class PomodoroScreen extends ConsumerWidget {
                                 color: Colors.green,
                               ),
                             ),
-                            const Text('Minutes', style: TextStyle(fontSize: 12)),
+                            const Text(
+                              'Minutes',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
                       ),

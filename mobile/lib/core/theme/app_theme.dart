@@ -59,9 +59,8 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorScheme: ColorScheme.light(
+    colorScheme: const ColorScheme.light(
       primary: AppColors.primary,
-      onPrimary: Colors.white,
       primaryContainer: AppColors.primaryContainer,
       secondary: AppColors.secondary,
       onSecondary: Colors.white,
@@ -69,16 +68,12 @@ class AppTheme {
       tertiary: AppColors.tertiary,
       onTertiary: Colors.white,
       tertiaryContainer: AppColors.tertiaryContainer,
-      surface: AppColors.surface,
-      onSurface: const Color(0xFF1A1A2E),
-      surfaceVariant: const Color(0xFFF0F0FF),
-      onSurfaceVariant: const Color(0xFF49454F),
-      background: AppColors.background,
-      onBackground: const Color(0xFF1A1A2E),
+      onSurface: Color(0xFF1A1A2E),
+      surfaceContainerHighest: Color(0xFFF0F0FF),
+      onSurfaceVariant: Color(0xFF49454F),
       error: AppColors.error,
-      onError: Colors.white,
-      outline: const Color(0xFFCAC4D0),
-      outlineVariant: const Color(0xFFE7E0EC),
+      outline: Color(0xFFCAC4D0),
+      outlineVariant: Color(0xFFE7E0EC),
     ),
     textTheme: _buildTextTheme(),
     elevatedButtonTheme: _elevatedButtonTheme(),
@@ -112,19 +107,17 @@ class AppTheme {
     colorScheme: ColorScheme.dark(
       primary: AppColors.primaryLight,
       onPrimary: const Color(0xFF1A1A2E),
-      primaryContainer: AppColors.primaryDark.withOpacity(0.4),
+      primaryContainer: AppColors.primaryDark.withValues(alpha: 0.4),
       secondary: AppColors.secondaryLight,
       onSecondary: const Color(0xFF1A1A2E),
-      secondaryContainer: AppColors.secondaryDark.withOpacity(0.4),
+      secondaryContainer: AppColors.secondaryDark.withValues(alpha: 0.4),
       tertiary: AppColors.tertiaryLight,
       onTertiary: const Color(0xFF1A1A2E),
-      tertiaryContainer: AppColors.tertiaryDark.withOpacity(0.4),
+      tertiaryContainer: AppColors.tertiaryDark.withValues(alpha: 0.4),
       surface: AppColors.surfaceDark,
       onSurface: const Color(0xFFE6E1E5),
-      surfaceVariant: const Color(0xFF2D2D4A),
+      surfaceContainerHighest: const Color(0xFF2D2D4A),
       onSurfaceVariant: const Color(0xFFCAC4D0),
-      background: AppColors.backgroundDark,
-      onBackground: const Color(0xFFE6E1E5),
       error: AppColors.error,
       onError: Colors.white,
       outline: const Color(0xFF938F99),
@@ -354,10 +347,10 @@ class AppTheme {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   );
 
-  static BottomNavigationBarThemeData _bottomNavTheme() => BottomNavigationBarThemeData(
+  static BottomNavigationBarThemeData _bottomNavTheme() => const BottomNavigationBarThemeData(
     backgroundColor: Colors.white,
     selectedItemColor: AppColors.primary,
-    unselectedItemColor: const Color(0xFFCAC4D0),
+    unselectedItemColor: Color(0xFFCAC4D0),
     type: BottomNavigationBarType.fixed,
     elevation: 8,
   );
@@ -432,12 +425,12 @@ class AppTheme {
     elevation: 8,
   );
 
-  static BadgeThemeData _badgeTheme() => BadgeThemeData(
+  static BadgeThemeData _badgeTheme() => const BadgeThemeData(
     backgroundColor: AppColors.secondary,
     textColor: Colors.white,
   );
 
-  static ProgressIndicatorThemeData _progressIndicatorTheme() => ProgressIndicatorThemeData(
+  static ProgressIndicatorThemeData _progressIndicatorTheme() => const ProgressIndicatorThemeData(
     color: AppColors.primary,
     linearTrackColor: AppColors.primaryContainer,
     circularTrackColor: AppColors.primaryContainer,
@@ -447,7 +440,7 @@ class AppTheme {
     activeTrackColor: AppColors.primary,
     inactiveTrackColor: AppColors.primaryContainer,
     thumbColor: AppColors.primary,
-    overlayColor: AppColors.primary.withOpacity(0.12),
+    overlayColor: AppColors.primary.withValues(alpha: 0.12),
     valueIndicatorColor: AppColors.primary,
     valueIndicatorTextStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
   );
@@ -458,7 +451,7 @@ class AppTheme {
       return const Color(0xFFCAC4D0);
     }),
     trackColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) return AppColors.primary.withOpacity(0.5);
+      if (states.contains(WidgetState.selected)) return AppColors.primary.withValues(alpha: 0.5);
       return const Color(0xFFE7E0EC);
     }),
   );
@@ -550,23 +543,23 @@ class AppTheme {
 
   static ChipThemeData _chipThemeDark() => ChipThemeData(
     backgroundColor: const Color(0xFF2D2D4A),
-    selectedColor: AppColors.primaryDark.withOpacity(0.4),
+    selectedColor: AppColors.primaryDark.withValues(alpha: 0.4),
     labelStyle: GoogleFonts.poppins(fontSize: 12, color: const Color(0xFFE6E1E5)),
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   );
 
-  static BottomNavigationBarThemeData _bottomNavThemeDark() => BottomNavigationBarThemeData(
-    backgroundColor: const Color(0xFF1A1A2E),
+  static BottomNavigationBarThemeData _bottomNavThemeDark() => const BottomNavigationBarThemeData(
+    backgroundColor: Color(0xFF1A1A2E),
     selectedItemColor: AppColors.primaryLight,
-    unselectedItemColor: const Color(0xFF938F99),
+    unselectedItemColor: Color(0xFF938F99),
     type: BottomNavigationBarType.fixed,
     elevation: 8,
   );
 
   static NavigationBarThemeData _navBarThemeDark() => NavigationBarThemeData(
     backgroundColor: const Color(0xFF1A1A2E),
-    indicatorColor: AppColors.primaryDark.withOpacity(0.4),
+    indicatorColor: AppColors.primaryDark.withValues(alpha: 0.4),
     labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
     height: 65,
     labelTextStyle: WidgetStateProperty.resolveWith((states) {
@@ -635,22 +628,22 @@ class AppTheme {
     elevation: 8,
   );
 
-  static BadgeThemeData _badgeThemeDark() => BadgeThemeData(
+  static BadgeThemeData _badgeThemeDark() => const BadgeThemeData(
     backgroundColor: AppColors.secondaryLight,
-    textColor: const Color(0xFF1A1A2E),
+    textColor: Color(0xFF1A1A2E),
   );
 
   static ProgressIndicatorThemeData _progressIndicatorThemeDark() => ProgressIndicatorThemeData(
     color: AppColors.primaryLight,
-    linearTrackColor: AppColors.primaryDark.withOpacity(0.4),
-    circularTrackColor: AppColors.primaryDark.withOpacity(0.4),
+    linearTrackColor: AppColors.primaryDark.withValues(alpha: 0.4),
+    circularTrackColor: AppColors.primaryDark.withValues(alpha: 0.4),
   );
 
   static SliderThemeData _sliderThemeDark() => SliderThemeData(
     activeTrackColor: AppColors.primaryLight,
-    inactiveTrackColor: AppColors.primaryDark.withOpacity(0.4),
+    inactiveTrackColor: AppColors.primaryDark.withValues(alpha: 0.4),
     thumbColor: AppColors.primaryLight,
-    overlayColor: AppColors.primaryLight.withOpacity(0.12),
+    overlayColor: AppColors.primaryLight.withValues(alpha: 0.12),
     valueIndicatorColor: AppColors.primaryLight,
     valueIndicatorTextStyle: GoogleFonts.poppins(color: const Color(0xFF1A1A2E), fontSize: 12),
   );
@@ -661,7 +654,7 @@ class AppTheme {
       return const Color(0xFF938F99);
     }),
     trackColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) return AppColors.primaryLight.withOpacity(0.5);
+      if (states.contains(WidgetState.selected)) return AppColors.primaryLight.withValues(alpha: 0.5);
       return const Color(0xFF49454F);
     }),
   );

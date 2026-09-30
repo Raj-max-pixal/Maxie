@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/features/pets/presentation/providers/pet_provider.dart'
+    as legacy_pet;
 import '../../../pets/presentation/widgets/pet_animation_widget.dart';
 import '../../../pets/presentation/providers/pet_provider.dart';
 import '../../../settings/presentation/providers/theme_provider.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/animated_greeting.dart';
 import '../../../../core/theme/app_theme_enhanced.dart';
+import '../../../cloud/presentation/widgets/portal_summon_widget.dart';
+
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -147,6 +151,12 @@ class DashboardScreen extends ConsumerWidget {
                 _buildStatsRow(context, petsState, isDark),
 
                 const SizedBox(height: 20),
+
+                // Cross-device portal travel control card
+                const PortalSummonWidget(),
+
+                const SizedBox(height: 20),
+
 
                 // Today's overview
                 _buildSection(
@@ -466,7 +476,11 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatsRow(BuildContext context, PetsEngineState state, bool isDark) {
+  Widget _buildStatsRow(
+    BuildContext context,
+    legacy_pet.PetsState state,
+    bool isDark,
+  ) {
     final theme = Theme.of(context);
     return Row(
       children: [

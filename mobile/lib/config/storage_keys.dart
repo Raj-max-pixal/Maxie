@@ -6,6 +6,7 @@ class StorageKeys {
   static const String companionState = 'companion_state';
   static const String companionEmotion = 'companion_emotion';
   static const String petState = 'pet_state';
+  static const String shimejiState = 'shimeji_state';
   static const String memoryIndex = 'memory_index';
   static const String voiceState = 'voice_state';
 }

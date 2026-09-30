@@ -1,32 +1,67 @@
-import 'package:maxie_mobile/features/ai_chat/domain/models/conversation.dart';
 import 'package:maxie_mobile/features/memory/domain/models/memory_brain_models.dart';
 
-abstract interface class MemoryService {
-  Future<MemorySuggestion?> extractSuggestion(
-    String text, {
-    String? conversationId,
-    String? messageId,
-  });
+abstract interface class MemoryRepository {
+  Future<List<MemoryModel>> readMemories();
 
-  Future<List<MemoryRecord>> recallMemory(String query);
-
-  Future<void> saveMemory(MemoryRecord memory);
+  Future<void> saveMemory(MemoryModel memory);
 
   Future<void> deleteMemory(String id);
 
   Future<void> clearMemories();
 
-  Future<List<MemoryRecord>> searchMemories(MemorySearchQuery query);
+  Future<MemoryModel?> getMemory(String id);
+
+  Future<List<MemoryModel>> searchMemories(String query);
+
+  Future<List<MemoryModel>> retrieveRelevantMemories(String query);
+}
+
+abstract interface class MemoryExtractor {
+  List<MemoryCandidate> extractCandidates({
+    required String text,
+    String? conversationId,
+  });
+}
+
+abstract interface class MemorySearch {
+  List<MemoryModel> search(
+    List<MemoryModel> memories, {
+    required String query,
+    MemoryCategory? category,
+  });
+}
+
+abstract interface class MemoryRanker {
+  List<MemoryModel> rank(List<MemoryModel> memories);
+}
+
+abstract interface class MemorySummarizer {
+  MemorySummary summarize(List<MemoryModel> memories);
+}
+
+abstract interface class MemoryService {
+  Future<List<MemoryModel>> readMemories();
+
+  Future<void> saveMemory(MemoryModel memory);
+
+  Future<void> deleteMemory(String id);
+
+  Future<void> clearMemories();
+
+  Future<List<MemoryModel>> recallMemory(String query);
+
+  Future<List<MemoryCandidate>> extractMemoryCandidates({
+    required String text,
+    String? conversationId,
+  });
 
   Future<MemorySummary> summarize();
 
-  Future<MemoryTimeline> buildTimeline();
+  Future<MemoryTimeline> timeline();
 
-  Future<MemoryRelationshipState> relationshipSnapshot();
+  Future<void> updateMemory(MemoryModel memory);
 
-  Future<MemoryRecord?> updateMemory(MemoryRecord memory);
+  Future<void> pinMemory(String id, {required bool pinned});
 
-  Future<MemoryRecord?> pinMemory(String id, {bool pinned = true});
-
-  Future<List<Conversation>> readConversations();
+  Future<void> forgetMemory(String id);
 }

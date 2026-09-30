@@ -1,8 +1,9 @@
- import 'package:flutter/foundation.dart';
+ import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import '../../../../core/constants/app_constants.dart';
 
 class GamificationState {
   final int xp;
@@ -156,7 +157,7 @@ class GamificationService extends StateNotifier<GamificationState> {
       final isConsecutive = difference.inDays == 1;
       final newStreak = isConsecutive ? state.dailyStreak + 1 : 1;
 
-      int bonus = isConsecutive
+      final int bonus = isConsecutive
           ? AppConstants.dailyLoginBonus + (newStreak * AppConstants.streakBonus)
           : AppConstants.dailyLoginBonus;
 

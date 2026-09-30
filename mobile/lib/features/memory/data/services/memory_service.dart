@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maxie_mobile/core/constants/app_constants.dart';
+import 'package:maxie_mobile/features/memory/data/models/memory_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:uuid/uuid.dart';
-import '../models/memory_model.dart';
-import '../../../../core/constants/app_constants.dart';
 
 final uuid = const Uuid();
 
@@ -19,12 +20,16 @@ class MemoryService {
   List<MemoryModel> get memories => List.unmodifiable(_memories);
 
   List<Map<String, dynamic>> getMemoriesAsMap() {
-    return _memories.map((m) => {
-      m.id: m.content,
-      'tags': m.tags.join(', '),
-      'type': m.type.name,
-      'timestamp': m.timestamp.toIso8601String(),
-    }).toList();
+    return _memories
+        .map(
+          (m) => {
+            m.id: m.content,
+            'tags': m.tags.join(', '),
+            'type': m.type.name,
+            'timestamp': m.timestamp.toIso8601String(),
+          },
+        )
+        .toList();
   }
 
   void addMemory({
@@ -106,8 +111,6 @@ class MemoryService {
 
     final preferences = getMemoriesByType(MemoryType.userPreference);
     final goals = getMemoriesByType(MemoryType.userGoal);
-    final recent = getRecentMemories(limit: 5);
-
     final buffer = StringBuffer();
 
     if (preferences.isNotEmpty) {

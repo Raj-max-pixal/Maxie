@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/emotion_state.dart';
+import 'package:maxie_mobile/features/emotions/domain/models/emotion_state.dart';
 
 class EmotionEngine {
   EmotionState _currentState = EmotionState();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../settings/presentation/providers/settings_provider.dart';
-import '../providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/maxie_state_provider.dart';
+import 'package:maxie_mobile/features/settings/presentation/providers/settings_provider.dart';
 
 class MaxieCharacter extends ConsumerWidget {
   const MaxieCharacter({super.key});
@@ -129,7 +129,7 @@ class MaxieCharacter extends ConsumerWidget {
                     child: Text('👑', style: TextStyle(fontSize: 26)),
                   )
                       .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                      .translate(y: -2, duration: 1.seconds),
+                      .moveY(end: -2, duration: 1.seconds),
                 ),
 
               if (maxieState.equippedAccessories.contains('detective_hat'))
@@ -141,7 +141,7 @@ class MaxieCharacter extends ConsumerWidget {
                     child: Text('🕵️‍♂️', style: TextStyle(fontSize: 26)),
                   )
                       .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                      .translate(y: -2, duration: 1.seconds),
+                      .moveY(end: -2, duration: 1.seconds),
                 ),
 
               if (maxieState.equippedAccessories.contains('wizard_hat'))

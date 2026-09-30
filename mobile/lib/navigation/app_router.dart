@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maxie_mobile/features/auth/application/auth_providers.dart';
+import 'package:maxie_mobile/features/auth/presentation/forgot_password_screen.dart';
+import 'package:maxie_mobile/features/auth/presentation/login_screen.dart';
+import 'package:maxie_mobile/features/auth/presentation/signup_screen.dart';
 import 'package:maxie_mobile/features/ai_chat/presentation/ai_chat_screen.dart';
+import 'package:maxie_mobile/features/agent_run/presentation/agent_run_screen.dart';
+import 'package:maxie_mobile/features/activity/presentation/activity_screen.dart';
 import 'package:maxie_mobile/features/home/presentation/home_screen.dart';
+import 'package:maxie_mobile/features/focus/presentation/focus_screen.dart';
 import 'package:maxie_mobile/features/memory/presentation/memory_screen.dart';
+import 'package:maxie_mobile/features/mission_control/presentation/mission_control_screen.dart';
 import 'package:maxie_mobile/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:maxie_mobile/features/pet/presentation/pet_screen.dart';
 import 'package:maxie_mobile/features/profile/presentation/profile_screen.dart';
 import 'package:maxie_mobile/features/settings/presentation/settings_screen.dart';
+import 'package:maxie_mobile/features/shimeji/presentation/shimeji_screen.dart';
 import 'package:maxie_mobile/features/splash/presentation/splash_screen.dart';
 import 'package:maxie_mobile/features/subscription/presentation/subscription_screen.dart';
 import 'package:maxie_mobile/features/tasks/presentation/tasks_screen.dart';
@@ -18,14 +27,44 @@ final rootNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>(
 );
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final auth = ref.watch(authServiceProvider);
   return GoRouter(
     navigatorKey: ref.watch(rootNavigatorKeyProvider),
     initialLocation: AppRoutes.splash,
+    refreshListenable: auth,
+    redirect: (context, state) async {
+      // Safe routing: allow users to explore MAXie Home, AI Chat, Shimeji, Memory,
+      // Focus, and Subscription without blocking on Firebase authentication.
+      if (auth.user != null) {
+        final user = auth.user!;
+        try {
+          await ref.read(userProfileRepositoryProvider).ensureProfile(user);
+        } catch (_) {}
+      }
+
+      // If user is on splash, let splash timer navigate to home naturally
+      return null;
+    },
     routes: [
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.login,
+        name: 'login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.signup,
+        name: 'signup',
+        builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: 'forgotPassword',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       GoRoute(
         path: AppRoutes.onboarding,
@@ -36,6 +75,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.home,
         name: 'home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.focus,
+        name: 'focus',
+        builder: (context, state) => const FocusScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.activity,
+        name: 'activity',
+        builder: (context, state) => const ActivityScreen(),
       ),
       GoRoute(
         path: AppRoutes.settings,
@@ -68,9 +117,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const PetScreen(),
       ),
       GoRoute(
+        path: AppRoutes.shimeji,
+        name: 'shimeji',
+        builder: (context, state) => const ShimejiScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.tasks,
         name: 'tasks',
         builder: (context, state) => const TasksScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.missionControl,
+        name: 'missionControl',
+        builder: (context, state) => const MissionControlScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.agentRun,
+        name: 'agentRun',
+        builder: (context, state) => const AgentRunScreen(),
       ),
     ],
   );

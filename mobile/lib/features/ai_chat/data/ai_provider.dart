@@ -6,8 +6,5 @@ abstract interface class AiProvider {
 
   bool get isConfigured;
 
-  Future<AiResponse> complete(
-    List<ChatMessage> messages, {
-    String? systemPrompt,
-  });
+  Future<AiResponse> complete(List<ChatMessage> messages);
 }

@@ -1,56 +1,264 @@
-enum PetMood { neutral, happy, focused, sleepy }
+enum PetMood {
+  neutral,
+  happy,
+  excited,
+  hungry,
+  tired,
+  sleepy,
+  sad,
+  focused,
+  listening,
+  dancing,
+  loving,
+}
+
+enum PetActivity { idle, eating, playing, sleeping, dancing, listening }
+
+enum PetPersonality { curious, kind, playful, calm }
+
+class DailyMission {
+  const DailyMission({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.target,
+    required this.progress,
+    required this.xpReward,
+    required this.date,
+  });
+
+  final String id;
+  final String title;
+  final String description;
+  final int target;
+  final int progress;
+  final int xpReward;
+  final DateTime date;
+
+  bool get completed => progress >= target;
+
+  DailyMission copyWith({int? progress}) => DailyMission(
+    id: id,
+    title: title,
+    description: description,
+    target: target,
+    progress: progress ?? this.progress,
+    xpReward: xpReward,
+    date: date,
+  );
+
+  factory DailyMission.fromJson(Map<dynamic, dynamic> json) => DailyMission(
+    id: json['id'] as String? ?? 'feed',
+    title: json['title'] as String? ?? 'Feed MAXie once',
+    description: json['description'] as String? ?? 'Give MAXie a little care.',
+    target: (json['target'] as num?)?.toInt() ?? 1,
+    progress: (json['progress'] as num?)?.toInt() ?? 0,
+    xpReward: (json['xpReward'] as num?)?.toInt() ?? 25,
+    date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.now(),
+  );
+
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'title': title,
+    'description': description,
+    'target': target,
+    'progress': progress,
+    'xpReward': xpReward,
+    'date': date.toIso8601String(),
+  };
+}
 
 class PetState {
   const PetState({
+    this.id = 'maxie-primary',
     this.name = 'MAXie',
+    this.level = 1,
+    this.xp = 0,
+    this.friendship = 0,
+    this.hunger = 72,
+    this.energy = 82,
+    this.happiness = 70,
+    this.sleepiness = 20,
     this.mood = PetMood.neutral,
-    this.energy = 1,
-    this.affinity = 0,
+    this.currentActivity = PetActivity.idle,
+    this.personality = PetPersonality.kind,
+    this.createdAt,
+    this.updatedAt,
+    this.lastInteractionAt,
+    this.lastFedAt,
+    this.lastPlayedAt,
+    this.lastSleptAt,
+    this.gifts = 0,
+    this.lastAction = 'Ready to hang out',
+    this.recentInteraction = 'MAXie is waiting for you.',
+    this.missions = const [],
+    this.inventory = const [],
+    this.equippedItemIds = const [],
   });
 
+  final String id;
   final String name;
+  final int level;
+  final int xp;
+  final int friendship;
+  final double hunger;
+  final double happiness;
+  final double sleepiness;
   final PetMood mood;
   final double energy;
-  final int affinity;
+  final PetActivity currentActivity;
+  final PetPersonality personality;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final DateTime? lastInteractionAt;
+  final DateTime? lastFedAt;
+  final DateTime? lastPlayedAt;
+  final DateTime? lastSleptAt;
+  final int gifts;
+  final String lastAction;
+  final String recentInteraction;
+  final List<DailyMission> missions;
+  final List<String> inventory;
+  final List<String> equippedItemIds;
+
+  int get affinity => friendship;
+  double get xpProgress => (xp % 100) / 100;
+  int get friendshipLevel => (friendship ~/ 100) + 1;
 
   PetState copyWith({
+    String? id,
     String? name,
+    int? level,
+    int? xp,
+    int? friendship,
+    int? affinity,
+    double? hunger,
+    double? happiness,
+    double? sleepiness,
     PetMood? mood,
     double? energy,
-    int? affinity,
+    PetActivity? currentActivity,
+    PetPersonality? personality,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? lastInteractionAt,
+    DateTime? lastFedAt,
+    DateTime? lastPlayedAt,
+    DateTime? lastSleptAt,
+    int? gifts,
+    String? lastAction,
+    String? recentInteraction,
+    List<DailyMission>? missions,
+    List<String>? inventory,
+    List<String>? equippedItemIds,
   }) {
     return PetState(
+      id: id ?? this.id,
       name: name ?? this.name,
+      level: level ?? this.level,
+      xp: xp ?? this.xp,
+      friendship: friendship ?? affinity ?? this.friendship,
+      hunger: hunger ?? this.hunger,
+      happiness: happiness ?? this.happiness,
+      sleepiness: sleepiness ?? this.sleepiness,
       mood: mood ?? this.mood,
       energy: energy ?? this.energy,
-      affinity: affinity ?? this.affinity,
+      currentActivity: currentActivity ?? this.currentActivity,
+      personality: personality ?? this.personality,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      lastInteractionAt: lastInteractionAt ?? this.lastInteractionAt,
+      lastFedAt: lastFedAt ?? this.lastFedAt,
+      lastPlayedAt: lastPlayedAt ?? this.lastPlayedAt,
+      lastSleptAt: lastSleptAt ?? this.lastSleptAt,
+      gifts: gifts ?? this.gifts,
+      lastAction: lastAction ?? this.lastAction,
+      recentInteraction: recentInteraction ?? this.recentInteraction,
+      missions: missions ?? this.missions,
+      inventory: inventory ?? this.inventory,
+      equippedItemIds: equippedItemIds ?? this.equippedItemIds,
     );
   }
 
   factory PetState.fromJson(Map<dynamic, dynamic> json) {
+    PetMood readMood() => PetMood.values.firstWhere(
+      (value) => value.name == json['mood'],
+      orElse: () => PetMood.neutral,
+    );
+    PetActivity readActivity() => PetActivity.values.firstWhere(
+      (value) => value.name == json['currentActivity'],
+      orElse: () => PetActivity.idle,
+    );
+    PetPersonality readPersonality() => PetPersonality.values.firstWhere(
+      (value) => value.name == json['personality'],
+      orElse: () => PetPersonality.kind,
+    );
+
     return PetState(
+      id: json['id'] as String? ?? 'maxie-primary',
       name: json['name'] as String? ?? 'MAXie',
-      mood: _petMoodFromName(json['mood'] as String?),
-      energy: (json['energy'] as num?)?.toDouble() ?? 1,
-      affinity: (json['affinity'] as num?)?.toInt() ?? 0,
+      level: (json['level'] as num?)?.toInt() ?? 1,
+      xp: (json['xp'] as num?)?.toInt() ?? 0,
+      friendship:
+          (json['friendship'] as num?)?.toInt() ??
+          (json['affinity'] as num?)?.toInt() ??
+          0,
+      hunger: (json['hunger'] as num?)?.toDouble() ?? 72,
+      happiness: (json['happiness'] as num?)?.toDouble() ?? 70,
+      sleepiness: (json['sleepiness'] as num?)?.toDouble() ?? 20,
+      mood: readMood(),
+      energy: (json['energy'] as num?)?.toDouble() ?? 82,
+      currentActivity: readActivity(),
+      personality: readPersonality(),
+      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? ''),
+      updatedAt: DateTime.tryParse(json['updatedAt'] as String? ?? ''),
+      lastInteractionAt: DateTime.tryParse(
+        json['lastInteractionAt'] as String? ?? '',
+      ),
+      lastFedAt: DateTime.tryParse(json['lastFedAt'] as String? ?? ''),
+      lastPlayedAt: DateTime.tryParse(json['lastPlayedAt'] as String? ?? ''),
+      lastSleptAt: DateTime.tryParse(json['lastSleptAt'] as String? ?? ''),
+      gifts: (json['gifts'] as num?)?.toInt() ?? 0,
+      lastAction: json['lastAction'] as String? ?? 'Ready to hang out',
+      recentInteraction:
+          json['recentInteraction'] as String? ?? 'MAXie is waiting for you.',
+      missions: (json['missions'] as List<dynamic>? ?? const [])
+          .whereType<Map<dynamic, dynamic>>()
+          .map(DailyMission.fromJson)
+          .toList(),
+      inventory: (json['inventory'] as List<dynamic>? ?? const [])
+          .cast<String>(),
+      equippedItemIds: (json['equippedItemIds'] as List<dynamic>? ?? const [])
+          .cast<String>(),
     );
   }
 
   Map<String, Object?> toJson() {
     return {
+      'id': id,
       'name': name,
+      'level': level,
+      'xp': xp,
+      'friendship': friendship,
+      'hunger': hunger,
+      'happiness': happiness,
+      'sleepiness': sleepiness,
       'mood': mood.name,
       'energy': energy,
-      'affinity': affinity,
+      'currentActivity': currentActivity.name,
+      'personality': personality.name,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      'lastInteractionAt': lastInteractionAt?.toIso8601String(),
+      'lastFedAt': lastFedAt?.toIso8601String(),
+      'lastPlayedAt': lastPlayedAt?.toIso8601String(),
+      'lastSleptAt': lastSleptAt?.toIso8601String(),
+      'gifts': gifts,
+      'lastAction': lastAction,
+      'recentInteraction': recentInteraction,
+      'missions': missions.map((mission) => mission.toJson()).toList(),
+      'inventory': inventory,
+      'equippedItemIds': equippedItemIds,
     };
   }
-}
-
-PetMood _petMoodFromName(String? name) {
-  for (final mood in PetMood.values) {
-    if (mood.name == name) {
-      return mood;
-    }
-  }
-  return PetMood.neutral;
 }

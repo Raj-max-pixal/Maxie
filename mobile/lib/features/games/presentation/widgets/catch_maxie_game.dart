@@ -154,7 +154,7 @@ class _CatchMaxieGameState extends ConsumerState<CatchMaxieGame> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -169,7 +169,7 @@ class _CatchMaxieGameState extends ConsumerState<CatchMaxieGame> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -189,7 +189,7 @@ class _CatchMaxieGameState extends ConsumerState<CatchMaxieGame> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: Colors.purple.withOpacity(0.3),
+                        color: Colors.purple.withValues(alpha: 0.3),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.pets, size: 48, color: Colors.purple),

@@ -1,6 +1,6 @@
 const path = require("path");
 
-function createTray({ Tray, Menu, nativeImage, app, iconPath, onOpenSettings, onWakePet, onDance }) {
+function createTray({ Tray, Menu, nativeImage, app, iconPath, onOpenSettings, onOpenCommandCenter, onWakePet, onDance }) {
   let image = nativeImage.createFromPath(iconPath);
   if (image.isEmpty()) {
     image = nativeImage.createFromDataURL(makeTrayIconDataUrl());
@@ -12,6 +12,7 @@ function createTray({ Tray, Menu, nativeImage, app, iconPath, onOpenSettings, on
     { label: "Wake MAXie", click: onWakePet },
     { label: "Dance", click: onDance },
     { type: "separator" },
+    { label: "Command Center", click: onOpenCommandCenter },
     { label: "Settings", click: onOpenSettings },
     { label: "Quit", click: () => app.exit(0) }
   ]));

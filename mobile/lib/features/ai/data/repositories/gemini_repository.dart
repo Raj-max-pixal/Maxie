@@ -1,6 +1,5 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import '../models/personality_profile.dart';
+import 'package:maxie_mobile/features/ai/data/models/personality_profile.dart';
 
 class GeminiRepository {
   late final GenerativeModel _model;
@@ -117,7 +116,7 @@ Remember: You are MAXie, not a generic assistant. Be cute, be emotional, be thei
     );
 
     try {
-      final response = await _model.generateContent(Content.text(prompt));
+      final response = await _model.generateContent([Content.text(prompt)]);
       return response.text ?? 'Interesting app!';
     } catch (e) {
       return _getDefaultReaction(appName);

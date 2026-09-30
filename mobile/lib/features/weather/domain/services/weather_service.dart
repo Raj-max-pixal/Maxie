@@ -52,12 +52,7 @@ class WeatherService {
   }
 
   Future<String> _getCityName(double lat, double lon) async {
-    try {
-      final placemarks = await Geolocator.placemarkFromCoordinates(lat, lon);
-      return placemarks.first.locality ?? 'Unknown';
-    } catch (e) {
-      return 'Unknown';
-    }
+    return 'Current location';
   }
 
   String getWeatherReaction() {

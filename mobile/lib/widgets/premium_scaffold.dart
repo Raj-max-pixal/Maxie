@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maxie_mobile/config/app_state.dart';
 import 'package:maxie_mobile/navigation/navigation_items.dart';
-import 'package:maxie_mobile/shared/responsive_layout.dart';
-import 'package:maxie_mobile/theme/app_colors.dart';
 import 'package:maxie_mobile/widgets/offline_banner.dart';
 
+/// MAXie is phone-first. On wider screens the exact mobile experience is
+/// centered as a device canvas instead of turning into a desktop dashboard.
 class PremiumScaffold extends ConsumerWidget {
   const PremiumScaffold({
     required this.child,
@@ -15,83 +14,77 @@ class PremiumScaffold extends ConsumerWidget {
     this.title,
     this.actions = const [],
     this.showNavigation = true,
+    this.floatingActionButton,
   });
 
   final String? title;
   final Widget child;
   final List<Widget> actions;
   final bool showNavigation;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isOffline = ref.watch(offlineProvider);
-    final layout = ResponsiveLayout.of(context);
     final selectedIndex = _selectedIndex(context);
+    final theme = Theme.of(context);
 
-    final content = DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.darkScaffold,
-            Color(0xFF101827),
-            AppColors.darkScaffold,
-          ],
-        ),
-      ),
-      child: Column(
-        children: [
-          if (isOffline) const OfflineBanner(),
-          Expanded(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: ResponsiveLayout.contentWidth(context),
-                ),
-                child: child,
-              ),
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final canvasWidth = constraints.maxWidth > 480
+            ? 480.0
+            : constraints.maxWidth;
+        final isWidePreview = constraints.maxWidth > 520;
+        final body = DecoratedBox(
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            border: isWidePreview
+                ? Border.symmetric(
+                    vertical: BorderSide(
+                      color: theme.colorScheme.onSurface.withValues(alpha: .08),
+                    ),
+                  )
+                : null,
+            boxShadow: isWidePreview
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(
+                        alpha: theme.brightness == Brightness.dark ? .26 : .10,
+                      ),
+                      blurRadius: 36,
+                      offset: const Offset(0, 12),
+                    ),
+                  ]
+                : null,
           ),
-        ],
-      ),
-    );
-
-    if (!showNavigation || layout == DeviceLayout.mobile) {
-      return Scaffold(
-        appBar: title == null
-            ? null
-            : AppBar(title: Text(title!), actions: actions),
-        body: content,
-        bottomNavigationBar: showNavigation
-            ? _PremiumBottomNavigation(selectedIndex: selectedIndex)
-            : null,
-      );
-    }
-
-    return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            selectedIndex: selectedIndex,
-            extended: layout == DeviceLayout.desktop,
-            backgroundColor: AppColors.darkSurface,
-            onDestinationSelected: (index) {
-              context.go(appNavigationItems[index].location);
-            },
-            destinations: [
-              for (final item in appNavigationItems)
-                NavigationRailDestination(
-                  icon: Icon(item.icon),
-                  label: Text(item.label),
-                ),
+          child: Column(
+            children: [
+              if (ref.watch(offlineProvider)) const OfflineBanner(),
+              if (title != null) _MobileTopBar(title: title!, actions: actions),
+              Expanded(child: child),
             ],
           ),
-          const VerticalDivider(width: 1),
-          Expanded(child: content),
-        ],
-      ),
+        );
+
+        return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          body: Center(
+            child: SizedBox(width: canvasWidth, child: body),
+          ),
+          bottomNavigationBar: showNavigation
+              ? Align(
+                  heightFactor: 1,
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: canvasWidth,
+                    child: _MobileBottomNavigation(
+                      selectedIndex: selectedIndex,
+                    ),
+                  ),
+                )
+              : null,
+          floatingActionButton: floatingActionButton,
+        );
+      },
     );
   }
 
@@ -104,29 +97,63 @@ class PremiumScaffold extends ConsumerWidget {
   }
 }
 
-class _PremiumBottomNavigation extends StatelessWidget {
-  const _PremiumBottomNavigation({required this.selectedIndex});
+class _MobileTopBar extends StatelessWidget {
+  const _MobileTopBar({required this.title, required this.actions});
+  final String title;
+  final List<Widget> actions;
 
+  @override
+  Widget build(BuildContext context) {
+    final canPop = Navigator.of(context).canPop();
+    return SafeArea(
+      bottom: false,
+      child: SizedBox(
+        height: 58,
+        child: Row(
+          children: [
+            if (canPop)
+              IconButton(
+                tooltip: 'Back',
+                onPressed: context.pop,
+                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+              )
+            else
+              const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              ),
+            ),
+            ...actions,
+            const SizedBox(width: 4),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MobileBottomNavigation extends StatelessWidget {
+  const _MobileBottomNavigation({required this.selectedIndex});
   final int selectedIndex;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       top: false,
       child: Container(
-        margin: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: const EdgeInsets.fromLTRB(8, 7, 8, 8),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface.withValues(alpha: 0.96),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.darkStroke),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.35),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
+          color: theme.colorScheme.surface,
+          border: Border(
+            top: BorderSide(
+              color: theme.colorScheme.onSurface.withValues(alpha: .08),
             ),
-          ],
+          ),
         ),
         child: Row(
           children: [
@@ -161,41 +188,40 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? const Color(0xFFE9D5FF) : const Color(0xFF7F8EA3);
-
+    final theme = Theme.of(context);
+    final selectedColor = theme.brightness == Brightness.dark
+        ? const Color(0xFF9CEED1)
+        : const Color(0xFF168A71);
+    final color = isSelected
+        ? selectedColor
+        : theme.colorScheme.onSurface.withValues(alpha: .55);
     return Semantics(
       button: true,
       selected: isSelected,
       label: label,
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
         onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
         child: AnimatedContainer(
-          duration: 220.ms,
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(vertical: 9),
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(vertical: 7),
           decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.seed.withValues(alpha: 0.18)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(18),
-            border: isSelected
-                ? Border.all(color: AppColors.seed.withValues(alpha: 0.45))
-                : null,
+            color: isSelected ? selectedColor.withValues(alpha: .12) : null,
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: color, size: 21),
+              Icon(icon, size: 21, color: color),
               const SizedBox(height: 3),
               Text(
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                style: TextStyle(
                   color: color,
-                  fontWeight: FontWeight.w800,
                   fontSize: 10,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

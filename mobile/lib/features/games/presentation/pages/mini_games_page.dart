@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
-import 'widgets/rock_paper_scissors_game.dart';
-import 'widgets/memory_game.dart';
-import 'widgets/catch_maxie_game.dart';
+import 'package:maxie_mobile/features/games/presentation/widgets/catch_maxie_game.dart';
+import 'package:maxie_mobile/features/games/presentation/widgets/memory_game.dart';
+import 'package:maxie_mobile/features/games/presentation/widgets/rock_paper_scissors_game.dart';
 
 class MiniGamesPage extends ConsumerStatefulWidget {
   const MiniGamesPage({super.key});
@@ -28,7 +28,7 @@ class _MiniGamesPageState extends ConsumerState<MiniGamesPage> {
         padding: const EdgeInsets.all(16),
         children: [
           _buildGameCard(
-            icon: Icons.rock,
+            icon: Icons.sports_mma,
             title: 'Rock Paper Scissors',
             description: 'Classic game against MAXie!',
             onTap: () => _showGame('rock_paper_scissors'),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/overlay_provider.dart';
-import '../../../study/domain/services/study_mode.dart';
+import 'package:maxie_mobile/features/home/presentation/providers/overlay_provider.dart';
+import 'package:maxie_mobile/features/study/domain/services/study_mode.dart';
 
 class FloatingPomodoroTimer extends ConsumerWidget {
   const FloatingPomodoroTimer({super.key});
@@ -31,11 +31,11 @@ class FloatingPomodoroTimer extends ConsumerWidget {
           width: 120,
           height: 120,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(overlayState.transparency),
+            color: Colors.white.withValues(alpha: overlayState.transparency),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -44,7 +44,7 @@ class FloatingPomodoroTimer extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.timer,
                 size: 32,
                 color: Colors.purple,
