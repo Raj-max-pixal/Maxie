@@ -15,7 +15,7 @@ If you discover a security vulnerability in MAXie, please report it privately to
 
 ### How to Report
 
-Send an email to: security@maxie.ai
+Send an email to: multimax305@gmail.com
 
 Please include:
 - A description of the vulnerability
