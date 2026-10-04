@@ -275,6 +275,20 @@ MAXie Mobile brings the companion experience to Android with a Flutter app desig
 - Local data persistence with Hive
 - MAXie Plus subscription screen with purchase and restore flows
 
+### 📱 Mobile Companion Details
+
+The mobile app expands MAXie beyond the desktop with a dedicated Android experience built in Flutter and designed for everyday use on the go.
+
+- Flutter-based Android companion app with onboarding, dashboard, and profile flows
+- AI chat, voice chat, and optional Gemini-powered responses when configured
+- Memory Brain, conversation history, and local-first persistence powered by Hive
+- Floating companion and in-app Shimeji-style interactions with draggable behavior
+- Mood, emotions, friendship progression, XP, rewards, and achievements
+- Productivity tools including tasks, habits, goals, notes, reminders, and Pomodoro sessions
+- Wellness and activity features such as focus support, gentle reminders, and daily progress views
+- MAXie Plus monetization flow with subscription, purchase, and restore support
+- Foundations for cloud sync and PC companion connectivity as the ecosystem grows
+
 ---
 
 ## 🎭 Expressions
